@@ -1,0 +1,25 @@
+npjsystem/frontend/.DS_Store
+npjsystem/frontend/node_modules
+npjsystem/frontend/dist
+npjsystem/frontend/package-lock.json
+
+npjsystem/frontend/tests/e2e/videos/
+npjsystem/frontend/tests/e2e/screenshots/
+
+# local env files
+npjsystem/frontend/.env.local
+npjsystem/frontend/.env.*.local
+
+# Log files
+npjsystem/frontend/npm-debug.log*
+npjsystem/frontend/yarn-debug.log*
+npjsystem/frontend/yarn-error.log*
+
+# Editor directories and files
+npjsystem/frontend/.idea
+npjsystem/frontend/.vscode
+npjsystem/frontend/*.suo
+npjsystem/frontend/*.ntvs*
+npjsystem/frontend/*.njsproj
+npjsystem/frontend/*.sln
+npjsystem/frontend/*.sw?

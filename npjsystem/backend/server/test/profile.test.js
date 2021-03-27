@@ -10,7 +10,7 @@ const request = function (url, method, data) {
 	return axios({ url, method, data, validateStatus: false });
 };
 
-test.only('Shall get profiles', async function () {
+test('Shall get profiles', async function () {
     // given - dado que
     const profile1 = await profileService.saveProfile({ name: generate(), description: generate() });
 	const profile2 = await profileService.saveProfile({ name: generate(), description: generate() });
@@ -44,7 +44,7 @@ test('Shall not save a profiles', async function () {
     const response2 = await request('http://localhost:3000/profiles', 'post', data);
     expect(response2.status).toBe(409);
 	const profile = response1.data;
-    await profileService.deleteProfile(profiles.id);
+    await profileService.deleteProfile(profile.id);
 });
 
 test('Shall update a profiles', async function () {

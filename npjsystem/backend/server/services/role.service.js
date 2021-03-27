@@ -15,11 +15,16 @@ exports.saveRole = async function (role) {
     return rolesData.saveRole(role)
 }
 
-exports.deleteRole = function (id) {
+exports.deleteRole = async function (id) {
+    const existingRole = await rolesData.getRole(id)
+    if (!existingRole) throw new Error('Role not found');
     return rolesData.deleteRole(id)
 }
 
 exports.updateRole = async function (id, role) {
-
+    const existingRole = await rolesData.getRole(id)
+    if (!existingRole) throw new Error('Role not found');
+    existingRole.name = role.name;
+    return rolesData.updateRole(existingRole);
 }
 

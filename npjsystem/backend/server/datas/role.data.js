@@ -32,14 +32,8 @@ exports.deleteRole = function (idRole) {
     })
 };
 
-exports.updateRole = function (id, role) {
-    return role.save({
-        where: {
-            id: role.id
-        }
-    });
-    // return Role.update(role);
-    // return role.save();
+exports.updateRole = function (role) {
+    role.save();
 };
 
 

@@ -23,7 +23,23 @@ router.post('/roles', async function (req, res, next){
 });
 
 router.put('/roles/:id', async function (req, res, next){
-    
+    const role = req.body;
+    try {
+        await roleService.updateRole(req.params.id, role)
+        res.status(204).end();
+    } catch (error) {
+        next(error);
+    }
 });
+
+router.delete('/roles/:id', async function (req, res, next){
+    try {
+        await roleService.deleteRole(req.params.id)
+        res.status(204).end();
+    } catch (error) {
+        next(error);
+    }
+});
+
 
 module.exports = router;

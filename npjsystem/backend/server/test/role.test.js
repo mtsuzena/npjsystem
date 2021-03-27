@@ -46,7 +46,7 @@ test('Shall not save a role', async function () {
     await roleService.deleteRole(role.id);
 });
 
-test.only('Shall update a role', async function () {
+test('Shall update a role', async function () {
     const role = await roleService.saveRole({ name: generate() });
     role.name = generate();
 	const response = await request(`http://localhost:3000/roles/${role.id}`, 'put', role);
@@ -56,18 +56,26 @@ test.only('Shall update a role', async function () {
     await roleService.deleteRole(role.id);
 });
 
-// test('Shall not update a post', async function () {
-//     const post = {
-//         id: 1
-//     };
-// 	const response = await request(`http://localhost:3000/posts/${post.id}`, 'put', post);
-//     expect(response.status).toBe(404);
-// });
+test('Shall not update a role', async function () {
+    const role = {
+        id: 1
+    };
+	const response = await request(`http://localhost:3000/roles/${role.id}`, 'put', role);
+    expect(response.status).toBe(404);
+});
 
-// test('Shall delete a post', async function () {
-//     const post = await postsService.savePost({ title: generate(), content: generate() });
-// 	const response = await request(`http://localhost:3000/posts/${post.id}`, 'delete');
-//     expect(response.status).toBe(204);
-//     const posts = await postsService.getPosts();
-//     expect(posts).toHaveLength(0);
-// });
+test('Shall delete a role', async function () {
+    const role = await roleService.saveRole({ name: generate() });
+	const response = await request(`http://localhost:3000/roles/${role.id}`, 'delete');
+    expect(response.status).toBe(204);
+    const roles = await roleService.getRoles();
+    expect(roles).toHaveLength(0);
+});
+
+test('Shall not delete a role', async function () {
+    const role = {
+        id: 1
+    };
+	const response = await request(`http://localhost:3000/roles/${role.id}`, 'delete');
+    expect(response.status).toBe(404);
+});

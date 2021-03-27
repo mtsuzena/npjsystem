@@ -12,4 +12,18 @@ router.get('/roles', async function (req, res, next){
     }
 });
 
+router.post('/roles', async function (req, res, next){
+    const role = req.body;
+    try {
+        const newRole = await roleService.saveRole(role)
+        res.status(201).json(newRole);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.put('/roles/:id', async function (req, res, next){
+    
+});
+
 module.exports = router;

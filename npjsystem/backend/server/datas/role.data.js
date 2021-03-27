@@ -2,11 +2,22 @@ const database = require('../config/database');
 const db = require("../models");
 const Role = db.role;
 
-db.sequelize.sync();
+// db.sequelize.sync();
 
 exports.getRoles = function () {
     return Role.findAll();
-	// return database.query('select * from blog.post');
+};
+
+exports.getRole = function (id) {
+    return Role.findByPk(id);
+};
+
+exports.getRoleByName = function (roleName) {
+    return Role.findOne({
+        where: {
+            name: roleName
+        }
+    });
 };
 
 exports.saveRole = function (role) {
@@ -20,6 +31,17 @@ exports.deleteRole = function (idRole) {
         }
     })
 };
+
+exports.updateRole = function (id, role) {
+    return role.save({
+        where: {
+            id: role.id
+        }
+    });
+    // return Role.update(role);
+    // return role.save();
+};
+
 
 
 // database

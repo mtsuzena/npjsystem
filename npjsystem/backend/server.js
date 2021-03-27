@@ -14,6 +14,7 @@ app.use(function (error, req, res, next) {
 	res.status(500).send(e.message);
 });
 
+// const db = require("./server/models");
 
 // db.sequelize.sync({force: true}).then(() => {
 //   console.log('Drop and Resync Database with { force: true }');

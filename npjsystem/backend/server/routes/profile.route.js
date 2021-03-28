@@ -12,6 +12,15 @@ router.get('/profiles', async function (req, res, next){
     }
 });
 
+router.get('/profiles/:id', async function (req, res, next){
+    try {
+        const profiles = await profileService.getProfile(req.params.id);
+        res.json(profiles);
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.post('/profiles', async function (req, res, next){
     const profile = req.body;
     try {

@@ -1,6 +1,7 @@
 const axios = require('axios');
 const crypto = require('crypto');
 const profileService = require('../services/profile.service.js');
+const roleService = require('../services/role.service.js');
 
 const generate = function () {
 	return crypto.randomBytes(20).toString('hex');
@@ -36,6 +37,25 @@ test('Shall save a profiles', async function () {
     expect(profile.name).toBe(data.name);
     expect(profile.description).toBe(data.description);
     await profileService.deleteProfile(profile.id);
+});
+
+test.only('Shall save a profiles with roles', async function () {
+    const role1 = await roleService.saveRole({ name: generate() });
+	const role2 = await roleService.saveRole({ name: generate() });
+
+    const data = { name: generate(), description: generate(), roles: [1, 2]};
+	const response = await request('http://localhost:3000/profiles', 'post', data);
+
+    expect(response.status).toBe(201);
+	const profile = response.data;
+    expect(profile.name).toBe(data.name);
+    expect(profile.description).toBe(data.description);
+
+    console.log(response);
+
+    await profileService.deleteProfile(profile.id);
+    await roleService.deleteRole(role1.id);
+    await roleService.deleteRole(role2.id);
 });
 
 test('Shall not save a profiles', async function () {

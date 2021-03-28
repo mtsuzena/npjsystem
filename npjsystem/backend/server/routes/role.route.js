@@ -12,6 +12,15 @@ router.get('/roles', async function (req, res, next){
     }
 });
 
+router.get('/roles/:id', async function (req, res, next){
+    try {
+        const roles = await roleService.getRole(req.params.id);
+        res.json(roles);
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.post('/roles', async function (req, res, next){
     const role = req.body;
     try {

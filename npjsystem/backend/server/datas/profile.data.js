@@ -1,12 +1,29 @@
 const db = require("../models");
 const Profile = db.profile;
+const Role = db.role;
 
 exports.getProfiles = function () {
-    return Profile.findAll();
+    return Profile.findAll({
+        include: [
+            {
+                model: Role,
+                as: 'roles',
+                through: { attributes: [] }
+            }
+        ],
+    });
 };
 
 exports.getProfile = function (id) {
-    return Profile.findByPk(id);
+    return Profile.findByPk(id, {
+        include: [
+            {
+                model: Role,
+                as: 'roles',
+                through: { attributes: [] }
+            }
+        ],
+    });
 };
 
 exports.getProfileByName = function (profileName) {
@@ -19,6 +36,12 @@ exports.getProfileByName = function (profileName) {
 
 exports.saveProfile = function (profile) {
 	return Profile.create(profile)
+};
+
+exports.saveProfileWithRoles = async function (profile, roles) {
+	const newProfile = await Profile.create(profile);
+    await newProfile.addRole(roles);
+    return newProfile;
 };
 
 exports.deleteProfile = function (idProfile) {

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --env node --detectOpenHandles"
+    "test": "jest --env node --detectOpenHandles",
+    "dev": "nodemon --inspect ./server.js"
   },
   "keywords": [
     "node",

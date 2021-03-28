@@ -4,6 +4,7 @@ const app = express();
 app.use(express.json());
 app.use('/', require('./server/routes/role.route.js'));
 app.use('/', require('./server/routes/profile.route.js'));
+app.use('/', require('./server/routes/user.route.js'));
 
 app.use(function (error, req, res, next) {
 	if (error.message === 'Role already exists') {
@@ -16,6 +17,12 @@ app.use(function (error, req, res, next) {
 		return res.status(409).send(e.message);
 	}
 	if (error.message === 'Profile not found') {
+		return res.status(404).send(e.message);
+	}
+	if (error.message === 'User already exists') {
+		return res.status(409).send(e.message);
+	}
+	if (error.message === 'User not found') {
 		return res.status(404).send(e.message);
 	}
 	

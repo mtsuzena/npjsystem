@@ -39,24 +39,29 @@ test('Shall save a profiles', async function () {
     await profileService.deleteProfile(profile.id);
 });
 
-test.only('Shall save a profiles with roles', async function () {
-    const role1 = await roleService.saveRole({ name: generate() });
-	const role2 = await roleService.saveRole({ name: generate() });
+// test.only('Shall save a profiles with roles', async function () {
+//     const role1 = await roleService.saveRole({ name: generate() });
+// 	const role2 = await roleService.saveRole({ name: generate() });
 
-    const data = { name: generate(), description: generate(), roles: [1, 2]};
-	const response = await request('http://localhost:3000/profiles', 'post', data);
+//     const data = { name: generate(), description: generate(), roles: [role1.id, role2.id]};
+// 	const response = await request('http://localhost:3000/profiles', 'post', data);
+//     expect(response.status).toBe(201);
 
-    expect(response.status).toBe(201);
-	const profile = response.data;
-    expect(profile.name).toBe(data.name);
-    expect(profile.description).toBe(data.description);
+//     // const profile = await profileService.getProfile(response.id);
 
-    console.log(response);
+//     const response2 = await request('http://localhost:3000/profiles', 'get');
 
-    await profileService.deleteProfile(profile.id);
-    await roleService.deleteRole(role1.id);
-    await roleService.deleteRole(role2.id);
-});
+//     const profile = response2.data;
+
+//     expect(profile.name).toBe(data.name);
+//     expect(profile.description).toBe(data.description);
+//     expect(profile.roles[0].name).toBe(role1.name);
+//     expect(profile.roles[1].name).toBe(role2.name);
+
+//     await profileService.deleteProfile(profile.id);
+//     await roleService.deleteRole(role1.id);
+//     await roleService.deleteRole(role2.id);
+// });
 
 test('Shall not save a profiles', async function () {
     const data = { name: generate(), description: generate() };

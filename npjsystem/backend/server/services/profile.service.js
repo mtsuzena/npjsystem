@@ -1,5 +1,4 @@
 const profilesData = require('../datas/profile.data.js');
-const roleService = require('./role.service');
 
 exports.getProfiles = function () {
     return profilesData.getProfiles();
@@ -11,7 +10,6 @@ exports.getProfile = function (id) {
 }
 
 exports.saveProfile = async function (data) {
-    console.log(data);
     const { roles, ...profile } = data;
 
     const existingProfile = await profilesData.getProfileByName(profile.name);

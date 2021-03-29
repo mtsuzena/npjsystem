@@ -5,32 +5,39 @@ app.use(express.json());
 app.use('/api/', require('./server/routes/role.route'));
 app.use('/api/', require('./server/routes/profile.route'));
 app.use('/api/', require('./server/routes/user.route'));
-app.use('/api/ ', require('./server/routes/auth.route.js'));
+app.use('/api/', require('./server/routes/authentication.route.js'));
+app.use('/api/', require('./server/routes/privateRouteTest.route'));
 
 app.use(function (error, req, res, next) {
 	if (error.message === 'Role already exists') {
-		return res.status(409).send(e.message);
+		return res.status(409).send(error.message);
 	}
 	if (error.message === 'Role not found') {
-		return res.status(404).send(e.message);
+		return res.status(404).send(error.message);
 	}
 	if (error.message === 'Profile already exists') {
-		return res.status(409).send(e.message);
+		return res.status(409).send(error.message);
 	}
 	if (error.message === 'Profile not found') {
-		return res.status(404).send(e.message);
+		return res.status(404).send(error.message);
 	}
 	if (error.message === 'Email already exists') {
-		return res.status(409).send(e.message);
+		return res.status(409).send(error.message);
 	}
 	if (error.message === 'User not found') {
-		return res.status(404).send(e.message);
+		return res.status(404).send(error.message);
 	}
 	if (error.message === 'Email or password is wrong') {
-		return res.status(400).send(e.message);
+		return res.status(400).send(error.message);
+	}
+	if (error.message === 'Email or password is wrong') {
+		return res.status(400).send(error.message);
+	}
+	if (error.message === 'Access Denied') {
+		return res.status(401).send(error.message);
 	}
 	
-	res.status(500).send(e.message);
+	res.status(500).send(error.message);
 });
 
 const db = require("./server/models");

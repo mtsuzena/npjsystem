@@ -11,16 +11,6 @@ const schema = {
     password: Joi.string()
 };
 
-router.post('/login', async function (req, res, next){
-    try {
-        const token = await userService.login(req.body);
-        res.header('auth-token', token).send(token);
-        
-    } catch (error) {
-        next(error);
-    }
-});
-
 router.get('/users', async function (req, res, next){
     try {
         const users = await userService.getUsers();

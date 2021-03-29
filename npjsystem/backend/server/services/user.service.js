@@ -12,20 +12,9 @@ exports.getUser = async function (id) {
     return usersData.getUser(id);
 }
 
-exports.login = async function (login) {
-
-    //Checking if the email exists
-    const user = await usersData.getUserByEmail(login.email);
-    if (!user) throw new Error('Email or password is wrong');
-    
-    //Check if the password is correct
-    const validatePassword = await bcrypt.compare(login.password, user.password);
-    if(!validatePassword) throw new Error('Email or password is wrong');
-
-    //Create and assign a token
-    const token = jwt.sign({id: user.id}, authConfig.TOKEN_SECRET);
-
-    return token;
+exports.getUserByEmail = async function(email){
+    const user = await usersData.getUserByEmail(email)
+    return user;
 }
 
 exports.saveUser = async function (data) {

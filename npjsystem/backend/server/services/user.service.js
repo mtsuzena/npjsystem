@@ -1,22 +1,29 @@
 const usersData = require('../datas/user.data.js');
+const profileService = require('../services/profile.service');
 
 exports.getUsers = function () {
     return usersData.getUsers();
 }
 
 
-exports.getUser = function (id) {
+exports.getUser = async function (id) {
     return usersData.getUser(id);
 }
 
 exports.saveUser = async function (data) {
-    const user = data;
+    const { profileId, ...user } = data;
 
     const existingUser = await usersData.getUserByUserName(user.username);
     if (existingUser) throw new Error('User already exists');
 
-    return usersData.saveUser(user);
-    
+    if(profileId){
+        const existingProfile = await profileService.getProfile(profileId);
+        if (!existingProfile) throw new Error('Profile not found');
+
+        return usersData.saveUserWithProfile(user, existingProfile);
+    }else{
+        return usersData.saveUser(user);
+    }
 }
 
 exports.deleteUser = async function (id) {

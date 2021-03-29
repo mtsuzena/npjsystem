@@ -2,11 +2,25 @@ const db = require("../models");
 const Role = db.role;
 
 exports.getRoles = function () {
-    return Role.findAll();
+    return Role.findAll({
+        include: [
+            {
+                model: db.profile,
+                as: 'profiles'
+            }
+        ],
+    });
 };
 
 exports.getRole = function (id) {
-    return Role.findByPk(id);
+    return Role.findByPk(id, {
+        include: [
+            {
+                model: db.profile,
+                as: 'profiles'
+            }
+        ],
+    });
 };
 
 exports.getRoleByName = function (roleName) {

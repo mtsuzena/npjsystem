@@ -7,8 +7,7 @@ exports.getProfiles = function () {
         include: [
             {
                 model: Role,
-                as: 'roles',
-                through: { attributes: [] }
+                as: 'roles'
             }
         ],
     });
@@ -19,8 +18,7 @@ exports.getProfile = function (id) {
         include: [
             {
                 model: Role,
-                as: 'roles',
-                through: { attributes: [] }
+                as: 'roles'
             }
         ],
     });

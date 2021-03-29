@@ -24,10 +24,10 @@ exports.getUser = function (id) {
     });
 };
 
-exports.getUserByUserName = function (uname) {
+exports.getUserByEmail = function (uemail) {
     return User.findOne({
         where: {
-            username: uname
+            email: uemail
         }
     });
 };

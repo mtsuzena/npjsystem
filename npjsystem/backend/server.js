@@ -2,9 +2,10 @@ const express = require("express");
 const app = express();
 
 app.use(express.json());
-app.use('/', require('./server/routes/role.route.js'));
-app.use('/', require('./server/routes/profile.route.js'));
-app.use('/', require('./server/routes/user.route.js'));
+app.use('/api/', require('./server/routes/role.route'));
+app.use('/api/', require('./server/routes/profile.route'));
+app.use('/api/', require('./server/routes/user.route'));
+app.use('/api/ ', require('./server/routes/auth.route.js'));
 
 app.use(function (error, req, res, next) {
 	if (error.message === 'Role already exists') {
@@ -19,11 +20,14 @@ app.use(function (error, req, res, next) {
 	if (error.message === 'Profile not found') {
 		return res.status(404).send(e.message);
 	}
-	if (error.message === 'User already exists') {
+	if (error.message === 'Email already exists') {
 		return res.status(409).send(e.message);
 	}
 	if (error.message === 'User not found') {
 		return res.status(404).send(e.message);
+	}
+	if (error.message === 'Email or password is wrong') {
+		return res.status(400).send(e.message);
 	}
 	
 	res.status(500).send(e.message);
@@ -36,5 +40,5 @@ db.sequelize.sync({force: true}).then(() => {
   initial();
 });
 
-app.listen(3000);
+app.listen(3000, () => console.log('Server up and running'));
 

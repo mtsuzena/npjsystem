@@ -51,6 +51,7 @@
 <script>
 import axios from 'axios'
 const jwt = require('jsonwebtoken')
+const configs = require('../../config/configs')
 export default {
   name: 'Login',
   data: () => ({
@@ -61,18 +62,25 @@ export default {
     source: String
   },
   methods: {
+    getUser: async function() {
+        
+        return response.data;
+    },
     login: async function() {
       const user = {
         email: this.email,
         password: this.password
       };
-      const api = 'http://localhost:3000/api/login';
       try {
-        const response = await axios.post(api, user);
-        console.log(response)
+
+        const response = await axios.post(configs.API_LOGIN, user);
         const verified = jwt.verify(response.data, "NPJSYSTEM-98asdhj319fdwjnn-key");
-        console.log(verified.id);
-        this.$router.push('/');
+
+        const get_user = await axios.get(configs.API_GET_USER + '/' + verified.id);
+
+
+        this.$router.push({name: 'Painel', params: {user: get_user.data, userJwt: response.data}});
+
       } catch (error) {
         if (error.response) {
             console.log('Error data : ', error.response.data);

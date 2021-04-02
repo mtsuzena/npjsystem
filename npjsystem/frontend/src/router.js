@@ -16,6 +16,12 @@ export default new Router({
       path: '/',
       component: () => import('@/views/dashboard/Index'),
       children: [
+        // will match everything
+        // {
+        //   name: 'Painel',
+        //   path: '*',
+        //   component: () => import('@/views/dashboard/Dashboard'),
+        // },
         // Dashboard
         {
           name: 'Painel',

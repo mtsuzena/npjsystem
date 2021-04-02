@@ -58,7 +58,7 @@
         <base-material-stats-card
           color="yellow"
           icon="mdi-animation"
-          title="Processos não iniciados"
+          title="ASdasd"
           value="30"
         />
       </v-col>
@@ -131,11 +131,15 @@
 </template>
 
 <script>
+  const configs = require('../../config/configs')
+  import axios from 'axios'
   export default {
     name: 'DashboardDashboard',
 
     data () {
       return {
+        userJwt: '',
+        user: {},
         type: 'month',
         types: ['mês', 'semana', 'dia', '4 dias'],
         mode: 'stack',
@@ -154,6 +158,10 @@
       }
     },
 
+    mounted() {
+        this.user = this.$route.params.user;
+        this.userJwt = this.$route.params.userJwt;
+    },
     methods: {
       complete (index) {
         this.list[index] = !this.list[index]

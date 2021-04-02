@@ -11,7 +11,7 @@ const request = function (url, method, data) {
 	return axios({ url, method, data, validateStatus: false });
 };
 
-test('Shall get profiles', async function () {
+test.only('Shall get profiles', async function () {
     // given - dado que
     const profile1 = await profileService.saveProfile({ name: generate(), description: generate() });
 	const profile2 = await profileService.saveProfile({ name: generate(), description: generate() });

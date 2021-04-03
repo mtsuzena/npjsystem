@@ -14,6 +14,8 @@ exports.login = async function (login) {
     const validatePassword = await bcrypt.compare(login.password, user.password);
     if(!validatePassword) throw new Error('Email or password is wrong');
 
+    if(!user.userActive) throw new Error('Email or password is wrong');
+
     //Create and assign a token
     const token = jwt.sign({id: user.id}, authConfig.TOKEN_SECRET);
 

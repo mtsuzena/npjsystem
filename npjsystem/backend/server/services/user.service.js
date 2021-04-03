@@ -54,6 +54,7 @@ exports.updateUser = async function (id, user) {
     existingUser.lastName = user.lastName;
     existingUser.email = user.email;
     existingUser.password = user.password;
+    existingUser.userActive = user.userActive;
 
     return usersData.updateUser(existingUser);
 }

@@ -12,14 +12,18 @@ app.use(express.json());
 app.use('/api/', require('./server/routes/role.route'));
 app.use('/api/', require('./server/routes/profile.route'));
 app.use('/api/', require('./server/routes/user.route'));
-app.use('/api/', require('./server/routes/authentication.route.js'));
+app.use('/api/', require('./server/routes/authentication.route'));
 app.use('/api/', require('./server/routes/privateRouteTest.route'));
+app.use('/api/', require('./server/routes/customer.route'));
 
 app.use(function (error, req, res, next) {
 	if (error.message === 'Role already exists') {
 		return res.status(409).send(error.message);
 	}
 	if (error.message === 'Role not found') {
+		return res.status(404).send(error.message);
+	}
+	if (error.message === 'Customer not found') {
 		return res.status(404).send(error.message);
 	}
 	if (error.message === 'Profile already exists') {

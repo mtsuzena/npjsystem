@@ -24,25 +24,43 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.user = require("../models/user.model.js")(sequelize, Sequelize);
-db.profile = require("../models/profile.model.js")(sequelize, Sequelize);
-db.role = require("../models/role.model.js")(sequelize, Sequelize);
+db.user = require("../models/user.model")(sequelize, Sequelize);
+db.profile = require("../models/profile.model")(sequelize, Sequelize);
+db.role = require("../models/role.model")(sequelize, Sequelize);
+db.customer = require("../models/customer.model")(sequelize, Sequelize);
+db.consultation = require("../models/consultation.model")(sequelize, Sequelize);
+
+// USER RELATIONSHIPS
+db.user.belongsTo(db.profile);
+db.user.hasMany(db.consultation);
 
 
+// CONSULTATION RELATIONSHIPS
+db.consultation.belongsTo(db.user);
+db.consultation.belongsTo(db.customer);
+
+
+// CUSTOMER RELATIONSHIPS
+db.customer.hasMany(db.consultation);
+
+
+// PROFILE RELATIONSHIPS
 db.profile.belongsToMany(db.role, {
     through: "profile_roles",
     foreignKey: "profileId",
     otherKey: "roleId"
 });
 
+db.profile.hasMany(db.user);
+
+
+// ROLE RELATIONSHIPS
 db.role.belongsToMany(db.profile, {
   through: "profile_roles",
   foreignKey: "roleId",
   otherKey: "profileId"
 });
 
-db.profile.hasMany(db.user);
-db.user.belongsTo(db.profile);
 
 
 db.ROLES = ["user", "admin", "moderator"];

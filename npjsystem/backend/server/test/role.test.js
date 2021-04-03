@@ -16,7 +16,7 @@ test('Shall get roles', async function () {
 	const role2 = await roleService.saveRole({ name: generate() });
 	const role3 = await roleService.saveRole({ name: generate() });
     // when - quando acontecer
-	const response = await request('http://localhost:3000/roles', 'get');
+	const response = await request('http://localhost:3000/api/roles', 'get');
     expect(response.status).toBe(200);
     console.log(response)
 	const roles = response.data;
@@ -30,7 +30,7 @@ test('Shall get roles', async function () {
 
 test('Shall save a role', async function () {
     const data = { name: generate() };
-	const response = await request('http://localhost:3000/roles', 'post', data);
+	const response = await request('http://localhost:3000/api/roles', 'post', data);
     expect(response.status).toBe(201);
 	const role = response.data;
     expect(role.name).toBe(data.name);
@@ -39,8 +39,8 @@ test('Shall save a role', async function () {
 
 test('Shall not save a role', async function () {
     const data = { name: generate() };
-	const response1 = await request('http://localhost:3000/roles', 'post', data);
-    const response2 = await request('http://localhost:3000/roles', 'post', data);
+	const response1 = await request('http://localhost:3000/api/roles', 'post', data);
+    const response2 = await request('http://localhost:3000/api/roles', 'post', data);
     expect(response2.status).toBe(409);
 	const role = response1.data;
     await roleService.deleteRole(role.id);
@@ -49,7 +49,7 @@ test('Shall not save a role', async function () {
 test('Shall update a role', async function () {
     const role = await roleService.saveRole({ name: generate() });
     role.name = generate();
-	const response = await request(`http://localhost:3000/roles/${role.id}`, 'put', role);
+	const response = await request(`http://localhost:3000/api/roles/${role.id}`, 'put', role);
     expect(response.status).toBe(204);
     const updatedRole = await roleService.getRole(role.id);
     expect(updatedRole.name).toBe(role.name);
@@ -60,13 +60,13 @@ test('Shall not update a role', async function () {
     const role = {
         id: 1
     };
-	const response = await request(`http://localhost:3000/roles/${role.id}`, 'put', role);
+	const response = await request(`http://localhost:3000/api/roles/${role.id}`, 'put', role);
     expect(response.status).toBe(404);
 });
 
 test('Shall delete a role', async function () {
     const role = await roleService.saveRole({ name: generate() });
-	const response = await request(`http://localhost:3000/roles/${role.id}`, 'delete');
+	const response = await request(`http://localhost:3000/api/roles/${role.id}`, 'delete');
     expect(response.status).toBe(204);
     const roles = await roleService.getRoles();
     expect(roles).toHaveLength(0);
@@ -76,6 +76,6 @@ test('Shall not delete a role', async function () {
     const role = {
         id: 1
     };
-	const response = await request(`http://localhost:3000/roles/${role.id}`, 'delete');
+	const response = await request(`http://localhost:3000/api/roles/${role.id}`, 'delete');
     expect(response.status).toBe(404);
 });

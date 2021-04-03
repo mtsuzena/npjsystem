@@ -1,5 +1,4 @@
 const db = require("../models");
-const { getUser } = require("../services/user.service");
 const User = db.user;
 
 exports.getUsers = function () {

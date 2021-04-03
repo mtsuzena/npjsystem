@@ -40,6 +40,9 @@ app.use(function (error, req, res, next) {
 	if (error.message === 'Email or password is wrong') {
 		return res.status(400).send(error.message);
 	}
+	if (error.message === 'Email invalid') {
+		return res.status(400).send(error.message);
+	}
 	if (error.message === 'Access Denied') {
 		return res.status(401).send(error.message);
 	}

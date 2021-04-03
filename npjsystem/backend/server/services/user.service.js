@@ -1,8 +1,7 @@
 const usersData = require('../datas/user.data.js');
 const profileService = require('../services/profile.service');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const authConfig = require('../config/auth.config')
+const validator = require('email-validator');
 
 exports.getUsers = function () {
     return usersData.getUsers();
@@ -19,6 +18,9 @@ exports.getUserByEmail = async function(email){
 
 exports.saveUser = async function (data) {
     const { profileId, ...user } = data;
+
+    isEmailValid = validator.validate(user.email);
+    if (!isEmailValid) throw new Error('Email invalid');
 
     const existingEmail = await usersData.getUserByEmail(user.email);
     if (existingEmail) throw new Error('Email already exists');
@@ -49,10 +51,9 @@ exports.updateUser = async function (id, user) {
     const existingUser = await usersData.getUser(id);
     if (!existingUser) throw new Error('User not found');
     existingUser.name = user.name;
-    existingUser.username = user.username;
+    existingUser.lastName = user.lastName;
     existingUser.email = user.email;
     existingUser.password = user.password;
 
     return usersData.updateUser(existingUser);
 }
-

@@ -30,6 +30,15 @@ exports.getConsultation = function (id) {
     });
 };
 
+exports.getConsultationByUserAndDate = function (userId, consultationDate) {
+    return Consultation.findOne({
+        where: {
+            userId: userId,
+            consultationDate: consultationDate
+        }
+    });
+};
+
 exports.saveConsultation = function (consultation) {
 	return Consultation.create(consultation);
 };

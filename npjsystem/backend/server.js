@@ -63,6 +63,9 @@ app.use(function (error, req, res, next) {
 	if (error.message === 'Consultation not found') {
 		return res.status(404).send(error.message);
 	}
+	if (error.message === 'User is already committed to this data') {
+		return res.status(409).send(error.message);
+	}
 	
 	res.status(500).send(error.message);
 });

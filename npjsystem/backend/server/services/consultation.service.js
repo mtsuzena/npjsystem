@@ -22,6 +22,9 @@ exports.saveConsultation = async function (consultation) {
     const existingCustomer = await customerService.getCustomer(consultation.customerId);
     if (!existingCustomer) throw new Error('Customer not found');
 
+    const existingConsultationWithDateAndUser = await consultationData.getConsultationByUserAndDate(consultation.userId, consultation.consultationDate);
+    if (existingConsultationWithDateAndUser) throw new Error('User is already committed to this data');
+
     return consultationData.saveConsultation(consultation);
 }
 

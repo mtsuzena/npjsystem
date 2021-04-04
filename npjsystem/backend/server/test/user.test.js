@@ -41,7 +41,7 @@ test('Shall save a user', async function () {
     await userService.deleteUser(user.id);
 });
 
-test('Shall not save a user', async function () {
+test('Shall not save a user duplicated', async function () {
     const data = { name: generate(), lastName: generate(), email: 'vmsuzena1@gmail.com', password: generate() };
 	const response1 = await request('http://localhost:3000/api/users', 'post', data);
     const response2 = await request('http://localhost:3000/api/users', 'post', data);
@@ -72,7 +72,7 @@ test('Shall update a user', async function () {
     await userService.deleteUser(user.id);
 });
 
-test('Shall not update a user', async function () {
+test('Shall not update a user that does not exists', async function () {
     const user = {
         id: 1
     };

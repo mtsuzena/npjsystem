@@ -55,6 +55,7 @@ exports.updateCustomer = async function (id, customer) {
     if (!existingCustomer) throw new Error('Customer not found');
 
     existingCustomer.name = customer.name;
+    existingCustomer.lastName = customer.lastName;
     existingCustomer.cep = customer.cep;
     existingCustomer.state = customer.state;
     existingCustomer.city = customer.city;

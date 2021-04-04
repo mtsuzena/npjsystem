@@ -1,7 +1,8 @@
 const axios = require('axios');
 const crypto = require('crypto');
-const customerService = require('../services/customer.service.js');
-const bcrypt = require('bcryptjs');
+const consultationService = require('../services/consultation.service.js');
+const consultationservice = require('../services/customer.service.js');
+const userService = require('../services/user.service.js');
 
 const generate = function () {
 	return crypto.randomBytes(20).toString('hex');
@@ -11,9 +12,9 @@ const request = function (url, method, data) {
 	return axios({ url, method, data, validateStatus: false });
 };
 
-test('Shall get customers', async function () {
+test.only('Shall get consultations', async function () {
     // given - dado que
-    const customer1 = await customerService.saveCustomer(
+    const customer = await consultationservice.saveCustomer(
         { 
             name: generate(), 
             lastName: generate(),
@@ -32,51 +33,27 @@ test('Shall get customers', async function () {
             cellphone: generate(),
         }
     );
-    const customer2 = await customerService.saveCustomer(
-        { 
-            name: generate(), 
-            lastName: generate(),
-            cep: '05010000',
-            state: 'SP',
-            city: 'São Paulo',
-            street: 'Rua Caiubí',
-            neighborhoodt: 'Perdizes',
-            cpf: '197.864.740-90',
-            rg: '20.911.256-6',
-            sex: 'masculino',
-            birthDate: new Date(),
-            landline: generate(),
-            cellphone: generate(),
-        }
-    );
-    const customer3 = await customerService.saveCustomer(
-        { 
-            name: generate(), 
-            lastName: generate(),
-            cep: '05010000',
-            state: 'SP',
-            city: 'São Paulo',
-            street: 'Rua Caiubí',
-            neighborhoodtt: 'Perdizes',
-            cpf: '197.864.740-90',
-            rg: '20.911.256-6',
-            sex: 'feminino',
-            birthDate: new Date(),
-            email: 'vmsuzena3@gmail.com', 
-            password: generate(),
-            landline: generate(),
-            cellphone: generate(),
-        }
-    );
+
+    const user = await userService.saveUser({ name: generate(), lastName: generate(), email: 'vmsuzena1@gmail.com', password: generate()});
+
+    const consultation1 = await consultationService.saveConsultation({userId: user.id, customerId: customer.id, consultationDate: new Date()});
+    const consultation2 = await consultationService.saveConsultation({userId: user.id, customerId: customer.id, consultationDate: new Date()});
+    const consultation3 = await consultationService.saveConsultation({userId: user.id, customerId: customer.id, consultationDate: new Date()});
+
     // when - quando acontecer
-	const response = await request('http://localhost:3000/api/customers', 'get');
+	const response = await request('http://localhost:3000/api/consultations', 'get');
+
     expect(response.status).toBe(200);
-	const customers = response.data;
+    
+	const consultations = response.data;
 	//then - então
-    expect(customers).toHaveLength(3);
-    await customerService.deleteCustomer(customer1.id);
-    await customerService.deleteCustomer(customer2.id);
-    await customerService.deleteCustomer(customer3.id);
+    expect(consultations).toHaveLength(3);
+    
+    await consultationService.deleteConsultation(consultation1.id);
+    await consultationService.deleteConsultation(consultation2.id);
+    await consultationService.deleteConsultation(consultation3.id);
+    await userService.deleteUser(user.id);
+    await customerService.deleteCustomer(customer.id);
 });
 
 
@@ -99,7 +76,7 @@ test('Shall save a customer', async function () {
         cellphone: generate(),
     };
 
-	const response = await request('http://localhost:3000/api/customers', 'post', data);
+	const response = await request('http://localhost:3000/api/consultations', 'post', data);
     expect(response.status).toBe(201);
 
 	const customer = response.data;
@@ -121,7 +98,7 @@ test('Shall save a customer', async function () {
     const validatePassword = await bcrypt.compare(data.password, customer.password);
     expect(true).toBe(validatePassword);
 
-    await customerService.deleteCustomer(customer.id);
+    await consultationService.deleteCustomer(customer.id);
 });
 
 test('Shall not save a customer duplicated', async function () {
@@ -143,13 +120,13 @@ test('Shall not save a customer duplicated', async function () {
         cellphone: generate(),
     };
 
-	const response1 = await request('http://localhost:3000/api/customers', 'post', data);
-    const response2 = await request('http://localhost:3000/api/customers', 'post', data);
+	const response1 = await request('http://localhost:3000/api/consultations', 'post', data);
+    const response2 = await request('http://localhost:3000/api/consultations', 'post', data);
 
     expect(response2.status).toBe(409);
 
 	const customer = response1.data;
-    await customerService.deleteCustomer(customer.id);
+    await consultationService.deleteCustomer(customer.id);
 });
 
 test('Shall not save a customer with invalid email', async function () {
@@ -170,7 +147,7 @@ test('Shall not save a customer with invalid email', async function () {
         cellphone: generate(),
     };
 
-	const response = await request('http://localhost:3000/api/customers', 'post', data);
+	const response = await request('http://localhost:3000/api/consultations', 'post', data);
     expect(response.status).toBe(400);
 });
 
@@ -194,7 +171,7 @@ test('Shall update a customer', async function () {
         cellphone: generate(),
     };
 
-    const customer = await customerService.saveCustomer(data); 
+    const customer = await consultationService.saveCustomer(data); 
 
     customer.name = generate();
     customer.lastName = generate();
@@ -209,11 +186,11 @@ test('Shall update a customer', async function () {
     customer.landline = '123123123';
     customer.cellphone = '333331313';
 
-	const response = await request(`http://localhost:3000/api/customers/${customer.id}`, 'put', customer);
+	const response = await request(`http://localhost:3000/api/consultations/${customer.id}`, 'put', customer);
 
     expect(response.status).toBe(204);
 
-    const updatedCustomer = await customerService.getCustomer(customer.id);
+    const updatedCustomer = await consultationService.getCustomer(customer.id);
 
     expect(updatedCustomer.name).toBe(customer.name);
     expect(updatedCustomer.lastName).toBe(customer.lastName);
@@ -228,14 +205,14 @@ test('Shall update a customer', async function () {
     expect(updatedCustomer.landline).toBe(customer.landline);
     expect(updatedCustomer.cellphone).toBe(customer.cellphone);
 
-    await customerService.deleteCustomer(customer.id);
+    await consultationService.deleteCustomer(customer.id);
 });
 
 test('Shall not update a customer that does not exists', async function () {
     const customer = {
         id: 1
     };
-	const response = await request(`http://localhost:3000/api/customers/${customer.id}`, 'put', customer);
+	const response = await request(`http://localhost:3000/api/consultations/${customer.id}`, 'put', customer);
 
     expect(response.status).toBe(404);
 });
@@ -260,15 +237,15 @@ test('Shall not update a customer that does not have valid email', async functio
         cellphone: generate(),
     };
 
-    const customer = await customerService.saveCustomer(data); 
+    const customer = await consultationService.saveCustomer(data); 
 
     customer.email = generate();
 
-	const response = await request(`http://localhost:3000/api/customers/${customer.id}`, 'put', customer);
+	const response = await request(`http://localhost:3000/api/consultations/${customer.id}`, 'put', customer);
 
     expect(response.status).toBe(400);
 
-    await customerService.deleteCustomer(customer.id);
+    await consultationService.deleteCustomer(customer.id);
 });
 
 test('Shall delete a customer', async function () {
@@ -290,20 +267,20 @@ test('Shall delete a customer', async function () {
         cellphone: generate(),
     };
 
-    const customer = await customerService.saveCustomer(data); 
+    const customer = await consultationService.saveCustomer(data); 
 
-	const response = await request(`http://localhost:3000/api/customers/${customer.id}`, 'delete');
+	const response = await request(`http://localhost:3000/api/consultations/${customer.id}`, 'delete');
 
     expect(response.status).toBe(204);
 
-    const customers = await customerService.getCustomers();
-    expect(customers).toHaveLength(0);
+    const consultations = await consultationService.getconsultations();
+    expect(consultations).toHaveLength(0);
 });
 
 test('Shall not delete a customer that does not exists', async function () {
     const customer = {
         id: 1
     };
-	const response = await request(`http://localhost:3000/api/customers/${customer.id}`, 'delete');
+	const response = await request(`http://localhost:3000/api/consultations/${customer.id}`, 'delete');
     expect(response.status).toBe(404);
 });

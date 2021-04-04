@@ -15,6 +15,7 @@ app.use('/api/', require('./server/routes/user.route'));
 app.use('/api/', require('./server/routes/authentication.route'));
 app.use('/api/', require('./server/routes/privateRouteTest.route'));
 app.use('/api/', require('./server/routes/customer.route'));
+app.use('/api/', require('./server/routes/consultation.route'));
 
 app.use(function (error, req, res, next) {
 	if (error.message === 'Role already exists') {
@@ -49,6 +50,18 @@ app.use(function (error, req, res, next) {
 	}
 	if (error.message === 'Access Denied') {
 		return res.status(401).send(error.message);
+	}
+	if (error.message === 'Consultation shall have a User') {
+		return res.status(400).send(error.message);
+	}
+	if (error.message === 'Consultation shall have a Customer') {
+		return res.status(400).send(error.message);
+	}
+	if (error.message === 'Consultation shall have a Date') {
+		return res.status(400).send(error.message);
+	}
+	if (error.message === 'Consultation not found') {
+		return res.status(404).send(error.message);
 	}
 	
 	res.status(500).send(error.message);

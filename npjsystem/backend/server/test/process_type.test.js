@@ -1,5 +1,6 @@
 const axios = require('axios');
 const processTypeService = require('../services/processType.service');
+const crypto = require('crypto');
 
 const generate = function () {
 	return crypto.randomBytes(20).toString('hex');
@@ -61,7 +62,7 @@ test('Shall update a processType', async function () {
     const processType = await processTypeService.saveProcessType(data); 
 
     processType.name = generate();
-
+    
 	const response = await request(`http://localhost:3000/api/processTypes/${processType.id}`, 'put', processType);
 
     expect(response.status).toBe(204);

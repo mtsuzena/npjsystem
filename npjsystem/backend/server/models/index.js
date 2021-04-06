@@ -29,6 +29,10 @@ db.profile = require("../models/profile.model")(sequelize, Sequelize);
 db.role = require("../models/role.model")(sequelize, Sequelize);
 db.customer = require("../models/customer.model")(sequelize, Sequelize);
 db.consultation = require("../models/consultation.model")(sequelize, Sequelize);
+db.processType = require("../models/processType.model")(sequelize, Sequelize);
+
+// ##
+// RELATIONSHIPS
 
 // USER RELATIONSHIPS
 db.user.belongsTo(db.profile);

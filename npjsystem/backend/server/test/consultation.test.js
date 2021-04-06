@@ -86,7 +86,7 @@ test('Shall save a consultation', async function () {
 	const response = await request('http://localhost:3000/api/consultations', 'post', data);
     expect(response.status).toBe(201);
 
-	const consultation = response.data;
+    const consultation = response.data;
 
     expect(consultation.userId).toBe(data.userId);
     expect(consultation.customerId).toBe(data.customerId);
@@ -182,136 +182,128 @@ test('Shall not save a consultation with inexisting customer', async function ()
     await userService.deleteUser(user.id);
 });
 
-// test('Shall update a customer', async function () {
+test('Shall update a consultation', async function () {
 
-//     const data = { 
-//         name: generate(), 
-//         lastName: generate(),
-//         cep: '05010000',
-//         state: 'SP',
-//         city: 'São Paulo',
-//         street: 'Rua Caiubí',
-//         neighborhoodt: 'Perdizes',
-//         cpf: '197.864.740-90',
-//         rg: '20.911.256-6',
-//         sex: 'feminino',
-//         birthDate: new Date(),
-//         email: 'vmsuzena3@gmail.com', 
-//         password: generate(),
-//         landline: generate(),
-//         cellphone: generate(),
-//     };
+    const customer = await customerService.saveCustomer(
+        { 
+            name: generate(), 
+            lastName: generate(),
+            cep: '05010000',
+            state: 'SP',
+            city: 'São Paulo',
+            street: 'Rua Caiubí',
+            neighborhoodt: 'Perdizes',
+            cpf: '197.864.740-90',
+            rg: '20.911.256-6',
+            sex: 'masculino',
+            birthDate: new Date(),
+            email: 'customer1@gmail.com', 
+            password: generate(),
+            landline: generate(),
+            cellphone: generate(),
+        }
+    );
 
-//     const customer = await consultationService.saveCustomer(data); 
+    const user = await userService.saveUser({ name: generate(), lastName: generate(), email: 'vmsuzena1@gmail.com', password: generate()});
 
-//     customer.name = generate();
-//     customer.lastName = generate();
-//     customer.cep = '60347600'
-//     customer.state = 'CE'
-//     customer.city = 'Fortaleza';
-//     customer.street = 'Rua 3';
-//     customer.cpf = '262.670.970-05';
-//     customer.rg = '28.339.008-6';
-//     customer.sex = 'masculino';
-//     customer.email = 'updated@gmail.com';
-//     customer.landline = '123123123';
-//     customer.cellphone = '333331313';
+    const customer2 = await customerService.saveCustomer(
+        { 
+            name: generate(), 
+            lastName: generate(),
+            cep: '05010000',
+            state: 'SP',
+            city: 'São Paulo',
+            street: 'Rua Caiubí',
+            neighborhoodt: 'Perdizes',
+            cpf: '197.864.740-90',
+            rg: '20.911.256-6',
+            sex: 'masculino',
+            birthDate: new Date(),
+            email: 'customerr2@gmmail.com', 
+            password: generate(),
+            landline: generate(),
+            cellphone: generate(),
+        }
+    );
 
-// 	const response = await request(`http://localhost:3000/api/consultations/${customer.id}`, 'put', customer);
+    const user2 = await userService.saveUser({ name: generate(), lastName: generate(), email: 'user2@gmail.com', password: generate()});
 
-//     expect(response.status).toBe(204);
+    const consultation = await consultationService.saveConsultation({userId: user.id, customerId: customer.id, consultationDate: "2021-04-04T14:01:30.000Z"});
 
-//     const updatedCustomer = await consultationService.getCustomer(customer.id);
+    consultation.userId = user2.id;
+    consultation.customerId = customer2.id;;
+    consultation.consultationDate = "2021-08-04T14:01:30.000Z";
 
-//     expect(updatedCustomer.name).toBe(customer.name);
-//     expect(updatedCustomer.lastName).toBe(customer.lastName);
-//     expect(updatedCustomer.cep).toBe(customer.cep);
-//     expect(updatedCustomer.state).toBe(customer.state);
-//     expect(updatedCustomer.city).toBe(customer.city);
-//     expect(updatedCustomer.street).toBe(customer.street);
-//     expect(updatedCustomer.cpf).toBe(customer.cpf);
-//     expect(updatedCustomer.rg).toBe(customer.rg);
-//     expect(updatedCustomer.sex).toBe(customer.sex);
-//     expect(updatedCustomer.email).toBe(customer.email);
-//     expect(updatedCustomer.landline).toBe(customer.landline);
-//     expect(updatedCustomer.cellphone).toBe(customer.cellphone);
+	const response = await request(`http://localhost:3000/api/consultations/${consultation.id}`, 'put', consultation);
 
-//     await consultationService.deleteCustomer(customer.id);
-// });
+    expect(response.status).toBe(204);
 
-// test('Shall not update a customer that does not exists', async function () {
-//     const customer = {
-//         id: 1
-//     };
-// 	const response = await request(`http://localhost:3000/api/consultations/${customer.id}`, 'put', customer);
+    const updatedConsultation = await consultationService.getConsultation(consultation.id)
 
-//     expect(response.status).toBe(404);
-// });
+    console.log(updatedConsultation.consultationDate);
 
-// test('Shall not update a customer that does not have valid email', async function () {
+    expect(updatedConsultation.userId).toBe(consultation.userId);
+    expect(updatedConsultation.customerId).toBe(consultation.customerId);
+    expect(updatedConsultation.consultationDate).toStrictEqual(consultation.consultationDate);
 
-//     const data = { 
-//         name: generate(), 
-//         lastName: generate(),
-//         cep: '05010000',
-//         state: 'SP',
-//         city: 'São Paulo',
-//         street: 'Rua Caiubí',
-//         neighborhoodt: 'Perdizes',
-//         cpf: '197.864.740-90',
-//         rg: '20.911.256-6',
-//         sex: 'feminino',
-//         birthDate: new Date(),
-//         email: 'vmsuzena3@gmail.com', 
-//         password: generate(),
-//         landline: generate(),
-//         cellphone: generate(),
-//     };
 
-//     const customer = await consultationService.saveCustomer(data); 
+    await consultationService.deleteConsultation(consultation.id);
+    await userService.deleteUser(user.id);
+    await customerService.deleteCustomer(customer.id);
+    await userService.deleteUser(user2.id);
+    await customerService.deleteCustomer(customer2.id);
+});
 
-//     customer.email = generate();
+test('Shall not update a consultation that does not exists', async function () {
+    const consultation = {
+        id: 1
+    };
+	const response = await request(`http://localhost:3000/api/consultations/${consultation.id}`, 'put', consultation);
 
-// 	const response = await request(`http://localhost:3000/api/consultations/${customer.id}`, 'put', customer);
+    expect(response.status).toBe(404);
+});
 
-//     expect(response.status).toBe(400);
 
-//     await consultationService.deleteCustomer(customer.id);
-// });
+test('Shall delete a consultation', async function () {
+    const customer = await customerService.saveCustomer(
+        { 
+            name: generate(), 
+            lastName: generate(),
+            cep: '05010000',
+            state: 'SP',
+            city: 'São Paulo',
+            street: 'Rua Caiubí',
+            neighborhoodt: 'Perdizes',
+            cpf: '197.864.740-90',
+            rg: '20.911.256-6',
+            sex: 'masculino',
+            birthDate: new Date(),
+            email: 'customer1@gmail.com', 
+            password: generate(),
+            landline: generate(),
+            cellphone: generate(),
+        }
+    );
 
-// test('Shall delete a customer', async function () {
-//     const data = { 
-//         name: generate(), 
-//         lastName: generate(),
-//         cep: '05010000',
-//         state: 'SP',
-//         city: 'São Paulo',
-//         street: 'Rua Caiubí',
-//         neighborhoodt: 'Perdizes',
-//         cpf: '197.864.740-90',
-//         rg: '20.911.256-6',
-//         sex: 'feminino',
-//         birthDate: new Date(),
-//         email: 'vmsuzena3@gmail.com', 
-//         password: generate(),
-//         landline: generate(),
-//         cellphone: generate(),
-//     };
+    const user = await userService.saveUser({ name: generate(), lastName: generate(), email: 'vmsuzena1@gmail.com', password: generate()});
 
-//     const customer = await consultationService.saveCustomer(data); 
+    const consultation = await consultationService.saveConsultation({userId: user.id, customerId: customer.id, consultationDate: "2021-04-04T14:01:30.000Z"});
 
-// 	const response = await request(`http://localhost:3000/api/consultations/${customer.id}`, 'delete');
+	const response = await request(`http://localhost:3000/api/consultations/${consultation.id}`, 'delete');
 
-//     expect(response.status).toBe(204);
+    expect(response.status).toBe(204);
 
-//     const consultations = await consultationService.getconsultations();
-//     expect(consultations).toHaveLength(0);
-// });
+    const consultations = await consultationService.getConsultations();
+    expect(consultations).toHaveLength(0);
+    
+    await userService.deleteUser(user.id);
+    await customerService.deleteCustomer(customer.id);
+});
 
-// test('Shall not delete a customer that does not exists', async function () {
-//     const customer = {
-//         id: 1
-//     };
-// 	const response = await request(`http://localhost:3000/api/consultations/${customer.id}`, 'delete');
-//     expect(response.status).toBe(404);
-// });
+test('Shall not delete a customer that does not exists', async function () {
+    const consultation = {
+        id: 1
+    };
+	const response = await request(`http://localhost:3000/api/consultations/${consultation.id}`, 'delete');
+    expect(response.status).toBe(404);
+});

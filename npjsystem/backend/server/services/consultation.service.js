@@ -39,6 +39,17 @@ exports.updateConsultation = async function (id, consultation) {
     const existingConsultation = await consultationData.getConsultation(id);
     if (!existingConsultation) throw new Error('Consultation not found');
 
+    const existingUser = await userService.getUser(consultation.userId);
+    if (!existingUser) throw new Error('User not found');
+
+    const existingCustomer = await customerService.getCustomer(consultation.customerId);
+    if (!existingCustomer) throw new Error('Customer not found');
+
+    const existingConsultationWithDateAndUser = await consultationData.getConsultationByUserAndDate(consultation.userId, consultation.consultationDate);
+    if(existingCustomer.consultationDate != consultation.consultationDate){
+        if (existingConsultationWithDateAndUser) throw new Error('User is already committed to this data');
+    }
+
     existingConsultation.userId = consultation.userId;
     existingConsultation.customerId = consultation.customerId;
     existingConsultation.consultationDate = consultation.consultationDate;

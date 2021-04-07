@@ -67,6 +67,7 @@ exports.updateCustomer = async function (id, customer) {
     existingCustomer.birthDate = customer.birthDate;
     existingCustomer.landline = customer.landline;
     existingCustomer.cellphone = customer.cellphone;
+    existingCustomer.customerActive = customer.customerActive;
     
     if(customer.email){
         isEmailValid = validator.validate(customer.email);

@@ -50,6 +50,10 @@ module.exports = (sequelize, Sequelize) => {
       },
       cellphone: {
         type: Sequelize.STRING,
+      },
+      customerActive: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true
       }
     });
   

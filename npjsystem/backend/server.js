@@ -16,6 +16,8 @@ app.use('/api/', require('./server/routes/authentication.route'));
 app.use('/api/', require('./server/routes/privateRouteTest.route'));
 app.use('/api/', require('./server/routes/customer.route'));
 app.use('/api/', require('./server/routes/consultation.route'));
+app.use('/api/', require('./server/routes/processType.route'));
+app.use('/api/', require('./server/routes/process.route'));
 
 app.use(function (error, req, res, next) {
 	if (error.message === 'Role already exists') {
@@ -65,6 +67,30 @@ app.use(function (error, req, res, next) {
 	}
 	if (error.message === 'User is already committed to this data') {
 		return res.status(409).send(error.message);
+	}
+	if (error.message === 'Process Type shall have a name') {
+		return res.status(400).send(error.message);
+	}
+	if (error.message === 'Process Type not found') {
+		return res.status(404).send(error.message);
+	}
+	if (error.message === 'Process Type name already exists') {
+		return res.status(409).send(error.message);
+	}
+	if (error.message === 'Process shall have a Customer') {
+		return res.status(400).send(error.message);
+	}
+	if (error.message === 'Process shall have a Process Type') {
+		return res.status(400).send(error.message);
+	}
+	if (error.message === 'Process shall have a Number') {
+		return res.status(400).send(error.message);
+	}
+	if (error.message === 'Process Number already exists') {
+		return res.status(409).send(error.message);
+	}
+	if (error.message === 'Process not found') {
+		return res.status(404).send(error.message);
 	}
 	
 	res.status(500).send(error.message);

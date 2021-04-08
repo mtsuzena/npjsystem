@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const userService = require('../services/user.service');
+const verify = require('../helpers/verifyToken');
 
-router.get('/users', async function (req, res, next){
+router.get('/users', verify, async function (req, res, next){
     try {
         const users = await userService.getUsers();
         res.json(users);
@@ -11,7 +12,7 @@ router.get('/users', async function (req, res, next){
     }
 });
 
-router.get('/users/:id', async function (req, res, next){
+router.get('/users/:id', verify, async function (req, res, next){
     try {
         const users = await userService.getUser(req.params.id);
         res.json(users);
@@ -20,7 +21,7 @@ router.get('/users/:id', async function (req, res, next){
     }
 });
 
-router.post('/users', async function (req, res, next){
+router.post('/users', verify, async function (req, res, next){
     const user = req.body;
     try {
         const newUser = await userService.saveUser(user);
@@ -30,7 +31,7 @@ router.post('/users', async function (req, res, next){
     }
 });
 
-router.put('/users/:id', async function (req, res, next){
+router.put('/users/:id', verify, async function (req, res, next){
     const user = req.body;
     try {
         await userService.updateUser(req.params.id, user)
@@ -40,7 +41,7 @@ router.put('/users/:id', async function (req, res, next){
     }
 });
 
-router.delete('/users/:id', async function (req, res, next){
+router.delete('/users/:id', verify, async function (req, res, next){
     try {
         await userService.deleteUser(req.params.id)
         res.status(204).end();

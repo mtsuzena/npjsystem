@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const processService = require('../services/process.service');
+const verify = require('../helpers/verifyToken');
 
-router.get('/processes', async function (req, res, next){
+router.get('/processes', verify, async function (req, res, next){
     try {
         const processes = await processService.getProcesses();
         res.json(processes);
@@ -11,7 +12,7 @@ router.get('/processes', async function (req, res, next){
     }
 });
 
-router.get('/processes/:id', async function (req, res, next){
+router.get('/processes/:id', verify, async function (req, res, next){
     try {
         const process = await processService.getProcess(req.params.id);
         res.json(process);
@@ -20,7 +21,7 @@ router.get('/processes/:id', async function (req, res, next){
     }
 });
 
-router.post('/processes', async function (req, res, next){
+router.post('/processes', verify, async function (req, res, next){
     const process = req.body;
     try {
         const newProcess = await processService.saveProcess(process);
@@ -30,7 +31,7 @@ router.post('/processes', async function (req, res, next){
     }
 });
 
-router.put('/processes/:id', async function (req, res, next){
+router.put('/processes/:id', verify, async function (req, res, next){
     const process = req.body;
     try {
         await processService.updateProcess(req.params.id, process)
@@ -40,7 +41,7 @@ router.put('/processes/:id', async function (req, res, next){
     }
 });
 
-router.delete('/processes/:id', async function (req, res, next){
+router.delete('/processes/:id', verify, async function (req, res, next){
     try {
         await processService.deleteProcess(req.params.id)
         res.status(204).end();

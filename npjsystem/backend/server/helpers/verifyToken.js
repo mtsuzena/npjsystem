@@ -3,7 +3,6 @@ const authConfig = require('../config/auth.config')
 
 module.exports = function (req, res, next){
     const token = req.header('auth-token');
-    // if (!token) throw new Error('Access Denied');
     if (!token) return res.status(401).send('Access Denied');
 
     try {

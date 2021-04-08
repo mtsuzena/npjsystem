@@ -4,6 +4,7 @@ const customerService = require('../services/customer.service');
 const userService = require('../services/user.service');
 const processTypeService = require('../services/processType.service');
 const processService = require('../services/process.service');
+const db = require("../models");
 
 const generate = function () {
 	return crypto.randomBytes(20).toString('hex');
@@ -71,11 +72,22 @@ processDataLoaderAll = async function(){
 }
 
 processDataCleanerAll = async function(){
-    const processes = await processService.getProcesses();
-    for (process in processes){
-        await processService.deleteProcess(process.id);
-    };
+    db.process.destroy({
+        where: {}
+    });
+    db.customer.destroy({
+        where: {}
+    });
+    // db.user.destroy({
+    //     where: {}
+    // });
+    // db.processType.destroy({
+    //     where: {}
+    // });
+    
 }
+
+
 
 
 

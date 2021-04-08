@@ -18,6 +18,7 @@ app.use('/api/', require('./server/routes/customer.route'));
 app.use('/api/', require('./server/routes/consultation.route'));
 app.use('/api/', require('./server/routes/processType.route'));
 app.use('/api/', require('./server/routes/process.route'));
+app.use('/api/', require('./server/routes/processChecklist.route'));
 
 app.use(function (error, req, res, next) {
 	if (error.message === 'Role already exists') {
@@ -92,6 +93,15 @@ app.use(function (error, req, res, next) {
 	if (error.message === 'Process not found') {
 		return res.status(404).send(error.message);
 	}
+	if (error.message === 'ProcessChecklist shall have a Process') {
+		return res.status(400).send(error.message);
+	}
+	if (error.message === 'ProcessChecklist shall have a Name') {
+		return res.status(400).send(error.message);
+	}
+	if (error.message === 'ProcessChecklist not found') {
+		return res.status(404).send(error.message);
+	}
 	
 	res.status(500).send(error.message);
 });
@@ -104,4 +114,3 @@ db.sequelize.sync({force: true}).then(() => {
 });
 
 app.listen(3000, () => console.log('Server up and running'));
-

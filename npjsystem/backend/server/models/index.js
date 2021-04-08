@@ -30,6 +30,7 @@ db.role = require("../models/role.model")(sequelize, Sequelize);
 db.customer = require("../models/customer.model")(sequelize, Sequelize);
 db.consultation = require("../models/consultation.model")(sequelize, Sequelize);
 db.processType = require("../models/processType.model")(sequelize, Sequelize);
+db.processChecklist = require("../models/processChecklist.model")(sequelize, Sequelize);
 db.process = require("../models/process.model")(sequelize, Sequelize);
 
 // ##
@@ -54,6 +55,11 @@ db.customer.hasMany(db.process);
 db.process.belongsTo(db.user);
 db.process.belongsTo(db.processType);
 db.process.belongsTo(db.customer);
+db.process.hasMany(db.processChecklist);
+
+
+// PROCESS CHECKLIST RELATIONSHIPS
+db.processChecklist.belongsTo(db.process);
 
 
 // CONSULTATION RELATIONSHIPS

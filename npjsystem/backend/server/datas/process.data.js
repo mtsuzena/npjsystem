@@ -12,6 +12,9 @@ exports.getProcesses = function () {
             },
             {
                 model: db.processType
+            },
+            {
+                model: db.processChecklist
             }
         ]
     });
@@ -28,6 +31,9 @@ exports.getProcess = function (id) {
             },
             {
                 model: db.processType
+            },
+            {
+                model: db.processChecklist
             }
         ]
     });

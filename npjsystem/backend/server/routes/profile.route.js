@@ -2,8 +2,9 @@ const e = require('express');
 const express = require('express');
 const router = express.Router();
 const profileService = require('../services/profile.service');
+const verify = require('../helpers/verifyToken');
 
-router.get('/profiles', async function (req, res, next){
+router.get('/profiles', verify, async function (req, res, next){
     try {
         const profiles = await profileService.getProfiles();
         res.json(profiles);
@@ -12,7 +13,7 @@ router.get('/profiles', async function (req, res, next){
     }
 });
 
-router.get('/profiles/:id', async function (req, res, next){
+router.get('/profiles/:id', verify, async function (req, res, next){
     try {
         const profiles = await profileService.getProfile(req.params.id);
         res.json(profiles);
@@ -21,7 +22,7 @@ router.get('/profiles/:id', async function (req, res, next){
     }
 });
 
-router.post('/profiles', async function (req, res, next){
+router.post('/profiles', verify, async function (req, res, next){
     const profile = req.body;
     try {
         const newProfile = await profileService.saveProfile(profile)
@@ -31,7 +32,7 @@ router.post('/profiles', async function (req, res, next){
     }
 });
 
-router.put('/profiles/:id', async function (req, res, next){
+router.put('/profiles/:id', verify, async function (req, res, next){
     const profile = req.body;
     try {
         await profileService.updateProfile(req.params.id, profile)
@@ -41,7 +42,7 @@ router.put('/profiles/:id', async function (req, res, next){
     }
 });
 
-router.delete('/profiles/:id', async function (req, res, next){
+router.delete('/profiles/:id', verify, async function (req, res, next){
     try {
         await profileService.deleteProfile(req.params.id)
         res.status(204).end();

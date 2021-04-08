@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const customerService = require('../services/customer.service');
+const verify = require('../helpers/verifyToken');
 
-router.get('/customers', async function (req, res, next){
+router.get('/customers', verify, async function (req, res, next){
     try {
         const customers = await customerService.getCustomers();
         res.json(customers);
@@ -11,7 +12,7 @@ router.get('/customers', async function (req, res, next){
     }
 });
 
-router.get('/customers/:id', async function (req, res, next){
+router.get('/customers/:id', verify, async function (req, res, next){
     try {
         const customers = await customerService.getCustomer(req.params.id);
         res.json(customers);
@@ -20,7 +21,7 @@ router.get('/customers/:id', async function (req, res, next){
     }
 });
 
-router.post('/customers', async function (req, res, next){
+router.post('/customers', verify, async function (req, res, next){
     const customer = req.body;
     try {
         const newCustomer = await customerService.saveCustomer(customer);
@@ -30,7 +31,7 @@ router.post('/customers', async function (req, res, next){
     }
 });
 
-router.put('/customers/:id', async function (req, res, next){
+router.put('/customers/:id', verify, async function (req, res, next){
     const customer = req.body;
     try {
         await customerService.updateCustomer(req.params.id, customer)
@@ -40,7 +41,7 @@ router.put('/customers/:id', async function (req, res, next){
     }
 });
 
-router.delete('/customers/:id', async function (req, res, next){
+router.delete('/customers/:id', verify, async function (req, res, next){
     try {
         await customerService.deleteCustomer(req.params.id)
         res.status(204).end();

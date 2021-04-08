@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const processChecklistService = require('../services/processChecklist.service');
+const verify = require('../helpers/verifyToken');
 
-router.get('/processChecklists', async function (req, res, next){
+router.get('/processChecklists', verify, async function (req, res, next){
     try {
         const processChecklists = await processChecklistService.getProcessChecklists();
         res.json(processChecklists);
@@ -11,7 +12,7 @@ router.get('/processChecklists', async function (req, res, next){
     }
 });
 
-router.get('/processChecklists/:id', async function (req, res, next){
+router.get('/processChecklists/:id', verify, async function (req, res, next){
     try {
         const processChecklist = await processChecklistService.getProcessChecklist(req.params.id);
         res.json(processChecklist);
@@ -20,7 +21,7 @@ router.get('/processChecklists/:id', async function (req, res, next){
     }
 });
 
-router.post('/processChecklists', async function (req, res, next){
+router.post('/processChecklists', verify, async function (req, res, next){
     const processChecklist = req.body;
     try {
         const newProcessChecklist = await processChecklistService.saveProcessChecklist(processChecklist);
@@ -30,7 +31,7 @@ router.post('/processChecklists', async function (req, res, next){
     }
 });
 
-router.put('/processChecklists/:id', async function (req, res, next){
+router.put('/processChecklists/:id', verify, async function (req, res, next){
     const processChecklist = req.body;
     try {
         await processChecklistService.updateProcessChecklist(req.params.id, processChecklist)
@@ -40,7 +41,7 @@ router.put('/processChecklists/:id', async function (req, res, next){
     }
 });
 
-router.delete('/processChecklists/:id', async function (req, res, next){
+router.delete('/processChecklists/:id', verify, async function (req, res, next){
     try {
         await processChecklistService.deleteProcessChecklist(req.params.id)
         res.status(204).end();

@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const userService = require('./server/services/user.service');
 
 app.use(function(req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -13,7 +14,6 @@ app.use('/api/', require('./server/routes/role.route'));
 app.use('/api/', require('./server/routes/profile.route'));
 app.use('/api/', require('./server/routes/user.route'));
 app.use('/api/', require('./server/routes/authentication.route'));
-app.use('/api/', require('./server/routes/privateRouteTest.route'));
 app.use('/api/', require('./server/routes/customer.route'));
 app.use('/api/', require('./server/routes/consultation.route'));
 app.use('/api/', require('./server/routes/processType.route'));
@@ -110,7 +110,19 @@ const db = require("./server/models");
 
 db.sequelize.sync({force: true}).then(() => {
   console.log('Drop and Resync Database with { force: true }');
+  userService.saveUser({
+	name: "Mateuss",
+	lastName: "Suzena",
+	email: "vmsuzena5@gmail.com",
+	password: "123456"
+	}).then(() => {
+		console.log('User inserido')
+	});
   initial();
 });
 
+
+
 app.listen(3000, () => console.log('Server up and running'));
+
+

@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const processTypeService = require('../services/processType.service');
+const verify = require('../helpers/verifyToken');
 
-router.get('/processTypes', async function (req, res, next){
+router.get('/processTypes', verify, async function (req, res, next){
     try {
         const processTypes = await processTypeService.getProcessTypes();
         res.json(processTypes);
@@ -11,7 +12,7 @@ router.get('/processTypes', async function (req, res, next){
     }
 });
 
-router.get('/processTypes/:id', async function (req, res, next){
+router.get('/processTypes/:id', verify, async function (req, res, next){
     try {
         const processType = await processTypeService.getProcessType(req.params.id);
         res.json(processType);
@@ -20,7 +21,7 @@ router.get('/processTypes/:id', async function (req, res, next){
     }
 });
 
-router.post('/processTypes', async function (req, res, next){
+router.post('/processTypes', verify, async function (req, res, next){
     const processType = req.body;
     try {
         const newProcessType = await processTypeService.saveProcessType(processType);
@@ -30,7 +31,7 @@ router.post('/processTypes', async function (req, res, next){
     }
 });
 
-router.put('/processTypes/:id', async function (req, res, next){
+router.put('/processTypes/:id', verify, async function (req, res, next){
     const processType = req.body;
     try {
         await processTypeService.updateProcessType(req.params.id, processType)
@@ -40,7 +41,7 @@ router.put('/processTypes/:id', async function (req, res, next){
     }
 });
 
-router.delete('/processTypes/:id', async function (req, res, next){
+router.delete('/processTypes/:id', verify, async function (req, res, next){
     try {
         await processTypeService.deleteProcessType(req.params.id)
         res.status(204).end();

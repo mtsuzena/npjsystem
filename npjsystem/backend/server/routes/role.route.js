@@ -2,8 +2,9 @@ const e = require('express');
 const express = require('express');
 const router = express.Router();
 const roleService = require('../services/role.service');
+const verify = require('../helpers/verifyToken');
 
-router.get('/roles', async function (req, res, next){
+router.get('/roles', verify, async function (req, res, next){
     try {
         const roles = await roleService.getRoles();
         res.json(roles);
@@ -12,7 +13,7 @@ router.get('/roles', async function (req, res, next){
     }
 });
 
-router.get('/roles/:id', async function (req, res, next){
+router.get('/roles/:id', verify, async function (req, res, next){
     try {
         const roles = await roleService.getRole(req.params.id);
         res.json(roles);
@@ -21,7 +22,7 @@ router.get('/roles/:id', async function (req, res, next){
     }
 });
 
-router.post('/roles', async function (req, res, next){
+router.post('/roles', verify, async function (req, res, next){
     const role = req.body;
     try {
         const newRole = await roleService.saveRole(role)
@@ -31,7 +32,7 @@ router.post('/roles', async function (req, res, next){
     }
 });
 
-router.put('/roles/:id', async function (req, res, next){
+router.put('/roles/:id', verify, async function (req, res, next){
     const role = req.body;
     try {
         await roleService.updateRole(req.params.id, role)
@@ -41,7 +42,7 @@ router.put('/roles/:id', async function (req, res, next){
     }
 });
 
-router.delete('/roles/:id', async function (req, res, next){
+router.delete('/roles/:id', verify, async function (req, res, next){
     try {
         await roleService.deleteRole(req.params.id)
         res.status(204).end();

@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const consultationService = require('../services/consultation.service');
+const verify = require('../helpers/verifyToken');
 
-router.get('/consultations', async function (req, res, next){
+router.get('/consultations', verify, async function (req, res, next){
     try {
         const consultations = await consultationService.getConsultations();
         res.json(consultations);
@@ -11,7 +12,7 @@ router.get('/consultations', async function (req, res, next){
     }
 });
 
-router.get('/consultations/:id', async function (req, res, next){
+router.get('/consultations/:id', verify, async function (req, res, next){
     try {
         const consultations = await consultationService.getConsultation(req.params.id);
         res.json(consultations);
@@ -20,7 +21,7 @@ router.get('/consultations/:id', async function (req, res, next){
     }
 });
 
-router.post('/consultations', async function (req, res, next){
+router.post('/consultations', verify, async function (req, res, next){
     const consultation = req.body;
     try {
         const newConsultation = await consultationService.saveConsultation(consultation);
@@ -30,7 +31,7 @@ router.post('/consultations', async function (req, res, next){
     }
 });
 
-router.put('/consultations/:id', async function (req, res, next){
+router.put('/consultations/:id', verify, async function (req, res, next){
     const consultation = req.body;
     try {
         await consultationService.updateConsultation(req.params.id, consultation)
@@ -40,7 +41,7 @@ router.put('/consultations/:id', async function (req, res, next){
     }
 });
 
-router.delete('/consultations/:id', async function (req, res, next){
+router.delete('/consultations/:id', verify, async function (req, res, next){
     try {
         await consultationService.deleteConsultation(req.params.id)
         res.status(204).end();

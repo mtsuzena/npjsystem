@@ -23,8 +23,6 @@ exports.getCustomerByEmail = async function(email){
 exports.saveCustomer = async function (customer) {
 
     if(customer.email){
-        console.log('Tem Email no CUSTOMER');
-
         isEmailValid = validator.validate(customer.email);
         if (!isEmailValid) throw new Error('Email invalid');
 

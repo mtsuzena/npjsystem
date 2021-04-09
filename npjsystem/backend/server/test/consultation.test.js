@@ -3,17 +3,18 @@ const crypto = require('crypto');
 const consultationService = require('../services/consultation.service.js');
 const customerService = require('../services/customer.service.js');
 const userService = require('../services/user.service.js');
+const cfgs = require('../config/auth.config');
 
 const generate = function () {
 	return crypto.randomBytes(20).toString('hex');
 };
 
 const request = function (url, method, data) {
-	return axios({ url, method, data, validateStatus: false });
+	return axios({ url, method, data, headers: {'auth-token': cfgs.JWT_USER}, validateStatus: false });
 };
 
 test('Shall get consultations', async function () {
-    // given - dado que
+    // given - dado q
     const customer = await customerService.saveCustomer(
         { 
             name: generate(), 

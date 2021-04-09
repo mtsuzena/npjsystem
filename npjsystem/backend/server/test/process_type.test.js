@@ -1,13 +1,14 @@
 const axios = require('axios');
 const processTypeService = require('../services/processType.service');
 const crypto = require('crypto');
+const cfgs = require('../config/auth.config');
 
 const generate = function () {
 	return crypto.randomBytes(20).toString('hex');
 };
 
 const request = function (url, method, data) {
-	return axios({ url, method, data, validateStatus: false });
+	return axios({ url, method, data, headers: {'auth-token': cfgs.JWT_USER}, validateStatus: false });
 };
 
 test('Shall get processTypes', async function () {

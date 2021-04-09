@@ -214,7 +214,9 @@ test('Shall update a customer', async function () {
 
     expect(response.status).toBe(204);
 
-    const updatedCustomer = await customerService.getCustomer(customer.id);
+    const updatedCustomerGet = await request(`http://localhost:3000/api/customers/${customer.id}`, 'get');
+
+    const updatedCustomer = updatedCustomerGet.data;
 
     expect(updatedCustomer.name).toBe(customer.name);
     expect(updatedCustomer.lastName).toBe(customer.lastName);

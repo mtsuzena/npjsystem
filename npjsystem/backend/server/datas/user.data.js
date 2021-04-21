@@ -27,7 +27,15 @@ exports.getUserByEmail = function (uemail) {
     return User.findOne({
         where: {
             email: uemail
-        }
+        },
+        include: [{
+            model: db.profile,
+            include: {
+                model: db.role,
+                attributes: ['name'],
+                through: { attributes: []}
+            }
+        }]
     });
 };
 

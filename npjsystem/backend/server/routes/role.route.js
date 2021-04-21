@@ -28,6 +28,7 @@ router.post('/roles', verify, async function (req, res, next){
         const newRole = await roleService.saveRole(role)
         res.status(201).json(newRole);
     } catch (error) {
+        console.log(error);
         next(error);
     }
 });

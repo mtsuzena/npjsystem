@@ -115,6 +115,14 @@ exports.check = function(route, method, roles){
             auth = authenticator(roles, db.ROLES.DELETE_CONSULTATION);
         }
     }
+    else if(route.indexOf("systemLogs") > -1){
+        if(method == "GET"){
+            auth = authenticator(roles, db.ROLES.READ_SYSTEM_LOG);
+        }
+        else if(method == "POST"){
+            auth = authenticator(roles, db.ROLES.CREATE_SYSTEM_LOG);
+        }
+    }
 
     if(auth){
         return true;

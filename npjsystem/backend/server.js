@@ -109,19 +109,6 @@ app.use(function (error, req, res, next) {
 
 const db = require("./server/models");
 
-// db.sequelize.sync({force: true}).then(() => {
-//   console.log('Drop and Resync Database with { force: true }');
-//   userService.saveUser({
-// 	name: "Mateuss",
-// 	lastName: "Suzena",
-// 	email: "vmsuzena5@gmail.com",
-// 	password: "admin"
-// 	}).then(() => {
-// 		console.log('User inserido')
-// 	});
-//   initial();
-// });
-
 db.sequelize.sync();
 // db.sequelize.sync({force: true});
 

@@ -30,6 +30,8 @@ INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (529, 'CREATE_CONSU
 INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (530, 'READ_CONSULTATION', (SELECT NOW()), (SELECT NOW()));
 INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (531, 'UPDATE_CONSULTATION', (SELECT NOW()), (SELECT NOW()));
 INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (532, 'DELETE_CONSULTATION', (SELECT NOW()), (SELECT NOW()));
+INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (533, 'CREATE_SYSTEM_LOG', (SELECT NOW()), (SELECT NOW()));
+INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (534, 'READ_SYSTEM_LOG', (SELECT NOW()), (SELECT NOW()));
 
 INSERT INTO profiles(id, name, description, "createdAt", "updatedAt") VALUES (500, 'ADMIN', 'System Admin', (SELECT NOW()), (SELECT NOW()));
 
@@ -65,5 +67,7 @@ insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") value
 insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 500, 530);
 insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 500, 531);
 insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 500, 532);
+insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 500, 533);
+insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 500, 534);
 
 insert into users (id, "name", email, "password", "userActive", "profileId", "createdAt", "updatedAt") values (100000, 'Admin', 'admin@gmail.com', '$2a$10$efMdAjZunBI8XnV.UZ8OW.0BQqDOa3sXeXcWboGy8ejlisBtBPEom', true, 500, (SELECT NOW()), (SELECT NOW()));

@@ -6,7 +6,10 @@ const authenticationService = require('../services/authentication.service');
 router.post('/login', async function (req, res, next){
     try {
         const token = await authenticationService.login(req.body);
-        res.header('auth-token', token).send(token);
+        res.header('auth-token', token).send({
+            token: token,
+            message: "Successfully Authenticated"
+        });
         
     } catch (error) {
         next(error);

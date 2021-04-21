@@ -22,106 +22,107 @@ app.use('/api/', require('./server/routes/processChecklist.route'));
 
 app.use(function (error, req, res, next) {
 	if (error.message === 'Role already exists') {
-		return res.status(409).send(error.message);
+		return res.status(409).send({errorMessage: error.message});
 	}
 	if (error.message === 'Role not found') {
-		return res.status(404).send(error.message);
+		return res.status(404).send({errorMessage: error.message});
 	}
 	if (error.message === 'Customer not found') {
-		return res.status(404).send(error.message);
+		return res.status(404).send({errorMessage: error.message});
 	}
 	if (error.message === 'Profile already exists') {
-		return res.status(409).send(error.message);
+		return res.status(409).send({errorMessage: error.message});
 	}
 	if (error.message === 'Profile not found') {
-		return res.status(404).send(error.message);
+		return res.status(404).send({errorMessage: error.message});
 	}
 	if (error.message === 'Email already exists') {
-		return res.status(409).send(error.message);
+		return res.status(409).send({errorMessage: error.message});
 	}
 	if (error.message === 'User not found') {
-		return res.status(404).send(error.message);
+		return res.status(404).send({errorMessage: error.message});
 	}
 	if (error.message === 'Email or password is wrong') {
-		return res.status(400).send(error.message);
+		return res.status(400).send({errorMessage: error.message});
 	}
 	if (error.message === 'Email or password is wrong') {
-		return res.status(400).send(error.message);
+		return res.status(400).send({errorMessage: error.message});
 	}
 	if (error.message === 'Email invalid') {
-		return res.status(400).send(error.message);
+		return res.status(400).send({errorMessage: error.message});
 	}
 	if (error.message === 'Access Denied') {
-		return res.status(401).send(error.message);
+		return res.status(401).send({errorMessage: error.message});
 	}
 	if (error.message === 'Consultation shall have a User') {
-		return res.status(400).send(error.message);
+		return res.status(400).send({errorMessage: error.message});
 	}
 	if (error.message === 'Consultation shall have a Customer') {
-		return res.status(400).send(error.message);
+		return res.status(400).send({errorMessage: error.message});
 	}
 	if (error.message === 'Consultation shall have a Date') {
-		return res.status(400).send(error.message);
+		return res.status(400).send({errorMessage: error.message});
 	}
 	if (error.message === 'Consultation not found') {
-		return res.status(404).send(error.message);
+		return res.status(404).send({errorMessage: error.message});
 	}
 	if (error.message === 'User is already committed to this data') {
-		return res.status(409).send(error.message);
+		return res.status(409).send({errorMessage: error.message});
 	}
 	if (error.message === 'Process Type shall have a name') {
-		return res.status(400).send(error.message);
+		return res.status(400).send({errorMessage: error.message});
 	}
 	if (error.message === 'Process Type not found') {
-		return res.status(404).send(error.message);
+		return res.status(404).send({errorMessage: error.message});
 	}
 	if (error.message === 'Process Type name already exists') {
-		return res.status(409).send(error.message);
+		return res.status(409).send({errorMessage: error.message});
 	}
 	if (error.message === 'Process shall have a Customer') {
-		return res.status(400).send(error.message);
+		return res.status(400).send({errorMessage: error.message});
 	}
 	if (error.message === 'Process shall have a Process Type') {
-		return res.status(400).send(error.message);
+		return res.status(400).send({errorMessage: error.message});
 	}
 	if (error.message === 'Process shall have a Number') {
-		return res.status(400).send(error.message);
+		return res.status(400).send({errorMessage: error.message});
 	}
 	if (error.message === 'Process Number already exists') {
-		return res.status(409).send(error.message);
+		return res.status(409).send({errorMessage: error.message});
 	}
 	if (error.message === 'Process not found') {
-		return res.status(404).send(error.message);
+		return res.status(404).send({errorMessage: error.message});
 	}
 	if (error.message === 'ProcessChecklist shall have a Process') {
-		return res.status(400).send(error.message);
+		return res.status(400).send({errorMessage: error.message});
 	}
 	if (error.message === 'ProcessChecklist shall have a Name') {
-		return res.status(400).send(error.message);
+		return res.status(400).send({errorMessage: error.message});
 	}
 	if (error.message === 'ProcessChecklist not found') {
-		return res.status(404).send(error.message);
+		return res.status(404).send({errorMessage: error.message});
 	}
 	
-	res.status(500).send(error.message);
+	res.status(500).send({errorMessage: error.message});
 });
 
 const db = require("./server/models");
 
-db.sequelize.sync({force: true}).then(() => {
-  console.log('Drop and Resync Database with { force: true }');
-  userService.saveUser({
-	name: "Mateuss",
-	lastName: "Suzena",
-	email: "vmsuzena5@gmail.com",
-	password: "123456"
-	}).then(() => {
-		console.log('User inserido')
-	});
-  initial();
-});
+// db.sequelize.sync({force: true}).then(() => {
+//   console.log('Drop and Resync Database with { force: true }');
+//   userService.saveUser({
+// 	name: "Mateuss",
+// 	lastName: "Suzena",
+// 	email: "vmsuzena5@gmail.com",
+// 	password: "admin"
+// 	}).then(() => {
+// 		console.log('User inserido')
+// 	});
+//   initial();
+// });
 
-
+db.sequelize.sync();
+// db.sequelize.sync({force: true});
 
 app.listen(3000, () => console.log('Server up and running'));
 

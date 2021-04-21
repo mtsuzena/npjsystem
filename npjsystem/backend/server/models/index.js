@@ -32,6 +32,7 @@ db.consultation = require("../models/consultation.model")(sequelize, Sequelize);
 db.processType = require("../models/processType.model")(sequelize, Sequelize);
 db.processChecklist = require("../models/processChecklist.model")(sequelize, Sequelize);
 db.process = require("../models/process.model")(sequelize, Sequelize);
+db.systemLog = require("../models/systemLog.model")(sequelize, Sequelize);
 
 // ##
 // RELATIONSHIPS
@@ -40,7 +41,10 @@ db.process = require("../models/process.model")(sequelize, Sequelize);
 db.user.belongsTo(db.profile);
 db.user.hasMany(db.consultation);
 db.user.hasMany(db.process);
+db.user.hasMany(db.systemLog);
 
+// SYSTEM LOGS RELATIONSHIPS
+db.systemLog.belongsTo(db.user);
 
 // PROCESS_TYPE RELATIONSHIPS
 db.processType.hasMany(db.process);
@@ -84,7 +88,7 @@ db.role.belongsToMany(db.profile, {
 });
 
 
-
+// ROLES
 db.ROLES = {
   CREATE_ROLE: "CREATE_ROLE",
   READ_ROLE: "READ_ROLE",

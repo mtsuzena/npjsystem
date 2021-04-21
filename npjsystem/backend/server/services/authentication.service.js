@@ -1,8 +1,8 @@
 const userService = require('../services/user.service.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const authConfig = require('../config/auth.config')
-
+const authConfig = require('../config/auth.config');
+const systemLogService = require('../services/systemLog.service');
 
 exports.login = async function (login) {
     //Checking if the email exists
@@ -22,6 +22,12 @@ exports.login = async function (login) {
     }else{
         token = jwt.sign({id: user.id, roles: user.profile.roles}, authConfig.TOKEN_SECRET, {expiresIn: "1d"});
     }
+
+    systemLogService.saveSystemLog({
+        action: "LOGIN",
+        description: "Usuário " + user.name + " " + "(id: " + user.id + ", email: " + user.email + ") realizou login no sistema",
+        userId: user.id
+    });
 
     return token;
 }

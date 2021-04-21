@@ -6,9 +6,6 @@ exports.getConsultations = function () {
         include: [
             {
                 model: db.user,
-                // include: {
-                //     model: db.role
-                // }
             },
             {
                 model: db.customer

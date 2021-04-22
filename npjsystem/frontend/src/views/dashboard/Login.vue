@@ -93,9 +93,8 @@
         }
         try {
           const response = await axios.post(configs.API_LOGIN, user)
-          const verified = jwt.decode(response.data.token)
-          // const verified = jwt.verify(response.data, "NPJSYSTEM-98asdhj319fdwjnn-key");
-
+          const token = response.data.token
+          const verified = jwt.decode(token)
           const get_user = await axios.get(configs.API_GET_USER + '/' + verified.id)
 
           this.$router.push({ name: 'Painel', params: { user: get_user.data, userJwt: response.data } })

@@ -1,4 +1,9 @@
 <template>
+  <v-form
+  ref="form"
+  v-model="valid"
+  lazy-validation
+  >
   <v-row justify="center">
     <v-dialog
       v-model="dialog"
@@ -24,6 +29,7 @@
                 <v-text-field
                   label="Email*"
                   type="email"
+                  :rules="emailRules"
                   required
                   v-model="people.email"
                 />
@@ -54,7 +60,6 @@
                   v-model="people.responsible"
                 />
               </v-col>
-              {{ people }}
             </v-row>
           </v-container>
         </v-card-text>
@@ -70,7 +75,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="save"
+            @click="save(); validate();"
           >
             Salvar
           </v-btn>
@@ -79,6 +84,7 @@
 
     </v-dialog>
   </v-row>
+  </v-form>
 </template>
 
 <script>
@@ -101,6 +107,11 @@ export default {
   data() {
     return {
       dialog: this.open,
+      valid: true,
+      emailRules: [
+        v => !!v || 'Preencha',
+        v => /.+@.+\..+/.test(v) || 'Insira um e-mail valido',
+      ],
       hour: '',
       people: {
         date: this.dateCalender,
@@ -112,12 +123,17 @@ export default {
     }
   },
   methods: {
+    validate () {
+      this.$refs.form.validate()
+    },
     close() {
       this.$emit("closeDialog")
     },
     save() {
-      this.people.date.setHours(parseInt(this.hour.substring(0, 2)), parseInt(this.hour.substring(7, this.hour.length - 2)));
-      //JSON.stringify(this.carrinho)
+      this.people.date.setHours(
+        parseInt(this.hour.substring(0, 2)),
+        parseInt(this.hour.substring(7, this.hour.length - 2))
+      );
       this.$emit("saveDialog", this.people)
       this.close()
     }

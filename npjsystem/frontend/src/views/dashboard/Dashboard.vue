@@ -5,7 +5,6 @@
     tag="section"
     class="grey lighten-5 mb-6"
   >
-
     <v-row
       align="start"
       justify="space-between"
@@ -46,7 +45,7 @@
           color="success"
           icon="mdi-check"
           title="Processos finalizados"
-          value="184"
+          value=""
         />
       </v-col>
 
@@ -63,8 +62,17 @@
         />
       </v-col>
     </v-row>
-    <v-divider class="mb-3" />
-      <div>
+    <v-divider class="mb-3"/>
+
+    <dialog-calender
+      v-if="calenderDateSelected != null && dialog != false"
+      :dateCalender="calenderDateSelected"
+      :open="dialog"
+      @closeDialog="closeDialog"
+      @saveDialog="saveObject"
+    ></dialog-calender>
+
+    <div>
       <v-sheet
         tile
         height="54"
@@ -85,7 +93,7 @@
           hide-details
           class="ma-2"
           label="type"
-        ></v-select>
+        />
         <v-select
           v-model="mode"
           :items="modes"
@@ -94,7 +102,7 @@
           hide-details
           label="event-overlap-mode"
           class="ma-2"
-        ></v-select>
+        />
         <v-select
           v-model="weekday"
           :items="weekdays"
@@ -103,8 +111,8 @@
           hide-details
           label="weekdays"
           class="ma-2"
-        ></v-select>
-        <v-spacer></v-spacer>
+        />
+        <v-spacer/>
         <v-btn
           icon
           class="ma-2"
@@ -123,81 +131,121 @@
           :event-overlap-mode="mode"
           :event-overlap-threshold="30"
           :event-color="getEventColor"
-          @change="getEvents"
-        ></v-calendar>
+          :dark="true"
+          @click:date="openDialogCalender"
+        />
       </v-sheet>
     </div>
   </v-container>
 </template>
 
 <script>
-  const configs = require('../../config/configs')
-  import axios from 'axios'
-  export default {
-    name: 'DashboardDashboard',
+import axios from 'axios'
 
-    data () {
-      return {
-        userJwt: '',
-        user: {},
-        type: 'month',
-        types: ['mês', 'semana', 'dia', '4 dias'],
-        mode: 'stack',
-        modes: ['stack', 'column'],
-        weekday: [0, 1, 2, 3, 4, 5, 6],
-        weekdays: [
-          { text: 'Sun - Sat', value: [0, 1, 2, 3, 4, 5, 6] },
-          { text: 'Mon - Sun', value: [1, 2, 3, 4, 5, 6, 0] },
-          { text: 'Mon - Fri', value: [1, 2, 3, 4, 5] },
-          { text: 'Mon, Wed, Fri', value: [1, 3, 5] },
-        ],
-        value: '',
-        events: [],
-        colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-        names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
+const configs = require('../../config/configs')
+export default {
+  name: 'DashboardDashboard',
+  components: {
+    DialogCalender: () => import('./components/DialogCalender'),
+  },
+
+  data() {
+    return {
+      userJwt: '',
+      user: {},
+      markeds: [],
+      calenderDateSelected: Date,
+      dialog: false,
+      type: 'month',
+      types: ['mês', 'semana', 'dia', '4 dias'],
+      mode: 'stack',
+      modes: ['stack', 'column'],
+      weekday: [0, 1, 2, 3, 4, 5, 6],
+      weekdays: [
+        {text: 'Domingo - Sábado', value: [0, 1, 2, 3, 4, 5, 6]},
+        {text: 'Segunda-Feira - Domingo', value: [1, 2, 3, 4, 5, 6, 0]},
+        {text: 'Segunda-Feira - Sexta-Feira', value: [1, 2, 3, 4, 5]},
+        {text: 'Segunda-Feira, Quarta-Feira, Sexta-Feira', value: [1, 3, 5]},
+      ],
+      value: '',
+      events: [],
+      colors: ['blue', 'indigo', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
+      names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
+    }
+  },
+  mounted() {
+    this.user = this.$route.params.user
+    this.userJwt = this.$route.params.userJwt
+  },
+  methods: {
+    openDialogCalender({date}) {
+      this.calenderDateSelected = new Date(`${date} 00:00:00`)
+      this.dialog = true
+    },
+    closeDialog() {
+      this.dialog = false
+    },
+    saveObject(e) {
+      const {date, name, email, phone, responsible} = e;
+      this.markeds.push({date, name, email, phone, responsible});
+    },
+    complete(index) {
+      this.list[index] = !this.list[index]
+    },
+    getEvents({start, end}) {
+      const events = []
+
+      const min = new Date(`${start.date}T00:00:00`)
+      const max = new Date(`${end.date}T23:59:59`)
+      const days = (max.getTime() - min.getTime()) / 86400000
+      const eventCount = this.rnd(days, days + 20)
+
+      for (let i = 0; i < eventCount; i++) {
+        const allDay = this.rnd(0, 3) === 0
+        const firstTimestamp = this.rnd(min.getTime(), max.getTime())
+        const first = new Date('2021-04-01 00:00:00')
+        const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
+        const second = new Date('2021-04-20 23:00:00')
+
+        events.push({
+          name: 'gdd',
+          start: first,
+          //end: second,
+          color: this.colors[this.rnd(0, this.colors.length - 1)],
+          timed: !allDay
+        })
       }
+      this.events = events
     },
-
-    mounted() {
-        this.user = this.$route.params.user;
-        this.userJwt = this.$route.params.userJwt;
+    getEventColor(event) {
+      return event.color
     },
-    methods: {
-      complete (index) {
-        this.list[index] = !this.list[index]
-      },
-      getEvents ({ start, end }) {
-        const events = []
-
-        const min = new Date(`${start.date}T00:00:00`)
-        const max = new Date(`${end.date}T23:59:59`)
-        const days = (max.getTime() - min.getTime()) / 86400000
-        const eventCount = this.rnd(days, days + 20)
-
-        for (let i = 0; i < eventCount; i++) {
-          const allDay = this.rnd(0, 3) === 0
-          const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-          const first = new Date(firstTimestamp - (firstTimestamp % 900000))
-          const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
-          const second = new Date(first.getTime() + secondTimestamp)
-
-          events.push({
-            name: this.names[this.rnd(0, this.names.length - 1)],
-            start: first,
-            end: second,
-            color: this.colors[this.rnd(0, this.colors.length - 1)],
-            timed: !allDay,
-          })
-        }
-
-        this.events = events
-      },
-      getEventColor (event) {
-        return event.color
-      },
-      rnd (a, b) {
-        return Math.floor((b - a + 1) * Math.random()) + a
-      },
+    rnd(a, b) {
+      return Math.floor((b - a + 1) * Math.random()) + a
     },
+    insertEvents(arr) {
+      this.events = []
+      arr.forEach((value) => {
+        this.events.push({
+          name: value.name,
+          start: new Date(value.date),
+          color: this.colors[this.rnd(0, this.colors.length - 1)],
+          timed: '00:00',
+          format: '24hr'
+        })
+      });
+    }
+  },
+  watch: {
+    markeds() {
+      window.localStorage.marked = JSON.stringify(this.markeds);
+      this.insertEvents(this.markeds)
+    },
+  },
+  created() {
+    if (window.localStorage.marked) {
+      this.markeds = JSON.parse(window.localStorage.marked)
+    }
   }
+}
 </script>

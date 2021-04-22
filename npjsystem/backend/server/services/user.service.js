@@ -2,13 +2,16 @@ const usersData = require('../datas/user.data.js');
 const profileService = require('../services/profile.service');
 const bcrypt = require('bcryptjs');
 const validator = require('email-validator');
+const systemLogService = require('../services/systemLog.service');
 
-exports.getUsers = function () {
-    return usersData.getUsers();
+exports.getUsers = async function () {
+    const users = await usersData.getUsers();
+    return users;
 }
 
 exports.getUser = async function (id) {
-    return usersData.getUser(id);
+    const user = await usersData.getUser(id);
+    return user;
 }
 
 exports.getUserByEmail = async function(email){

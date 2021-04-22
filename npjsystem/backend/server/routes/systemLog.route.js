@@ -30,5 +30,16 @@ router.get('/systemLogs/byUserId/:userId', verify, async function (req, res, nex
     }
 });
 
+router.post('/systemLogs', verify, async function (req, res, next){
+    const systemLog = req.body;
+    try {
+        const newSystemLogs = await systemLogService.saveSystemLog(systemLog);
+        res.status(201).json(newSystemLogs);
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+});
+
 
 module.exports = router;

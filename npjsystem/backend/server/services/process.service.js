@@ -11,6 +11,11 @@ exports.getProcess = async function (id) {
     return processData.getProcess(id);
 }
 
+exports.getProcessesByUserId = async function (userId) {
+    return processData.getProcessesByUserId(userId);
+}
+
+
 exports.saveProcess = async function (process) {
 
     if(!process.customerId) throw new Error('Process shall have a Customer');

@@ -71,7 +71,6 @@
 
 <script>
   import axios from 'axios'
-  const jwt = require('jsonwebtoken')
   const configs = require('../../config/configs')
   export default {
     name: 'Login',
@@ -92,7 +91,7 @@
           password: this.password,
         }
         try {
-          const response = await axios.post(configs.API_LOGIN, user);
+          const response = await axios.post(configs.API_URL+"login", user);
           const token = response.data.token;
           window.localStorage.token = token;
 

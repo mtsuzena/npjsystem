@@ -141,8 +141,8 @@
 
 <script>
 import axios from 'axios'
-
-const configs = require('../../config/configs')
+const jwt = require('jsonwebtoken');
+const configs = require('../../config/configs');
 export default {
   name: 'DashboardDashboard',
   components: {
@@ -151,8 +151,8 @@ export default {
 
   data() {
     return {
-      userJwt: '',
       user: {},
+      processes: {},
       markeds: [],
       calenderDateSelected: Date,
       dialog: false,
@@ -237,6 +237,22 @@ export default {
       window.localStorage.marked = JSON.stringify(this.markeds);
       this.insertEvents(this.markeds)
     },
+  },
+  beforeMount(){
+    let api = axios.create({
+      baseURL: configs.API_URL,
+      headers: {
+        'auth-token': window.localStorage.token
+      }
+    });
+    const tokenDecoded = jwt.decode(window.localStorage.token);
+    api.get(`users/${tokenDecoded.id}`).then((responseGetUserById) => {
+      this.user = responseGetUserById.data;
+    });
+
+    api.get(`processes/byUserId/${tokenDecoded.id}`).then((responseGetProcessesByUserId) => {
+      this.processes = responseGetProcessesByUserId.data;
+    });
   },
   created() {
     if (window.localStorage.marked) {

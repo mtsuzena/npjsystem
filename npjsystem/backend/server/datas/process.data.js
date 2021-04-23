@@ -39,6 +39,28 @@ exports.getProcess = function (id) {
     });
 };
 
+exports.getProcessesByUserId = function (userId) {
+    return Process.findAll({
+        where: {
+            userId: userId
+        },
+        include: [
+            {
+                model: db.user
+            },
+            {
+                model: db.customer
+            },
+            {
+                model: db.processType
+            },
+            {
+                model: db.processChecklist
+            }
+        ]
+    });
+};
+
 exports.getProcessByNumber = function (number) {
     return Process.findOne({
         where: {

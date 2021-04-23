@@ -21,6 +21,15 @@ router.get('/processes/:id', verify, async function (req, res, next){
     }
 });
 
+router.get('/processes/byUserId/:userId', verify, async function (req, res, next){
+    try {
+        const processes = await processService.getProcessesByUserId(req.params.userId);
+        res.json(processes);
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.post('/processes', verify, async function (req, res, next){
     const process = req.body;
     try {

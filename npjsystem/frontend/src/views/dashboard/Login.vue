@@ -92,12 +92,11 @@
           password: this.password,
         }
         try {
-          const response = await axios.post(configs.API_LOGIN, user)
-          const token = response.data.token
-          const verified = jwt.decode(token)
-          const get_user = await axios.get(configs.API_GET_USER + '/' + verified.id)
+          const response = await axios.post(configs.API_LOGIN, user);
+          const token = response.data.token;
+          window.localStorage.token = token;
 
-          this.$router.push({ name: 'Painel', params: { user: get_user.data, userJwt: response.data } })
+          this.$router.push({ name: 'Painel' })
         } catch (error) {
           if (error.response) {
             console.log('Error data : ', error.response.data)

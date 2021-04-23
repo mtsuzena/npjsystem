@@ -173,10 +173,6 @@ export default {
       names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
     }
   },
-  mounted() {
-    this.user = this.$route.params.user
-    this.userJwt = this.$route.params.userJwt
-  },
   methods: {
     openDialogCalender({date}) {
       this.calenderDateSelected = new Date(`${date} 00:00:00`)

@@ -7,7 +7,7 @@
   >
     <v-row
       align="start"
-      justify="space-between"
+      justify="space-around"
       class="grey lighten-5"
     >
       <v-col
@@ -19,8 +19,9 @@
           color="orange"
           icon="mdi-animation-play"
           title="Processos em andamento"
-          value="10"
-        />
+          :value="ongoingProcesses"
+        />   
+
       </v-col>
 
       <v-col
@@ -28,13 +29,17 @@
         sm="6"
         lg="3"
       >
-        <base-material-stats-card
-          color="red"
-          icon="mdi-alert-circle"
-          title="Processos atrasados"
-          value="15"
-        />
+        <div @mouseover="openPendingChecklists">
+          <base-material-stats-card
+            color="red"
+            icon="mdi-alert-circle"
+            title="Processos com pendências"
+            :value="pendingProcesses"
+          />
+        </div>
       </v-col>
+      
+      <pendings-process-checklists v-show="authorizeOpenPopupPendingChecklists"></pendings-process-checklists>
 
       <v-col
         cols="12"
@@ -44,21 +49,8 @@
         <base-material-stats-card
           color="success"
           icon="mdi-check"
-          title="Processos finalizados"
-          value=""
-        />
-      </v-col>
-
-      <v-col
-        cols="12"
-        sm="6"
-        lg="3"
-      >
-        <base-material-stats-card
-          color="yellow"
-          icon="mdi-animation"
-          title="ASdasd"
-          value="30"
+          title="Processos arquivados"
+          :value="filedProcesses"
         />
       </v-col>
     </v-row>
@@ -147,12 +139,18 @@ export default {
   name: 'DashboardDashboard',
   components: {
     DialogCalender: () => import('./components/DialogCalender'),
+    PendingsProcessChecklists: () => import( './components/PendingsProcessChecklists'),
   },
 
   data() {
     return {
       user: {},
       processes: {},
+      ongoingProcesses: '',
+      filedProcesses: '',
+      pendingProcesses: '',
+      pendingChecklists: [],
+      authorizeOpenPopupPendingChecklists: false,
       markeds: [],
       calenderDateSelected: Date,
       dialog: false,
@@ -174,6 +172,11 @@ export default {
     }
   },
   methods: {
+    openPendingChecklists(event){
+      this.authorizeOpenPopupPendingChecklists = !this.authorizeOpenPopupPendingChecklists;
+      console.log(event);
+      console.log("Open Pending CHecklists");
+    },
     openDialogCalender({date}) {
       this.calenderDateSelected = new Date(`${date} 00:00:00`)
       this.dialog = true
@@ -251,8 +254,41 @@ export default {
     });
 
     api.get(`processes/byUserId/${tokenDecoded.id}`).then((responseGetProcessesByUserId) => {
+
       this.processes = responseGetProcessesByUserId.data;
+
+      let ongoingProcesses = 0;
+      let filedProcesses = 0;
+      let pendingProcesses = 0;
+
+      this.processes.forEach((process, i) => {
+
+        if(process.isFiled){
+          filedProcesses += 1;
+        }else{
+          ongoingProcesses += 1;
+        }
+
+        let isPending = true;
+
+        process.processChecklists.forEach((procesChecklist, i) => {
+          if(!procesChecklist.isChecked){
+            this.pendingChecklists.push(procesChecklist);
+            if(isPending){
+              pendingProcesses += 1;
+              isPending = false;
+            }
+          }
+        });
+
+      });
+
+      this.ongoingProcesses = ongoingProcesses.toString();
+      this.filedProcesses = filedProcesses.toString();
+      this.pendingProcesses = pendingProcesses.toString();
+
     });
+
   },
   created() {
     if (window.localStorage.marked) {

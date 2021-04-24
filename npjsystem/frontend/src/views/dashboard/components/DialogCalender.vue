@@ -17,38 +17,54 @@
         <v-card-text>
           <v-container>
             <v-row>
-              <v-col cols="12">
+              <v-col cols="6">
                 <v-text-field
-                  v-model="people.name"
+                  v-model="customer.name"
                   label="Nome do Cliente*"
+                  type="text"
+                  required
+                />
+              </v-col>
+              <v-col cols="6">
+                <v-text-field
+                  v-model="customer.name"
+                  label="Sobrenome do Cliente*"
                   type="text"
                   required
                 />
               </v-col>
               <v-col cols="12">
                 <v-text-field
+                  v-model="customer.name"
+                  label="CPF*"
+                  type="text"
+                  required
+                />
+              </v-col>
+              <v-col cols="6">
+                <v-text-field
                   label="Email*"
                   type="email"
                   :rules="emailRules"
                   required
-                  v-model="people.email"
+                  v-model="customer.email"
                 />
               </v-col>
-              <v-col cols="12">
+              <v-col cols="6">
                 <v-text-field
                   label="Telefone*"
                   type="phone"
                   required
-                  v-model="people.phone"
+                  v-model="customer.phone"
                 />
               </v-col>
 
-              <v-col cols="mg-12">
-                <v-time-picker
-                  format="24hr"
-                  v-model="hour"
-                ></v-time-picker>
-              </v-col>
+<!--              <v-col cols="mg-1">-->
+<!--                <v-time-picker-->
+<!--                  format="24hr"-->
+<!--                  v-model="hour"-->
+<!--                ></v-time-picker>-->
+<!--              </v-col>-->
 
               <v-col
                 cols="12"
@@ -57,7 +73,7 @@
                   :items="['Flavio Augusto de Souza', 'Maria Joaquim', 'Victor Suzena', 'Sorriso Ronaldo']"
                   label="Responsável pelo atendimento*"
                   required
-                  v-model="people.responsible"
+                  v-model="customer.responsible"
                 />
               </v-col>
             </v-row>
@@ -113,13 +129,17 @@ export default {
         v => /.+@.+\..+/.test(v) || 'Insira um e-mail valido',
       ],
       hour: '',
-      people: {
+      customer: {
         date: this.dateCalender,
         name: '',
         email: '',
         phone: '',
         responsible: '',
-      }
+      },
+      consultations: {
+        date: this.dateCalender,
+        responsible: Number,
+      },
     }
   },
   methods: {
@@ -130,11 +150,11 @@ export default {
       this.$emit("closeDialog")
     },
     save() {
-      this.people.date.setHours(
+      this.customer.date.setHours(
         parseInt(this.hour.substring(0, 2)),
         parseInt(this.hour.substring(7, this.hour.length - 2))
       );
-      this.$emit("saveDialog", this.people)
+      this.$emit("saveDialog", this.customer)
       this.close()
     }
   },

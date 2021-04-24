@@ -16,17 +16,15 @@ export default new Router({
       path: '/',
       component: () => import('@/views/dashboard/Index'),
       children: [
-        // will match everything
-        // {
-        //   name: 'Painel',
-        //   path: '*',
-        //   component: () => import('@/views/dashboard/Dashboard'),
-        // },
-        // Dashboard
         {
           name: 'Painel',
           path: '',
           component: () => import('@/views/dashboard/Dashboard'),
+        },
+        {
+          name: 'Atendimentos',
+          path: 'pages/atendimentos',
+          component: () => import('@/views/dashboard/Consultations'),
         },
         // Pages
         {
@@ -60,12 +58,6 @@ export default new Router({
           name: 'Google Maps',
           path: 'maps/google-maps',
           component: () => import('@/views/dashboard/maps/GoogleMaps'),
-        },
-        // Upgrade
-        {
-          name: 'Upgrade',
-          path: 'upgrade',
-          component: () => import('@/views/dashboard/Upgrade'),
         },
       ],
     },

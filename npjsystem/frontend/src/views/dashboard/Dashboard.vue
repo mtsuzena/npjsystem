@@ -13,7 +13,7 @@
       <v-col
         cols="12"
         sm="6"
-        lg="3"
+        lg="4"
       >
         <base-material-stats-card
           color="orange"
@@ -21,32 +21,25 @@
           title="Processos em andamento"
           :value="ongoingProcesses"
         />
-
       </v-col>
 
       <v-col
         cols="12"
         sm="6"
-        lg="3"
+        lg="4"
       >
-
-        <div @mouseover="authorizeOpenPopupPendingChecklists = true"
-             @mouseleave="authorizeOpenPopupPendingChecklists = false"
-        ><base-material-stats-card
+        <base-material-stats-card
             color="red"
             icon="mdi-alert-circle"
             title="Processos com pendências"
             :value="pendingProcesses"
           />
-        </div>
       </v-col>
-
-      <pendings-process-checklists v-show="authorizeOpenPopupPendingChecklists"></pendings-process-checklists>
 
       <v-col
         cols="12"
         sm="6"
-        lg="3"
+        lg="4"
       >
         <base-material-stats-card
           color="success"
@@ -56,80 +49,37 @@
         />
       </v-col>
     </v-row>
+
     <v-divider class="mb-3"/>
 
-    <dialog-calender
-      v-if="calenderDateSelected != null && dialog != false"
-      :dateCalender="calenderDateSelected"
-      :open="dialog"
-      @closeDialog="closeDialog"
-      @saveDialog="saveObject"
-    ></dialog-calender>
+    <v-row
+      align="start"
+      justify="space-around"
+      class="grey lighten-5"
+    >
+      <v-col>
+        <base-material-card
+          color="red"
+          class="px-6 py-3"
+        >
+          <template v-slot:heading>
+            <div class="display-2 font-weight-light">
+              Pendências
+            </div>
 
-    <div>
-      <v-sheet
-        tile
-        height="54"
-        class="d-flex"
-      >
-        <v-btn
-          icon
-          class="ma-2"
-          @click="$refs.calendar.prev()"
-        >
-          <v-icon>mdi-chevron-left</v-icon>
-        </v-btn>
-        <v-select
-          v-model="type"
-          :items="types"
-          dense
-          outlined
-          hide-details
-          class="ma-2"
-          label="type"
-        />
-        <v-select
-          v-model="mode"
-          :items="modes"
-          dense
-          outlined
-          hide-details
-          label="event-overlap-mode"
-          class="ma-2"
-        />
-        <v-select
-          v-model="weekday"
-          :items="weekdays"
-          dense
-          outlined
-          hide-details
-          label="weekdays"
-          class="ma-2"
-        />
-        <v-spacer/>
-        <v-btn
-          icon
-          class="ma-2"
-          @click="$refs.calendar.next()"
-        >
-          <v-icon>mdi-chevron-right</v-icon>
-        </v-btn>
-      </v-sheet>
-      <v-sheet height="600">
-        <v-calendar
-          ref="calendar"
-          v-model="value"
-          :weekdays="weekday"
-          :type="type"
-          :events="events"
-          :event-overlap-mode="mode"
-          :event-overlap-threshold="30"
-          :event-color="getEventColor"
-          :dark="true"
-          @click:date="openDialogCalender"
-        />
-      </v-sheet>
-    </div>
+          </template>
+          <v-card-text>
+            <v-data-table
+              :headers="pendingHeaders"
+              :items="pendingChecklists"
+              :footer-props="{
+                'items-per-page-text':'Pendências por página'
+              }"
+            />
+          </v-card-text>
+        </base-material-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -140,7 +90,6 @@ const configs = require('../../config/configs');
 export default {
   name: 'DashboardDashboard',
   components: {
-    DialogCalender: () => import('./components/DialogCalender'),
     PendingsProcessChecklists: () => import( './components/PendingsProcessChecklists'),
   },
 
@@ -152,96 +101,42 @@ export default {
       filedProcesses: '',
       pendingProcesses: '',
       pendingChecklists: [],
-      authorizeOpenPopupPendingChecklists: false,
-      markeds: [],
-      calenderDateSelected: Date,
-      dialog: false,
-      type: 'month',
-      types: ['mês', 'semana', 'dia', '4 dias'],
-      mode: 'stack',
-      modes: ['stack', 'column'],
-      weekday: [0, 1, 2, 3, 4, 5, 6],
-      weekdays: [
-        {text: 'Domingo - Sábado', value: [0, 1, 2, 3, 4, 5, 6]},
-        {text: 'Segunda-Feira - Domingo', value: [1, 2, 3, 4, 5, 6, 0]},
-        {text: 'Segunda-Feira - Sexta-Feira', value: [1, 2, 3, 4, 5]},
-        {text: 'Segunda-Feira, Quarta-Feira, Sexta-Feira', value: [1, 3, 5]},
+      pendingHeaders: [
+        {
+          sortable: false,
+          text: 'Nome',
+          value: 'name',
+          align: 'left',
+        },
+        {
+          sortable: false,
+          text: 'Prazo',
+          value: 'deadline',
+          align: 'left',
+        },
+        {
+          sortable: false,
+          text: 'Processo',
+          value: 'process.number',
+          align: 'left ',
+        },
+        {
+          sortable: false,
+          text: 'Responsavel',
+          value: 'process.user.name',
+          align: 'left',
+        },
+        {
+          sortable: false,
+          text: 'Cliente',
+          value: 'process.customer.name',
+          align: 'left',
+        },
       ],
-      value: '',
-      events: [],
-      colors: ['blue', , 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
-      names: ['Meeting', 'Holiday', 'PTO', 'Travel', 'Event', 'Birthday', 'Conference', 'Party'],
     }
   },
   methods: {
-    openPendingChecklists(event){
-      this.authorizeOpenPopupPendingChecklists = !this.authorizeOpenPopupPendingChecklists;
-      console.log(event);
-      console.log("Open Pending CHecklists");
-    },
-    openDialogCalender({date}) {
-      this.calenderDateSelected = new Date(`${date} 00:00:00`)
-      this.dialog = true
-    },
-    closeDialog() {
-      this.dialog = false
-    },
-    saveObject(e) {
-      const {date, name, email, phone, responsible} = e;
-      this.markeds.push({date, name, email, phone, responsible});
-    },
-    complete(index) {
-      this.list[index] = !this.list[index]
-    },
-    getEvents({start, end}) {
-      const events = []
-
-      const min = new Date(`${start.date}T00:00:00`)
-      const max = new Date(`${end.date}T23:59:59`)
-      const days = (max.getTime() - min.getTime()) / 86400000
-      const eventCount = this.rnd(days, days + 20)
-
-      for (let i = 0; i < eventCount; i++) {
-        const allDay = this.rnd(0, 3) === 0
-        const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-        const first = new Date('2021-04-01 00:00:00')
-        const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000
-        const second = new Date('2021-04-20 23:00:00')
-
-        events.push({
-          name: 'gdd',
-          start: first,
-          //end: second,
-          color: this.colors[this.rnd(0, this.colors.length - 1)],
-          timed: !allDay
-        })
-      }
-      this.events = events
-    },
-    getEventColor(event) {
-      return event.color
-    },
-    rnd(a, b) {
-      return Math.floor((b - a + 1) * Math.random()) + a
-    },
-    insertEvents(arr) {
-      this.events = []
-      arr.forEach((value) => {
-        this.events.push({
-          name: value.name,
-          start: new Date(value.date),
-          color: this.colors[this.rnd(0, this.colors.length - 1)],
-          timed: '00:00',
-          format: '24hr'
-        })
-      });
-    }
-  },
-  watch: {
-    markeds() {
-      window.localStorage.marked = JSON.stringify(this.markeds);
-      this.insertEvents(this.markeds)
-    },
+    
   },
   beforeMount(){
     let api = axios.create({
@@ -292,10 +187,5 @@ export default {
     });
 
   },
-  created() {
-    if (window.localStorage.marked) {
-      this.markeds = JSON.parse(window.localStorage.marked)
-    }
-  }
 }
 </script>

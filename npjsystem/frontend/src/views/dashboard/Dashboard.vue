@@ -20,7 +20,7 @@
           icon="mdi-animation-play"
           title="Processos em andamento"
           :value="ongoingProcesses"
-        />   
+        />
 
       </v-col>
 
@@ -29,8 +29,10 @@
         sm="6"
         lg="3"
       >
-        <div @mouseover="openPendingChecklists">
-          <base-material-stats-card
+
+        <div @mouseover="authorizeOpenPopupPendingChecklists = true"
+             @mouseleave="authorizeOpenPopupPendingChecklists = false"
+        ><base-material-stats-card
             color="red"
             icon="mdi-alert-circle"
             title="Processos com pendências"
@@ -38,7 +40,7 @@
           />
         </div>
       </v-col>
-      
+
       <pendings-process-checklists v-show="authorizeOpenPopupPendingChecklists"></pendings-process-checklists>
 
       <v-col

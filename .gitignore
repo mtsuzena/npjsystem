@@ -23,3 +23,4 @@ npjsystem/frontend/*.ntvs*
 npjsystem/frontend/*.njsproj
 npjsystem/frontend/*.sln
 npjsystem/frontend/*.sw?
+npjsystem/.idea*

@@ -29,8 +29,13 @@ export default new Router({
         // Pages
         {
           name: 'Perfil do Usuário',
-          path: 'pages/user',
+          path: 'pages/usuario',
           component: () => import('@/views/dashboard/pages/UserProfile'),
+        },
+        {
+          name: 'Perfil do Cliente',
+          path: 'pages/cliente',
+          component: () => import('@/views/dashboard/pages/Customer'),
         },
         {
           name: 'Notifications',

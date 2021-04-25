@@ -21,6 +21,15 @@ router.get('/users/:id', verify, async function (req, res, next){
     }
 });
 
+router.get('/users/freeOnDate/:date', verify, async function (req, res, next){
+    try {
+        const users = await userService.getUserFreeOnDate(req.params.date);        
+        res.json(users);
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.post('/users', verify, async function (req, res, next){
     const user = req.body;
     try {

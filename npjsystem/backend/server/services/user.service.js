@@ -82,7 +82,11 @@ exports.updateUser = async function (id, user) {
     existingUser.lastName = user.lastName;
     existingUser.email = user.email;
     existingUser.password = user.password;
-    existingUser.userActive = user.userActive;
+    existingUser.aboutMe = user.aboutMe;
+    existingUser.cep = user.cep;
+    existingUser.state = user.state;
+    existingUser.city = user.city;
+    existingUser.addres = user.addres;
     existingUser.profileId = user.profileId;
 
 

@@ -1,6 +1,6 @@
 const consultationData = require('../datas/consultation.data.js');
 const customerService = require('../services/customer.service');
-const userService = require('../services/user.service')
+const userService = require('../services/user.service');
 
 exports.getConsultations = function () {
     return consultationData.getConsultations();
@@ -8,6 +8,10 @@ exports.getConsultations = function () {
 
 exports.getConsultation = async function (id) {
     return consultationData.getConsultation(id);
+}
+
+exports.getConsultationsByDate = async function (date) {
+    return consultationData.getConsultationsByDate(date);
 }
 
 exports.saveConsultation = async function (consultation) {

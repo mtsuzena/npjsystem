@@ -36,6 +36,14 @@ exports.getConsultationByUserAndDate = function (userId, consultationDate) {
     });
 };
 
+exports.getConsultationsByDate = function (date) {
+    return Consultation.findAll({
+        where: {
+            consultationDate: date
+        }
+    });
+};
+
 exports.saveConsultation = function (consultation) {
 	return Consultation.create(consultation);
 };

@@ -2,11 +2,36 @@ const usersData = require('../datas/user.data.js');
 const profileService = require('../services/profile.service');
 const bcrypt = require('bcryptjs');
 const validator = require('email-validator');
-const systemLogService = require('../services/systemLog.service');
+const consultationService = require('../services/consultation.service');
+const { user } = require('../models/index.js');
 
 exports.getUsers = async function () {
     const users = await usersData.getUsers();
     return users;
+}
+
+exports.getUserFreeOnDate = async function (date) {
+    const users = await usersData.getUsers();
+    const consultations = await consultationService.getConsultationsByDate(date);
+
+    var responsibles = [];
+
+    users.forEach((responsible, i) => {
+
+        let isFree = true;
+
+        consultations.forEach((consultation, i) => {
+            if(responsible.id == consultation.userId){
+                isFree = false;
+            }
+        });
+
+        if(isFree){
+            responsibles.push(responsible);
+        }
+    });
+
+    return responsibles;
 }
 
 exports.getUser = async function (id) {

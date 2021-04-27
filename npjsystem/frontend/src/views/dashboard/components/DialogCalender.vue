@@ -14,6 +14,8 @@
       >
         <v-card>
           <v-toolbar>
+            <v-icon large color="green darken-2">event</v-icon>
+            <v-spacer></v-spacer>
             <v-toolbar-title>Agendar para o dia {{ dateCalender | dateFormat }}</v-toolbar-title>
             <v-spacer />
             <v-btn
@@ -59,28 +61,7 @@
                     type="text"
                   />
                 </v-col>
-      <v-row justify="center">
-        <v-dialog
-          v-model="dialog"
-          max-width="40%"
-          persistent
-        >
-          <v-card
-          >
-            <v-toolbar>
-              <v-icon large color="green darken-2">event</v-icon>
-              <v-spacer></v-spacer>
-              <v-toolbar-title>Agendar para o dia {{ dateCalender | dateFormat }}</v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-btn
-                color="blue darken-1"
-                icon
-                text
-                @click="close"
-              >
-                <v-icon>mdi-close</v-icon>
-              </v-btn>
-            </v-toolbar>
+      
                 <v-col cols="6">
                   <v-text-field
                     v-model.trim="customer.email"

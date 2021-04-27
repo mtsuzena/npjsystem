@@ -14,9 +14,11 @@
           max-width="40%"
           persistent
         >
-          <v-card>
-
+          <v-card
+          >
             <v-toolbar>
+              <v-icon large color="green darken-2">event</v-icon>
+              <v-spacer></v-spacer>
               <v-toolbar-title>Agendar para o dia {{ dateCalender | dateFormat }}</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn

@@ -7,8 +7,9 @@ import './plugins/chartist'
 import './plugins/vee-validate'
 import vuetify from './plugins/vuetify'
 import i18n from './i18n'
-
+import VueMask from 'v-mask'
 Vue.config.productionTip = false
+Vue.use(VueMask)
 
 new Vue({
   router,

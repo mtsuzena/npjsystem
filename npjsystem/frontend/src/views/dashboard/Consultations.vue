@@ -82,6 +82,19 @@
 </template>
 
 <script>
+
+
+import axios from "axios";
+import configs from "../../config/configs";
+const jwt = require('jsonwebtoken');
+
+let api = axios.create({
+  baseURL: configs.API_URL,
+  headers: {
+    'auth-token': window.localStorage.token
+  }
+});
+
 export default {
   name: 'ConsultationsConsultations',
   components: {
@@ -94,6 +107,7 @@ export default {
       markeds: [],
       calenderDateSelected: Date,
       dialog: false,
+      consultations: {},
       type: 'month',
       types: ['mês', 'semana', 'dia', '4 dias'],
       mode: 'stack',
@@ -118,9 +132,8 @@ export default {
     closeDialog() {
       this.dialog = false
     },
-    saveObject(e) {
-      const {date, name, email, phone, responsible} = e;
-      this.markeds.push({date, name, email, phone, responsible});
+    saveObject() {
+      this.getConsultation();
     },
     complete(index) {
       this.list[index] = !this.list[index]
@@ -156,32 +169,33 @@ export default {
     rnd(a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a
     },
-    insertEvents(arr) {
+   async insertEvents(arr) {
+
       this.events = []
-      arr.forEach((value) => {
+      arr.forEach((value)=>{
         this.events.push({
-          name: value.name,
-          start: new Date(value.date),
+          name: value.customer.name,
+          start: new Date(value.consultationDate),
           color: this.colors[this.rnd(0, this.colors.length - 1)],
           timed: '00:00',
           format: '24hr'
-        })
+        });
       });
+
+    },
+    async getConsultation(){
+        await api.get(`consultations/`).then((response) => {
+          this.consultations = response.data;
+        });
     }
   },
   watch: {
-    markeds() {
-      window.localStorage.marked = JSON.stringify(this.markeds);
-      this.insertEvents(this.markeds)
+    consultations() {
+      this.insertEvents(this.consultations);
     },
   },
-  beforeMount(){
-
-  },
-  created() {
-    if (window.localStorage.marked) {
-      this.markeds = JSON.parse(window.localStorage.marked)
-    }
+   created() {
+      this.getConsultation();
   }
 }
 </script>

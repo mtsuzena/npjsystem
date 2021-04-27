@@ -59,22 +59,31 @@
     >
       <v-col>
         <base-material-card
+          icon="mdi-clipboard-text"
           color="red"
-          class="px-6 py-3"
+          title="Pendências"
+          class="px-5 py-3"
         >
-          <template v-slot:heading>
-            <div class="display-2 font-weight-light">
-              Pendências
-            </div>
-
-          </template>
           <v-card-text>
+            <v-card-title
+            >
+              <v-text-field
+                v-model="search"
+                append-icon="mdi-magnify"
+                label="Pesquisar"
+                single-line
+                hide-details
+              ></v-text-field>
+            </v-card-title>
+
             <v-data-table
               :headers="pendingHeaders"
               :items="pendingChecklists"
+              :search="search"
               :footer-props="{
                 'items-per-page-text':'Pendências por página'
               }"
+              class="py-3"
             />
           </v-card-text>
         </base-material-card>
@@ -101,6 +110,7 @@ export default {
       filedProcesses: '',
       pendingProcesses: '',
       pendingChecklists: [],
+      search: '', 
       pendingHeaders: [
         {
           sortable: false,
@@ -136,9 +146,8 @@ export default {
     }
   },
   methods: {
-    
   },
-  beforeMount(){
+  beforeCreate(){
     let api = axios.create({
       baseURL: configs.API_URL,
       headers: {

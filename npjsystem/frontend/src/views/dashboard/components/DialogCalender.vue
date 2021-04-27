@@ -1,109 +1,175 @@
 <template>
-  <v-form
-  ref="form"
-  v-model="valid"
-  lazy-validation
-  >
-  <v-row justify="center">
-    <v-dialog
-      v-model="dialog"
-      persistent
-      max-width="600px"
+
+    <v-form
+      id="dialogForm"
+      ref="form"
+      v-model="valid"
+      lazy-validation
+      @submit.prevent="save"
     >
-      <v-card>
-        <v-card-title>
-          <span class="text-h5">Agendar para o dia {{ dateCalender | dateFormat }}</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="6">
-                <v-text-field
-                  v-model="customer.name"
-                  label="Nome do Cliente*"
-                  type="text"
-                  required
-                />
-              </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  v-model="customer.name"
-                  label="Sobrenome do Cliente*"
-                  type="text"
-                  required
-                />
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="customer.name"
-                  label="CPF*"
-                  type="text"
-                  required
-                />
-              </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  label="Email*"
-                  type="email"
-                  :rules="emailRules"
-                  required
-                  v-model="customer.email"
-                />
-              </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  label="Telefone*"
-                  type="phone"
-                  required
-                  v-model="customer.phone"
-                />
-              </v-col>
 
-<!--              <v-col cols="mg-1">-->
-<!--                <v-time-picker-->
-<!--                  format="24hr"-->
-<!--                  v-model="hour"-->
-<!--                ></v-time-picker>-->
-<!--              </v-col>-->
+      <v-row justify="center">
+        <v-dialog
+          v-model="dialog"
+          max-width="40%"
+          persistent
+        >
+          <v-card>
 
-              <v-col
-                cols="12"
+            <v-toolbar>
+              <v-toolbar-title>Agendar para o dia {{ dateCalender | dateFormat }}</v-toolbar-title>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="blue darken-1"
+                icon
+                text
+                @click="close"
               >
-                <v-select
-                  :items="['Flavio Augusto de Souza', 'Maria Joaquim', 'Victor Suzena', 'Sorriso Ronaldo']"
-                  label="Responsável pelo atendimento*"
-                  required
-                  v-model="customer.responsible"
-                />
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer/>
-          <v-btn
-            color="blue darken-1"
-            text
-            @click="close"
-          >
-            X
-          </v-btn>
-          <v-btn
-            color="blue darken-1"
-            text
-            @click="save(); validate();"
-          >
-            Salvar
-          </v-btn>
-        </v-card-actions>
-      </v-card>
+                <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-toolbar>
 
-    </v-dialog>
-  </v-row>
-  </v-form>
+            <v-card-text>
+              <v-container>
+                <v-row>
+
+                  <v-col cols="6">
+                      <v-text-field
+                        v-model.trim="customer.name"
+                        label="Nome do Cliente*"
+                        :rules="nameRules"
+                        required
+                        type="text"
+                      />
+                  </v-col>
+
+                  <v-col cols="6">
+                      <v-text-field
+                        v-model.trim="customer.lastName"
+                        label="Sobrenome do Cliente*"
+                        :rules="lastNameRules"
+                        required
+                        type="text"
+                      />
+                  </v-col>
+
+                  <v-col cols="12">
+                      <v-text-field
+                        v-model.trim="customer.cpf"
+                        v-mask="'###.###.###-##'"
+                        label="CPF*"
+                        required
+                        :rules="cpfRules"
+                        type="text"
+                      />
+                  </v-col>
+
+                  <v-col cols="6">
+                      <v-text-field
+                        v-model.trim="customer.email"
+                        label="Email*"
+                        :rules="emailRules"
+                        required
+                        type="email"
+                      />
+                  </v-col>
+
+                  <v-col cols="6">
+                    <v-text-field
+                      v-model.trim="customer.cellphone"
+                      v-mask="'(##) #####-####'"
+                      label="Telefone*"
+                      :rules="phoneRules"
+                      required
+                      type="phone"
+                    />
+                  </v-col>
+
+                  <v-col
+                    cols="12"
+                  >
+                    <v-menu
+                      ref="menu"
+                      v-model="menu"
+                      :close-on-content-click="false"
+                      :nudge-right="100"
+                      :return-value.sync="time"
+                      max-height="100%"
+                      max-width="20%"
+                      min-width="20%"
+                      offset-x
+                      transition="scale-transition"
+                    >
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-text-field
+                          v-model="time"
+                          v-bind="attrs"
+                          v-on="on"
+                          label="Selecionar horário"
+                          :rules="timeRules"
+                          readonly
+                        ></v-text-field>
+                      </template>
+                      <v-time-picker
+                        v-if="menu"
+                        v-model="time"
+                        format="24hr"
+                        full-width
+
+                        @click:minute="$refs.menu.save(time)"
+                      ></v-time-picker>
+                    </v-menu>
+                  </v-col>
+                  <v-spacer></v-spacer>
+
+                  <v-col
+                    cols="12"
+                  >
+                    <v-select
+                      v-model="select"
+                      :items="items"
+                      :rules="selectRules"
+                      label="Responsável pelo atendimento*"
+                      required
+                    />
+                  </v-col>
+                </v-row>
+
+              </v-container>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer/>
+              <v-btn
+                color="blue darken-1"
+                form="dialogForm"
+                text
+                type="submit"
+                :disabled="!valid"
+              >
+                Salvar
+              </v-btn>
+
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
+
+    </v-form>
+
 </template>
 
 <script>
+import axios from 'axios'
+import configs from "../../../config/configs";
+
+const jwt = require('jsonwebtoken');
+let api = axios.create({
+  baseURL: configs.API_URL,
+  headers: {
+    'auth-token': window.localStorage.token
+  }
+});
+
 export default {
   name: 'DialogCalender',
   props: {
@@ -115,7 +181,7 @@ export default {
       const options = {
         year: 'numeric',
         month: 'numeric',
-        day: 'numeric'
+        day: 'numeric',
       }
       return value.toLocaleDateString('pt-br', options)
     }
@@ -123,39 +189,119 @@ export default {
   data() {
     return {
       dialog: this.open,
+      items: [],
+      time: null,
+      select: null,
+      menu: false,
+      name: '',
       valid: true,
-      emailRules: [
-        v => !!v || 'Preencha',
-        v => /.+@.+\..+/.test(v) || 'Insira um e-mail valido',
+      nameRules: [
+        v => !!v || 'Preencha o Nome!',
+        v => (v && v.length <= 10) || 'Tamanho máximo de 10 caracteres!',
+        v => /[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/.test(v) || 'Não inserir numeros ou caractéres especiais!',
       ],
-      hour: '',
+      lastNameRules: [
+        v => !!v || 'Preencha o o Sobrenome!',
+        v => (v && v.length <= 20) || 'Tamanho máximo de 20 caracteres!',
+        v => /[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/.test(v) || 'Não inserir numeros ou caractéres especiais!',
+      ],
+      email: '',
+      emailRules: [
+        v => !!v || 'Preencha o email',
+        v => /.+@.+\..+/.test(v) || 'Insiria um email válido!',
+      ],
+      cpfRules: [
+        v => !!v || 'Preencha o cpf',
+        v => /([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})/.test(v) || 'Insiria um cpf válido!',
+      ],
+      phoneRules: [
+        v => !!v || 'Preencha o telefone',
+        v => /^\s*(\(\d{2}\)|\d{0})[-. ]?(\d{5}|\d{4})[-. ]?(\d{4})[-. ]?\s*$/.test(v) || 'Insiria um telefone válido!',
+      ],
+      selectRules: [
+        v => !!v || 'Selecione um responsável',
+      ],
+      timeRules: [
+        v => !!v || 'Selecione um horário',
+      ],
       customer: {
-        date: this.dateCalender,
         name: '',
+        lastName: '',
+        cpf: '',
         email: '',
-        phone: '',
+        cellphone: '',
         responsible: '',
       },
       consultations: {
-        date: this.dateCalender,
-        responsible: Number,
+        userId: Number,
+        customerId: null,
+        consultationDate: this.dateCalender,
       },
     }
   },
+  created() {
+    this.getUsers();
+  },
   methods: {
-    validate () {
-      this.$refs.form.validate()
+    async getUsers() {
+      await api.get(`users/freeOnDate/${this.dateCalender}`).then((responseGetUserById) => {
+        responseGetUserById.data.forEach((value) => {
+          this.items.push({
+            text: value.name,
+            value: value.id
+          });
+        });
+      });
     },
     close() {
       this.$emit("closeDialog")
     },
-    save() {
-      this.customer.date.setHours(
-        parseInt(this.hour.substring(0, 2)),
-        parseInt(this.hour.substring(7, this.hour.length - 2))
-      );
-      this.$emit("saveDialog", this.customer)
-      this.close()
+    // validate(obj){
+    //     for(var prop in obj) {
+    //       if(obj.hasOwnProperty(prop))
+    //         return false;
+    //     }
+    //     return true;
+    // },
+    async save() {
+      if (this.$refs.form.validate()){
+
+        this.consultations.consultationDate.setHours(
+          parseInt(this.time.substring(0, 2)),
+          parseInt(this.time.substring(7, this.time.length - 2))
+        );
+        this.consultations.userId = this.select;
+
+        await api.post('/customers', this.customer)
+          .then((response) => {
+            console.log(response)
+            this.consultations.customerId = response.data.id;
+              api.post('/consultations', this.consultations)
+              .then((response) => {
+                console.log(response);
+                this.close()
+                this.$emit("saveDialog")
+              }, (error) => {
+                console.log(error);
+              });
+
+          }, (error) => {
+            console.log(error);
+          });
+
+        // axios.all([
+        //   axios.post(`/my-url`, {
+        //     myVar: 'myValue'
+        //   }),
+        //   axios.post(`/my-url2`, {
+        //     myVar: 'myValue'
+        //   })
+        // ])
+        //   .then(axios.spread((data1, data2) => {
+        //     // output of req.
+        //     console.log('data1', data1, 'data2', data2)
+        //   }));
+      }
     }
   },
 }

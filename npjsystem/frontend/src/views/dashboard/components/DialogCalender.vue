@@ -95,7 +95,7 @@
                     max-height="100%"
                     max-width="20%"
                     min-width="20%"
-                    offset-x
+                    offset-y
                     transition="scale-transition"
                   >
                     <template v-slot:activator="{ on, attrs }">
@@ -125,8 +125,7 @@
                   <v-select
                     v-model="select"
                     :items="items"
-                    :rules="selectRules"
-                    label="Responsável pelo atendimento*"
+                    label="Responsável pelo atendimento"
                     required
                   />
                 </v-col>

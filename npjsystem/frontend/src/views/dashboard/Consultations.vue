@@ -73,8 +73,8 @@
           :event-overlap-mode="mode"
           :event-overlap-threshold="30"
           :event-color="getEventColor"
-          :dark="true"
           @click:date="openDialogCalender"
+          :dark="true"
         />
       </v-sheet>
     </div>
@@ -174,7 +174,7 @@ export default {
       this.events = []
       arr.forEach((value)=>{
         this.events.push({
-          name: value.customer.name,
+          name: `| Atendimento ao Cliente: ${value.customer.name}`,
           start: new Date(value.consultationDate),
           color: this.colors[this.rnd(0, this.colors.length - 1)],
           timed: '00:00',

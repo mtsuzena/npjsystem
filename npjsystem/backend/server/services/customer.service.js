@@ -30,6 +30,13 @@ exports.saveCustomer = async function (customer) {
         if (existingEmail) throw new Error('Email already exists');
     }
 
+    if(customer.cpf){
+        const existingCpf = await customerData.getCustomerByCpf(customer.cpf);
+        if (existingCpf) throw new Error('Cpf already exists');
+    }else{
+        throw new Error('Customer shall have a cpf');
+    }
+
     if(customer.password){
         //encriptar password
         const salt = await bcrypt.genSalt(10);

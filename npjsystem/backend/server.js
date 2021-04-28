@@ -88,7 +88,13 @@ app.use(function (error, req, res, next) {
 	if (error.message === 'Process shall have a Number') {
 		return res.status(400).send({errorMessage: error.message});
 	}
+	if (error.message === 'Customer shall have a cpf') {
+		return res.status(400).send({errorMessage: error.message});
+	}
 	if (error.message === 'Process Number already exists') {
+		return res.status(409).send({errorMessage: error.message});
+	}
+	if (error.message === 'Cpf already exists') {
 		return res.status(409).send({errorMessage: error.message});
 	}
 	if (error.message === 'Process not found') {

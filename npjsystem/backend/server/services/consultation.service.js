@@ -16,15 +16,13 @@ exports.getConsultationsByDate = async function (date) {
 
 exports.saveConsultation = async function (consultation) {
 
-    if(!consultation.userId) throw new Error('Consultation shall have a User');
     if(!consultation.customerId) throw new Error('Consultation shall have a Customer');
     if(!consultation.consultationDate) throw new Error('Consultation shall have a Date');
-    
-    const existingUser = await userService.getUser(consultation.userId);
-    if (!existingUser) throw new Error('User not found');
 
-    const existingCustomer = await customerService.getCustomer(consultation.customerId);
-    if (!existingCustomer) throw new Error('Customer not found');
+    if(consultation.userId){
+        const existingCustomer = await customerService.getCustomer(consultation.customerId);
+        if (!existingCustomer) throw new Error('Customer not found');
+    }
 
     const existingConsultationWithDateAndUser = await consultationData.getConsultationByUserAndDate(consultation.userId, consultation.consultationDate);
     if (existingConsultationWithDateAndUser) throw new Error('User is already committed to this data');

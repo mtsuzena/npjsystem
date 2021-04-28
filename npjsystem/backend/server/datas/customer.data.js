@@ -17,6 +17,14 @@ exports.getCustomerByEmail = function (email) {
     });
 };
 
+exports.getCustomerByCpf = function (cpf) {
+    return Customer.findOne({
+        where: {
+            cpf: cpf
+        }
+    });
+};
+
 exports.saveCustomer = function (customer) {
 	return Customer.create(customer);
 };

@@ -22,6 +22,11 @@ export default new Router({
           component: () => import('@/views/dashboard/Dashboard'),
         },
         {
+          name: 'Processos',
+          path: 'paginas/processos',
+          component: () => import('@/views/dashboard/Processes'),
+        },
+        {
           name: 'Atendimentos',
           path: 'pages/atendimentos',
           component: () => import('@/views/dashboard/Consultations'),
@@ -29,7 +34,7 @@ export default new Router({
         // Pages
         {
           name: 'Perfil do Usuário',
-          path: 'pages/usuario',
+          path: 'paginas/usuario',
           component: () => import('@/views/dashboard/pages/UserProfile'),
         },
         {

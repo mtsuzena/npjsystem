@@ -9,6 +9,7 @@
     <dialog-calender
       v-if="calenderDateSelected != null && dialog != false"
       :dateCalender="calenderDateSelected"
+      :customerId="customerId"
       :open="dialog"
       @closeDialog="closeDialog"
       @saveDialog="saveObject"
@@ -74,6 +75,7 @@
           :event-overlap-threshold="30"
           :event-color="getEventColor"
           @click:date="openDialogCalender"
+          @click:event="showEvents"
           :dark="true"
         />
       </v-sheet>
@@ -105,6 +107,7 @@ export default {
   data() {
     return {
       markeds: [],
+      customerId: '',
       calenderDateSelected: Date,
       dialog: false,
       consultations: {},
@@ -126,7 +129,13 @@ export default {
   },
   methods: {
     openDialogCalender({date}) {
+      this.customerId = '';
       this.calenderDateSelected = new Date(`${date} 00:00:00`)
+      this.dialog = true
+    },
+    showEvents(e){
+      this.customerId = e.event.id;
+      this.calenderDateSelected =new Date(`${e.day.date}  00:00:00`);
       this.dialog = true
     },
     closeDialog() {
@@ -172,8 +181,10 @@ export default {
    async insertEvents(arr) {
 
       this.events = []
+
       arr.forEach((value)=>{
         this.events.push({
+          id: value.customerId,
           name: `| Atendimento ao Cliente: ${value.customer.name}`,
           start: new Date(value.consultationDate),
           color: this.colors[this.rnd(0, this.colors.length - 1)],

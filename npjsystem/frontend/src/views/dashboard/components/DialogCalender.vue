@@ -61,13 +61,11 @@
                     type="text"
                   />
                 </v-col>
-      
+
                 <v-col cols="6">
                   <v-text-field
                     v-model.trim="customer.email"
-                    :rules="emailRules"
                     label="Email*"
-                    required
                     type="email"
                   />
                 </v-col>
@@ -177,6 +175,7 @@
     props: {
       dateCalender: Date,
       open: Boolean,
+      customerId: null,
     },
     data () {
       return {
@@ -198,10 +197,6 @@
           v => /[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/.test(v) || 'Não inserir numeros ou caractéres especiais!',
         ],
         email: '',
-        emailRules: [
-          v => !!v || 'Preencha o email',
-          v => /.+@.+\..+/.test(v) || 'Insiria um email válido!',
-        ],
         cpfRules: [
           v => !!v || 'Preencha o cpf',
           v => /([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})/.test(v) || 'Insiria um cpf válido!',
@@ -254,57 +249,70 @@
           })
         })
       },
+      async getCustomerId () {
+        await api.get(`/consultations`).then((responseGetCustomerById) => {
+          responseGetCustomerById.data.forEach((value) => {
+              this.customer.name = value.customer.name;
+              this.customer.lastName = value.customer.lastName;
+              this.customer.cpf = value.customer.cpf;
+              this.customer.email = value.customer.email;
+              this.customer.cellphone = value.customer.cellphone;
+              let x = new Date(value.consultationDate);
+              this.time = x.toLocaleTimeString();
+          })
+        })
+      },
       close () {
+        this.clear();
         this.$emit('closeDialog')
       },
-      // validate(obj){
-      //     for(var prop in obj) {
-      //       if(obj.hasOwnProperty(prop))
-      //         return false;
-      //     }
-      //     return true;
-      // },
+      clear(){
+     //   this.customerId = '';
+        this.customer.name = '';
+        this.customer.lastName = '';
+        this.customer.cpf = '';
+        this.customer.email = '';
+        this.customer.cellphone = '';
+        this.time = null;
+      },
       async save () {
         if (this.$refs.form.validate()) {
-          // this.consultations.consultationDate.setHours(
-          //   parseInt(this.time.substring(0, 2)),
-          //   parseInt(this.time.substring(7, this.time.length - 2))
-          // );
-          this.consultations.consultationDate = this.dateCalender
-          this.consultations.userId = this.select
 
-          await api.post('/customers', this.customer)
-            .then((response) => {
-              console.log(response)
-              this.consultations.customerId = response.data.id
-              api.post('/consultations', this.consultations)
-                .then((response) => {
-                  console.log(response)
-                  this.close()
-                  this.$emit('saveDialog')
-                }, (error) => {
-                  console.log(error)
-                })
-            }, (error) => {
-              console.log(error)
-            })
+          if (this.customerId !== ''){ //caso seja vazio ir para o else e atualizar a consulta
+            this.consultations.consultationDate.setHours(
+              parseInt(this.time.substring(0, 2)),
+              parseInt(this.time.substring(7, this.time.length - 2))
+            );
+            this.consultations.consultationDate = this.dateCalender
+            this.consultations.userId = this.select
 
-        // axios.all([
-        //   axios.post(`/my-url`, {
-        //     myVar: 'myValue'
-        //   }),
-        //   axios.post(`/my-url2`, {
-        //     myVar: 'myValue'
-        //   })
-        // ])
-        //   .then(axios.spread((data1, data2) => {
-        //     // output of req.
-        //     console.log('data1', data1, 'data2', data2)
-        //   }));
+            await api.post('/customers', this.customer)
+              .then((response) => {
+                console.log("Em cima da meia da meia")
+                console.log(response)
+                this.consultations.customerId = response.data.id
+                api.post('/consultations', this.consultations)
+                  .then((response) => {
+                    console.log(response)
+                    this.close()
+                    this.$emit('saveDialog')
+                  }, (error) => {
+                    console.log(error)
+                  })
+              }, (error) => {
+                console.log(error)
+              })
+          }
+
+          this.clear();
         }
       },
     },
-
+    created() {
+      if (this.customerId !== ''){
+          this.getCustomerId(this.customerId);
+      }
+    }
   }
 </script>
 <style scoped>

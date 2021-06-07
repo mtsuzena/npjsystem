@@ -110,7 +110,7 @@
         {
           title: 'Processos',
           icon: 'mdi-clipboard-outline',
-          to: 'pages/processos',
+          to: '/pages/processos',
         },
         // {
         //   title: 'typography',

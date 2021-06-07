@@ -107,11 +107,11 @@
           title: 'consultations',
           to: '/pages/atendimentos',
         },
-        // {
-        //   title: 'rtables',
-        //   icon: 'mdi-clipboard-outline',
-        //   to: '/tables/regular-tables',
-        // },
+        {
+          title: 'Processos',
+          icon: 'mdi-clipboard-outline',
+          to: 'pages/processos',
+        },
         // {
         //   title: 'typography',
         //   icon: 'mdi-format-font',
@@ -132,11 +132,11 @@
         //   icon: 'mdi-bell',
         //   to: '/components/notifications',
         // },
-        // {
-        //   icon: 'mdi-account',
-        //   title: 'user',
-        //   to: '/pages/user',
-        // },
+        {
+          icon: 'mdi-account',
+          title: 'user',
+          to: '/pages/usuario',
+        },
       ],
     }),
 

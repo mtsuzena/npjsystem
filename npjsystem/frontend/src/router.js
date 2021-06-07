@@ -23,7 +23,7 @@ export default new Router({
         },
         {
           name: 'Processos',
-          path: 'paginas/processos',
+          path: 'pages/processos',
           component: () => import('@/views/dashboard/Processes'),
         },
         {
@@ -34,7 +34,7 @@ export default new Router({
         // Pages
         {
           name: 'Perfil do Usuário',
-          path: 'paginas/usuario',
+          path: 'pages/usuario',
           component: () => import('@/views/dashboard/pages/UserProfile'),
         },
         {

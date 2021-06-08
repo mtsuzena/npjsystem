@@ -11,7 +11,6 @@
 <script>
 
 import axios from 'axios'
-const jwt = require('jsonwebtoken');
 const configs = require('../../config/configs');
 
 export default {

@@ -30,6 +30,15 @@ router.get('/processes/byUserId/:userId', verify, async function (req, res, next
     }
 });
 
+router.get('/processes/byProcessNumber/:processNumber', verify, async function (req, res, next){
+    try {
+        const process = await processService.getProcessByProcessNumber(req.params.processNumber);
+        res.json(process);
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.post('/processes', verify, async function (req, res, next){
     const process = req.body;
     try {

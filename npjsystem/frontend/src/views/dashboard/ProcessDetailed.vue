@@ -34,10 +34,9 @@ export default {
       }
     });
 
-    api.get(`processes/${this.$route.params.processNumber}`).then((responseGetProcessByNumber) => {
+    api.get(`processes/byProcessNumber/${this.$route.params.processNumber}`).then((responseGetProcessByNumber) => {
       this.process = responseGetProcessByNumber.data;
     });
-
   }
 }
 </script>

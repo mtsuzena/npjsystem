@@ -36,6 +36,8 @@
               :footer-props="{
                 'items-per-page-text':'Pendências por página'
               }"
+              item-key="number"
+              @click:row="redirectToDetailedProcessScreen"
               class="py-3"
             />
           </v-card-text>
@@ -65,7 +67,7 @@ export default {
     return {
       processes: [
         {
-          number: '10293',
+          number: '123132222',
           assessmentDate: 'asdsa',
           hearingDate: 'asd',
           regarding: 'Separacao Consensual',
@@ -73,7 +75,7 @@ export default {
           user: 'Usuario Responsael'
         },
         {
-          number: '10293asdasd',
+          number: 'Process12312',
           assessmentDate: 'akkkksa',
           hearingDate: 'assssd',
           regarding: 'Vaga Creche',
@@ -123,6 +125,9 @@ export default {
     }
   },
   methods: {
+    redirectToDetailedProcessScreen(process) {
+      this.$router.push(`processDetailed/${process.number}`);
+    },
   },
 }
 </script>

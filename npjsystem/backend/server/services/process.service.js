@@ -15,6 +15,9 @@ exports.getProcessesByUserId = async function (userId) {
     return processData.getProcessesByUserId(userId);
 }
 
+exports.getProcessByProcessNumber = async function (processNumber) {
+    return processData.getProcessByProcessNumber(processNumber);
+}
 
 exports.saveProcess = async function (process) {
 

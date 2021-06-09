@@ -100,6 +100,41 @@ exports.getProcessesByUserId = function (userId) {
     });
 };
 
+exports.getProcessByProcessNumber = function (processNumber) {
+    return Process.findOne({
+        where: {
+            number: processNumber
+        },
+        include: [
+            {
+                model: db.user
+            },
+            {
+                model: db.customer
+            },
+            {
+                model: db.processType
+            },
+            {
+                model: db.processChecklist,
+                include: [
+                    {
+                        model: db.process,
+                        include: [
+                            {
+                                model: db.user
+                            },
+                            {
+                                model: db.customer
+                            },
+                        ]
+                    }
+                ]
+            }
+        ]
+    });
+};
+
 exports.getProcessByNumber = function (number) {
     return Process.findOne({
         where: {

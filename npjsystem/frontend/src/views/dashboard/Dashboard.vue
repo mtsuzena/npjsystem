@@ -162,7 +162,7 @@ export default {
     api.get(`processes/byUserId/${tokenDecoded.id}`).then((responseGetProcessesByUserId) => {
 
       this.processes = responseGetProcessesByUserId.data;
-
+      
       let ongoingProcesses = 0;
       let filedProcesses = 0;
       let pendingProcesses = 0;

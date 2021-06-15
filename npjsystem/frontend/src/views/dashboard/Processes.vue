@@ -57,68 +57,53 @@
 
 <script>
 
+import axios from 'axios'
+const jwt = require('jsonwebtoken');
+const configs = require('../../config/configs');
+
 export default {
   name: 'Processes',
   components: {
-
   },
-
   data() {
     return {
-      processes: [
-        {
-          number: '123132222',
-          assessmentDate: 'asdsa',
-          hearingDate: 'asd',
-          regarding: 'Separacao Consensual',
-          customer: 'CLiente',
-          user: 'Usuario Responsael'
-        },
-        {
-          number: 'Process12312',
-          assessmentDate: 'akkkksa',
-          hearingDate: 'assssd',
-          regarding: 'Vaga Creche',
-          customer: 'CLiente 2',
-          user: 'Usuario Responsael 2'
-        },
-      ],
+      processes: [],
       search: '', 
       processHeaders: [
         {
           sortable: false,
-          text: 'Processo',
+          text: 'Numero do Processo',
           value: 'number',
           align: 'left',
         },
         {
           sortable: false,
           text: 'Data de Autuação',
-          value: 'assessmentDate',
+          value: 'begins_date',
           align: 'left',
         },
         {
           sortable: false,
           text: 'Referente a:',
-          value: 'regarding',
+          value: 'processType.name',
           align: 'left ',
         },
         {
           sortable: false,
           text: 'Data de Audiência',
-          value: 'hearingDate',
+          value: 'court_hearing_date',
           align: 'left',
         },
         {
           sortable: false,
           text: 'Cliente',
-          value: 'customer',
+          value: 'customer.name',
           align: 'left',
         },
         {
           sortable: false,
           text: 'Responsável',
-          value: 'user',
+          value: 'user.name',
           align: 'left',
         },
       ],
@@ -129,5 +114,18 @@ export default {
       this.$router.push(`processDetailed/${process.number}`);
     },
   },
+  beforeCreate(){
+    let api = axios.create({
+      baseURL: configs.API_URL,
+      headers: {
+        'auth-token': window.localStorage.token
+      }
+    });
+    const tokenDecoded = jwt.decode(window.localStorage.token);
+
+    api.get('processes').then((responseGetProcesses) => {
+      this.processes = responseGetProcesses.data;   
+    });
+  }
 }
 </script>

@@ -71,3 +71,13 @@ insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") value
 insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 500, 534);
 
 insert into users (id, "name", email, "lastName", "aboutMe", "cep", "state", "city", "addres", "password", "userActive", "profileId", "createdAt", "updatedAt") values (100000, 'Admin', 'admin@gmail.com', 'Last Name', 'About Me kkk \n asd', '83704304', 'PR', 'City Admin', 'Addres Admin', '$2a$10$efMdAjZunBI8XnV.UZ8OW.0BQqDOa3sXeXcWboGy8ejlisBtBPEom', true, 500, (SELECT NOW()), (SELECT NOW()));
+
+/* ARRUMAR DADOS POSTERIORMENTE */
+
+INSERT INTO "processTypes"(id, name, "createdAt", "updatedAt") VALUES (501, 'Process Type 1', (SELECT NOW()), (SELECT NOW()));
+INSERT INTO customers(id, name, "lastName", "createdAt", "updatedAt") VALUES (501, 'Customer Name 1', 'Customer Lastname 1', (SELECT NOW()), (SELECT NOW()));
+INSERT INTO processes(id, "number", "userId", "customerId", "processTypeId", begins_date, court_hearing_date, "createdAt", "updatedAt") VALUES (501, '0004142-55.2021.8.16.0025', 100000, 501, 501, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));
+
+INSERT INTO "processTypes"(id, name, "createdAt", "updatedAt") VALUES (502, 'Process Type 2', (SELECT NOW()), (SELECT NOW()));
+INSERT INTO customers(id, name, "lastName", "createdAt", "updatedAt") VALUES (502, 'Customer Name 2', 'Customer Lastname 2', (SELECT NOW()), (SELECT NOW()));
+INSERT INTO processes(id, "number", "userId", "customerId","processTypeId", begins_date, court_hearing_date, "createdAt", "updatedAt") VALUES (502, '0004141-41.2021.8.16.0025', 100000, 502, 502, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));

@@ -84,7 +84,11 @@
                 'items-per-page-text':'Pendências por página'
               }"
               class="py-3"
-            />
+            >
+              <template v-slot:item.deadline="{ item }">
+                <span>{{ new Date(item.deadline).toLocaleString() }}</span>
+              </template>
+            </v-data-table>
           </v-card-text>
         </base-material-card>
       </v-col>

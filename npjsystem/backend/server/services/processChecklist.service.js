@@ -36,6 +36,10 @@ exports.updateProcessChecklist = async function (id, processChecklist) {
     const existingProcess = await processService.getProcess(processChecklist.processId);
     if (!existingProcess) throw new Error('Process not found');
 
+    if (processChecklist.status){
+        existingProcessChecklist.status = processChecklist.status;
+    }
+
     existingProcessChecklist.name = processChecklist.name;
     existingProcessChecklist.isChecked = processChecklist.isChecked;
     existingProcessChecklist.deadline = processChecklist.deadline;

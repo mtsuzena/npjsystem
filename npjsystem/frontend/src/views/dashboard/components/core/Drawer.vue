@@ -112,6 +112,11 @@
           icon: 'mdi-clipboard-outline',
           to: '/pages/processos',
         },
+        {
+          title: 'Revisão de Documentos',
+          icon: 'mdi-clipboard-outline',
+          to: '/pages/documentReview',
+        },
         // {
         //   title: 'typography',
         //   icon: 'mdi-format-font',

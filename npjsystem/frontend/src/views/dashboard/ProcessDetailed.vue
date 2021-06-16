@@ -14,11 +14,66 @@
       <v-col>
         <base-material-card
           color="green"
-          :title="`Processo ${process.number} / (1 dia(s) em tramitação)`"
+          :title="`Processo ${process.number} / ${processStatus}`"
           class="px-5 py-3"
         >
           <v-card-text>
-            
+            <v-row>
+              <v-col>
+                <span>Referente a: {{ process.processType.name }}</span>
+              </v-col>
+              <v-col>
+                <span>Data de Autuação: {{ new Date(process.begins_date).toLocaleString() }}</span>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <span>Cliente: {{ process.customer.name }}</span>
+              </v-col>
+              <v-col>
+                <span>Data de Audiência: {{ new Date(process.court_hearing_date).toLocaleString() }}</span>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <span>Responsável: {{ process.user.name }}</span>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </base-material-card>
+      </v-col>
+    </v-row>
+    <v-row
+      align="start"
+      justify="space-around"
+      class="grey lighten-5"
+    >
+      <v-col>
+        <base-material-card
+          color="red"
+          title="Lista de checagem do andamento processual"
+          class="px-5 py-3"
+        >
+          <v-card-text>
+            <v-data-table
+              v-model="checklistsDone"
+              :headers="headers"
+              :items="process.processChecklists"
+              item-key="name"
+              show-select
+              class="elevation-1"
+            >
+              <template v-slot:item.deadline="{ item }">
+                <span>{{ new Date(item.deadline).toLocaleString() }}</span>
+              </template>
+
+              <template v-slot:item.status="{ item }">
+                <span v-if="item.status == 0">Não iniciado</span>
+                <span v-if="item.status == 1">Em aprovação</span>
+                <span v-if="item.status == 2">Aprovado</span>
+              </template>
+
+            </v-data-table>
           </v-card-text>
         </base-material-card>
       </v-col>
@@ -34,13 +89,29 @@ const configs = require('../../config/configs');
 export default {
   name: 'ProcessDetailed',
   components: {
-
   },
-
   data() {
     return {
       process: {},
-      processStatus: ''     
+      processStatus: '',
+      checklistsDone: [],
+      selected: [],
+      headers: [
+        {
+          text: 'Nome Checklist',
+          align: 'start',
+          sortable: false,
+          value: 'name',
+        },
+        { 
+          text: 'Prazo de finalização', 
+          value: 'deadline' 
+        },
+        { 
+          text: 'Status', 
+          value: 'status' 
+        },
+      ],
     }
   },
   methods: {
@@ -54,12 +125,30 @@ export default {
     });
 
     api.get(`processes/byProcessNumber/${this.$route.params.processNumber}`).then((responseGetProcessByNumber) => {
+
       this.process = responseGetProcessByNumber.data;
+
       if(this.process.isFiled){
         this.processStatus = '(processo arquivado)'
       }else{
+        // CRIAR LOGICA DOS DIAS DE TRAMITAÇÃO AQUI...
 
+        let beginsDate = new Date(this.process.begins_date);
+        let currentDate = new Date();
+
+        let difference = (currentDate.getTime()-beginsDate.getTime()) / 1000 / 60 / 60 / 24;
+
+        let differenceInDecimal = parseInt(difference, 10);
+
+        this.processStatus = `(${differenceInDecimal} dia(s) em tramitação)`;
       }
+
+      this.process.processChecklists.forEach((procesChecklist, i) => {
+        if(procesChecklist.isChecked){
+          this.checklistsDone.push(procesChecklist);
+        }
+      });
+
     });
   }
 }

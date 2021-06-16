@@ -13,6 +13,15 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       },
+      /* 
+      0 - Não iniciado
+      1 - Em aprovação
+      2 - Aprovado
+      */
+      status: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+      },
       deadline: {
         type: Sequelize.DATE
       }

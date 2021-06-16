@@ -108,6 +108,10 @@ export default {
           value: 'deadline' 
         },
         { 
+          text: 'Responsavel', 
+          value: "status" 
+        },
+        { 
           text: 'Status', 
           value: 'status' 
         },

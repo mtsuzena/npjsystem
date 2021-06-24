@@ -24,6 +24,7 @@ exports.saveProcess = async function (process) {
     if(!process.customerId) throw new Error('Process shall have a Customer');
     if(!process.processTypeId) throw new Error('Process shall have a Process Type');
     if(!process.number) throw new Error('Process shall have a Number');
+    if(!process.requerido) throw new Error('Process shall have a Requerido');
 
     if(process.userId){
         const existingUser = await userService.getUser(process.userId);
@@ -74,12 +75,37 @@ exports.updateProcess = async function (id, process) {
     const existingProcessWithNumber = await processData.getProcessByNumber(process.number);
     if (existingProcessWithNumber && existingProcessWithNumber.id != id) throw new Error('Process Number already exists');
 
-    existingProcess.customerId = process.customerId;
-    existingProcess.processTypeId = process.processTypeId;
-    existingProcess.number = process.number
-    existingProcess.begins_date = process.begins_date
-    existingProcess.court_hearing_date = process.court_hearing_date
-    existingProcess.isFiled = process.isFiled
+    if(process.requerido){
+        existingProcess.requerido = process.requerido;
+    }
+
+    if(process.pastaFisica){
+        existingProcess.pastaFisica = process.pastaFisica;
+    }
+
+    if(process.customerId){
+        existingProcess.customerId = process.customerId;
+    }
+
+    if(process.processTypeId){
+        existingProcess.processTypeId = process.processTypeId;
+    }
+
+    if(process.number){
+        existingProcess.number = process.number;
+    }
+
+    if(process.isFiled){
+        existingProcess.isFiled = process.isFiled;
+    }
+
+    if(process.court_hearing_date){
+        existingProcess.court_hearing_date = process.court_hearing_date;
+    }
+
+    if(process.begins_date){
+        existingProcess.begins_date = process.begins_date;
+    }
 
     return processData.updateProcess(existingProcess);
 }

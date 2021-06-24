@@ -103,6 +103,9 @@ app.use(function (error, req, res, next) {
 	if (error.message === 'ProcessChecklist shall have a Process') {
 		return res.status(400).send({errorMessage: error.message});
 	}
+	if (error.message === 'Process shall have a Requerido') {
+		return res.status(400).send({errorMessage: error.message});
+	}
 	if (error.message === 'ProcessChecklist shall have a Name') {
 		return res.status(400).send({errorMessage: error.message});
 	}

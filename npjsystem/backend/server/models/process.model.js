@@ -9,6 +9,13 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false
       },
+      requerido: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      pastaFisica: {
+        type: Sequelize.STRING
+      },
       begins_date: {
         type: Sequelize.DATE
       },

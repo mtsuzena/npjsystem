@@ -27,6 +27,11 @@ export default new Router({
           component: () => import('@/views/dashboard/Processes'),
         },
         {
+          name: 'Revisão de Documentos',
+          path: 'pages/documentReview',
+          component: () => import('@/views/dashboard/DocumentReview'),
+        },
+        {
           name: 'Processo Detalhado',
           path: 'pages/processDetailed/:processNumber',
           component: () => import('@/views/dashboard/ProcessDetailed'),

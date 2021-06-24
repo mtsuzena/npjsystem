@@ -23,7 +23,7 @@
                 <span>Assunto: {{ process.processType.name }}</span>
               </v-col>
               <v-col>
-                <span>Responsável: {{ process.user.name }}</span>
+                <span>Professor Responsável: {{ process.user.name }}</span>
               </v-col>
             </v-row>
             <v-row>

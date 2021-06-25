@@ -86,6 +86,34 @@
         </base-material-card>
       </v-col>
     </v-row>
+    <v-row
+      align="start"
+      justify="space-around"
+      class="grey lighten-5"
+    >
+      <v-timeline>
+        <v-timeline-item
+          v-for="processMovement in processMovements"
+          :key="processMovement"
+          large
+        >
+          <template v-slot:icon>
+            <v-avatar>
+              <img :src="processMovement.imgSrc">
+            </v-avatar>
+          </template>
+          <template v-slot:opposite>
+            <span>{{processMovement.user.name}}</span>
+          </template>
+          <v-card class="elevation-2">
+            <v-card-title class="text-h5">
+              {{processMovement.actionName}}
+            </v-card-title>
+            <v-card-text>{{processMovement.actionDescription}}</v-card-text>
+          </v-card>
+        </v-timeline-item>
+      </v-timeline>
+    </v-row>
   </v-container>
 </template>
 
@@ -101,6 +129,24 @@ export default {
   data() {
     return {
       process: {},
+      processMovements: [
+        {
+          actionName: 'Criação de checklist',
+          actionDescription: 'Usuario XX criou um checklist chamado Peticao Inicial no dia 10/04/05 às 15:30hs',
+          imgSrc: 'https://i.pravatar.cc/64',
+          user: {
+            name: 'User 1'
+          }
+        },
+        {
+          actionName: 'Action Name Test 2',
+          actionDescription: 'Usuario XX2 criou um checklist chamado Peticao Inicial no dia 10/04/05 às 15:30hs',
+          imgSrc: 'https://i.pravatar.cc/65',
+          user: {
+            name: 'User 2'
+          }
+        }
+      ],
       processStatus: '',
       checklistsDone: [],
       selected: [],

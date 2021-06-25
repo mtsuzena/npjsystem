@@ -127,6 +127,13 @@
                     required
                   />
                 </v-col>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="consultations.motivo"
+                    label="Motivo"
+                    type="text"
+                  />
+                </v-col>
               </v-row>
             </v-container>
           </v-card-text>
@@ -175,7 +182,7 @@
     props: {
       dateCalender: Date,
       open: Boolean,
-      customerId: null,
+      consultationId: null,
     },
     data () {
       return {
@@ -223,6 +230,7 @@
           userId: Number,
           customerId: null,
           consultationDate: this.dateCalender,
+          motivo: null,
         },
       }
     },
@@ -249,17 +257,17 @@
           })
         })
       },
-      async getCustomerId () {
-        await api.get(`/consultations`).then((responseGetCustomerById) => {
-          responseGetCustomerById.data.forEach((value) => {
-              this.customer.name = value.customer.name;
-              this.customer.lastName = value.customer.lastName;
-              this.customer.cpf = value.customer.cpf;
-              this.customer.email = value.customer.email;
-              this.customer.cellphone = value.customer.cellphone;
-              let x = new Date(value.consultationDate);
-              this.time = x.toLocaleTimeString();
-          })
+      async getConsultationById (consultationId) {
+        await api.get(`/consultations/${consultationId}`).then((responseGetConsultationById) => {
+          let value = responseGetConsultationById.data;
+          this.customer.name = value.customer.name;
+          this.customer.lastName = value.customer.lastName;
+          this.customer.cpf = value.customer.cpf;
+          this.customer.email = value.customer.email;
+          this.customer.cellphone = value.customer.cellphone;
+          this.consultations.motivo = value.motivo;
+          let x = new Date(value.consultationDate);
+          this.time = x.toLocaleTimeString();
         })
       },
       close () {
@@ -278,7 +286,7 @@
       async save () {
         if (this.$refs.form.validate()) {
 
-          if (this.customerId !== ''){ //caso seja vazio ir para o else e atualizar a consulta
+          if (this.customerId !== ' '){ //caso seja vazio ir para o else e atualizar a consulta
             this.consultations.consultationDate.setHours(
               parseInt(this.time.substring(0, 2)),
               parseInt(this.time.substring(7, this.time.length - 2))
@@ -309,8 +317,8 @@
       },
     },
     created() {
-      if (this.customerId !== ''){
-          this.getCustomerId(this.customerId);
+      if (this.consultationId !== ''){
+          this.getConsultationById(this.consultationId);
       }
     }
   }

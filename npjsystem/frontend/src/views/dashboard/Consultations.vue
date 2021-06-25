@@ -9,7 +9,7 @@
     <dialog-calender
       v-if="calenderDateSelected != null && dialog != false"
       :dateCalender="calenderDateSelected"
-      :customerId="customerId"
+      :consultationId="consultationId"
       :open="dialog"
       @closeDialog="closeDialog"
       @saveDialog="saveObject"
@@ -107,7 +107,7 @@ export default {
   data() {
     return {
       markeds: [],
-      customerId: '',
+      consultationId: '',
       calenderDateSelected: Date,
       dialog: false,
       consultations: {},
@@ -129,12 +129,12 @@ export default {
   },
   methods: {
     openDialogCalender({date}) {
-      this.customerId = '';
+      this.consultationId = '';
       this.calenderDateSelected = new Date(`${date} 00:00:00`)
       this.dialog = true
     },
     showEvents(e){
-      this.customerId = e.event.id;
+      this.consultationId = e.event.id;
       this.calenderDateSelected =new Date(`${e.day.date}  00:00:00`);
       this.dialog = true
     },
@@ -184,7 +184,7 @@ export default {
 
       arr.forEach((value)=>{
         this.events.push({
-          id: value.customerId,
+          id: value.id,
           name: `| Atendimento ao Cliente: ${value.customer.name}`,
           start: new Date(value.consultationDate),
           color: this.colors[this.rnd(0, this.colors.length - 1)],

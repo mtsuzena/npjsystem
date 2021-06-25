@@ -99,7 +99,7 @@
         >
           <template v-slot:icon>
             <v-avatar>
-              <img :src="processMovement.imgSrc">
+              <img :src="processMovement.user.imgSrc">
             </v-avatar>
           </template>
           <template v-slot:opposite>
@@ -133,17 +133,17 @@ export default {
         {
           actionName: 'Criação de checklist',
           actionDescription: 'Usuario XX criou um checklist chamado Peticao Inicial no dia 10/04/05 às 15:30hs',
-          imgSrc: 'https://i.pravatar.cc/64',
           user: {
-            name: 'User 1'
+            name: 'User 1',
+            imgSrc: 'https://i.pravatar.cc/64'
           }
         },
         {
           actionName: 'Action Name Test 2',
           actionDescription: 'Usuario XX2 criou um checklist chamado Peticao Inicial no dia 10/04/05 às 15:30hs',
-          imgSrc: 'https://i.pravatar.cc/65',
           user: {
-            name: 'User 2'
+            name: 'User 2',
+            imgSrc: 'https://i.pravatar.cc/65'
           }
         }
       ],

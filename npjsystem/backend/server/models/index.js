@@ -31,6 +31,7 @@ db.customer = require("../models/customer.model")(sequelize, Sequelize);
 db.consultation = require("../models/consultation.model")(sequelize, Sequelize);
 db.processType = require("../models/processType.model")(sequelize, Sequelize);
 db.processChecklist = require("../models/processChecklist.model")(sequelize, Sequelize);
+db.processMovement = require("./processMovement.model")(sequelize, Sequelize);
 db.process = require("../models/process.model")(sequelize, Sequelize);
 db.systemLog = require("../models/systemLog.model")(sequelize, Sequelize);
 
@@ -42,6 +43,7 @@ db.user.belongsTo(db.profile);
 db.user.hasMany(db.consultation);
 db.user.hasMany(db.process);
 db.user.hasMany(db.systemLog);
+db.user.hasMany(db.processMovement);
 
 // SYSTEM LOGS RELATIONSHIPS
 db.systemLog.belongsTo(db.user);
@@ -55,11 +57,17 @@ db.customer.hasMany(db.consultation);
 db.customer.hasMany(db.process);
 
 
+// PROCESS MOVEMENTS RELATIONSHIPS
+db.processMovement.belongsTo(db.process);
+db.processMovement.belongsTo(db.user);
+
+
 // PROCESS RELATIONSHIPS
 db.process.belongsTo(db.user);
 db.process.belongsTo(db.processType);
 db.process.belongsTo(db.customer);
 db.process.hasMany(db.processChecklist);
+db.process.hasMany(db.processMovement);
 
 
 // PROCESS CHECKLIST RELATIONSHIPS
@@ -90,6 +98,8 @@ db.role.belongsToMany(db.profile, {
 
 // ROLES
 db.ROLES = {
+  CREATE_PROCESS_MOVEMENTS: "CREATE_PROCESS_MOVEMENTS",
+  READ_PROCESS_MOVEMENTS: "READ_PROCESS_MOVEMENTS",
   CREATE_ROLE: "CREATE_ROLE",
   READ_ROLE: "READ_ROLE",
   UPDATE_ROLE: "UPDATE_ROLE",

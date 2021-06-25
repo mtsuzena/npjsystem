@@ -7,7 +7,10 @@ module.exports = (sequelize, Sequelize) => {
       },
       consultationDate: {
         type: Sequelize.DATE
-      }
+      },
+      motivo: {
+        type: Sequelize.STRING
+      },
     });
   
     return Consultation;

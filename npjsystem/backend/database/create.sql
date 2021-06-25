@@ -76,11 +76,11 @@ insert into users (id, "name", email, "lastName", "aboutMe", "cep", "state", "ci
 
 INSERT INTO "processTypes"(id, name, "createdAt", "updatedAt") VALUES (501, 'Process Type 1', (SELECT NOW()), (SELECT NOW()));
 INSERT INTO customers(id, name, "lastName", "createdAt", "updatedAt") VALUES (501, 'Customer Name 1', 'Customer Lastname 1', (SELECT NOW()), (SELECT NOW()));
-INSERT INTO processes(id, "number", "userId", "customerId", "processTypeId", begins_date, court_hearing_date, "createdAt", "updatedAt") VALUES (501, '0004142-55.2021.8.16.0025', 100000, 501, 501, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));
+INSERT INTO processes(id, "number", "requerido", "pastaFisica", "userId", "customerId", "processTypeId", begins_date, court_hearing_date, "createdAt", "updatedAt") VALUES (501, '0004142-55.2021.8.16.0025', 'Requerido Test', 'Pasta Fisica 1', 100000, 501, 501, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));
 
 INSERT INTO "processTypes"(id, name, "createdAt", "updatedAt") VALUES (502, 'Process Type 2', (SELECT NOW()), (SELECT NOW()));
 INSERT INTO customers(id, name, "lastName", "createdAt", "updatedAt") VALUES (502, 'Customer Name 2', 'Customer Lastname 2', (SELECT NOW()), (SELECT NOW()));
-INSERT INTO processes(id, "number", "userId", "customerId","processTypeId", begins_date, court_hearing_date, "createdAt", "updatedAt") VALUES (502, '0004141-41.2021.8.16.0025', 100000, 502, 502, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));
+INSERT INTO processes(id, "number", "requerido", "pastaFisica", "userId", "customerId","processTypeId", begins_date, court_hearing_date, "createdAt", "updatedAt") VALUES (502, '0004141-41.2021.8.16.0025', 'Requerido Test2', 'Pasta Fisica 2', 100000, 502, 502, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));
 
 INSERT INTO "processChecklists"(id, name, "processId", status, "isChecked",deadline,"createdAt", "updatedAt") VALUES (501, 'Checklist 1', 502, 0, false, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));
 INSERT INTO "processChecklists"(id, name, "processId", status, "isChecked",deadline,"createdAt", "updatedAt") VALUES (502, 'Checklist 2', 502, 1, true, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));

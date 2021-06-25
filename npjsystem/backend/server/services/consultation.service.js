@@ -52,6 +52,10 @@ exports.updateConsultation = async function (id, consultation) {
         if (existingConsultationWithDateAndUser) throw new Error('User is already committed to this data');
     }
 
+    if(consultation.motivo){
+        existingConsultation.motivo = consultation.motivo;
+    }
+
     existingConsultation.userId = consultation.userId;
     existingConsultation.customerId = consultation.customerId;
     existingConsultation.consultationDate = consultation.consultationDate;

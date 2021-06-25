@@ -20,15 +20,15 @@
           <v-card-text>
             <v-row>
               <v-col>
-                <span>Referente a: {{ process.processType.name }}</span>
+                <span>Assunto: {{ process.processType.name }}</span>
               </v-col>
               <v-col>
-                <span>Data de Autuação: {{ new Date(process.begins_date).toLocaleString() }}</span>
+                <span>Professor Responsável: {{ process.user.name }}</span>
               </v-col>
             </v-row>
             <v-row>
               <v-col>
-                <span>Cliente: {{ process.customer.name }}</span>
+                <span>Data de Autuação: {{ new Date(process.begins_date).toLocaleString() }}</span>
               </v-col>
               <v-col>
                 <span>Data de Audiência: {{ new Date(process.court_hearing_date).toLocaleString() }}</span>
@@ -36,7 +36,15 @@
             </v-row>
             <v-row>
               <v-col>
-                <span>Responsável: {{ process.user.name }}</span>
+                <span>Requerente: {{ process.customer.name }}</span>
+              </v-col>
+              <v-col>
+                <span>Requerido: {{ process.requerido }}</span>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <span>Pasta Física: {{ process.pastaFisica }}</span>
               </v-col>
             </v-row>
           </v-card-text>

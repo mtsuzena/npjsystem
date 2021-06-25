@@ -112,6 +112,18 @@ app.use(function (error, req, res, next) {
 	if (error.message === 'ProcessChecklist not found') {
 		return res.status(404).send({errorMessage: error.message});
 	}
+	if (error.message === 'processMovement shall have a ProcessId') {
+		return res.status(400).send({errorMessage: error.message});
+	}
+	if (error.message === 'processMovement shall have a UserId') {
+		return res.status(400).send({errorMessage: error.message});
+	}
+	if (error.message === 'processMovement shall have a actionName') {
+		return res.status(400).send({errorMessage: error.message});
+	}
+	if (error.message === 'processMovement shall have a actionDescription') {
+		return res.status(400).send({errorMessage: error.message});
+	}
 	
 	res.status(500).send({errorMessage: error.message});
 });

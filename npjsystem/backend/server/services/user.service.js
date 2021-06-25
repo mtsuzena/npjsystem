@@ -89,6 +89,9 @@ exports.updateUser = async function (id, user) {
     existingUser.addres = user.addres;
     existingUser.profileId = user.profileId;
 
+    if(user.imgSrc){
+        existingUser.imgSrc = user.imgSrc;
+    }
 
     return usersData.updateUser(existingUser);
 }

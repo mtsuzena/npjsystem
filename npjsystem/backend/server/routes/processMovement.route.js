@@ -19,8 +19,6 @@ router.post('/processMovements', verify, async function (req, res, next){
         const newProcessMovement = await processMovementService.saveProcessMovement(processMovement);
         res.status(201).json(newProcessMovement);
     } catch (error) {
-
-        
         next(error);
     }
 });

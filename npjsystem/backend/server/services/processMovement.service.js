@@ -15,7 +15,7 @@ exports.saveProcessMovement = async function (processMovement) {
     const existingProcess = await processService.getProcess(processMovement.processId);
     if (!existingProcess) throw new Error('Process not found');
 
-    const existingUser = await usersData.getUser(id);
+    const existingUser = await usersData.getUser(processMovement.userId);
     if (!existingUser) throw new Error('User not found');
 
     return processMovementData.saveProcessMovement(processMovement);

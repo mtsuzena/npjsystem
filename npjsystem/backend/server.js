@@ -19,8 +19,9 @@ app.use('/api/', require('./server/routes/consultation.route'));
 app.use('/api/', require('./server/routes/processType.route'));
 app.use('/api/', require('./server/routes/process.route'));
 app.use('/api/', require('./server/routes/processChecklist.route'));
+app.use('/api/', require('./server/routes/processMovement.route'));
 app.use('/api/', require('./server/routes/systemLog.route'));
-
+	 
 app.use(function (error, req, res, next) {
 	if (error.message === 'Role already exists') {
 		return res.status(409).send({errorMessage: error.message});

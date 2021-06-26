@@ -28,6 +28,15 @@ exports.getProcesses = function () {
                         ]
                     }
                 ]
+            },
+            {
+                model: db.processMovement,
+                include: [
+                    {
+                        model: db.user,
+                        attributes: ['name', 'imgSrc']
+                    }
+                ]
             }
         ]
     });
@@ -58,6 +67,15 @@ exports.getProcess = function (id) {
                                 model: db.customer
                             },
                         ]
+                    }
+                ]
+            },
+            {
+                model: db.processMovement,
+                include: [
+                    {
+                        model: db.user,
+                        attributes: ['name', 'imgSrc']
                     }
                 ]
             }
@@ -95,6 +113,15 @@ exports.getProcessesByUserId = function (userId) {
                         ]
                     }
                 ]
+            },
+            {
+                model: db.processMovement,
+                include: [
+                    {
+                        model: db.user,
+                        attributes: ['name', 'imgSrc']
+                    }
+                ]
             }
         ]
     });
@@ -130,6 +157,15 @@ exports.getProcessByProcessNumber = function (processNumber) {
                         ]
                     }
                 ]
+            },
+            {
+                model: db.processMovement,
+                include: [
+                    {
+                        model: db.user,
+                        attributes: ['name', 'imgSrc']
+                    }
+                ]
             }
         ]
     });
@@ -163,6 +199,15 @@ exports.getProcessByNumber = function (number) {
                                 model: db.customer
                             },
                         ]
+                    }
+                ]
+            },
+            {
+                model: db.processMovement,
+                include: [
+                    {
+                        model: db.user,
+                        attributes: ['name', 'imgSrc']
                     }
                 ]
             }

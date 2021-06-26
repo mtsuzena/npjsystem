@@ -74,7 +74,7 @@ insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") value
 insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 500, 535);
 insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 500, 536);
 
-insert into users (id, "name", email, "lastName", "aboutMe", "cep", "state", "city", "addres", "password", "userActive", "profileId", "createdAt", "updatedAt") values (100000, 'Admin', 'admin@gmail.com', 'Last Name', 'About Me kkk \n asd', '83704304', 'PR', 'City Admin', 'Addres Admin', '$2a$10$efMdAjZunBI8XnV.UZ8OW.0BQqDOa3sXeXcWboGy8ejlisBtBPEom', true, 500, (SELECT NOW()), (SELECT NOW()));
+insert into users (id, "name", email, "imgSrc","lastName", "aboutMe", "cep", "state", "city", "addres", "password", "userActive", "profileId", "createdAt", "updatedAt") values (100000, 'Genilma Moura', 'admin@gmail.com', '@/assets/avatar/avatar_masculino_exemplo_1.jpeg', 'Last Name', 'About Me kkk \n asd', '83704304', 'PR', 'City Admin', 'Addres Admin', '$2a$10$efMdAjZunBI8XnV.UZ8OW.0BQqDOa3sXeXcWboGy8ejlisBtBPEom', true, 500, (SELECT NOW()), (SELECT NOW()));
 
 /* ARRUMAR DADOS POSTERIORMENTE */
 

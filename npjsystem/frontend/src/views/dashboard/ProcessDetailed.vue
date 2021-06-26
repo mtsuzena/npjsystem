@@ -93,7 +93,7 @@
     >
       <v-timeline>
         <v-timeline-item
-          v-for="processMovement in processMovements"
+          v-for="processMovement in process.processMovements"
           :key="processMovement"
           large
         >
@@ -129,24 +129,6 @@ export default {
   data() {
     return {
       process: {},
-      processMovements: [
-        {
-          actionName: 'Criação de checklist',
-          actionDescription: 'Usuario XX criou um checklist chamado Peticao Inicial no dia 10/04/05 às 15:30hs',
-          user: {
-            name: 'User 1',
-            imgSrc: 'https://i.pravatar.cc/64'
-          }
-        },
-        {
-          actionName: 'Action Name Test 2',
-          actionDescription: 'Usuario XX2 criou um checklist chamado Peticao Inicial no dia 10/04/05 às 15:30hs',
-          user: {
-            name: 'User 2',
-            imgSrc: 'https://i.pravatar.cc/65'
-          }
-        }
-      ],
       processStatus: '',
       checklistsDone: [],
       selected: [],
@@ -205,6 +187,11 @@ export default {
         if(procesChecklist.isChecked){
           this.checklistsDone.push(procesChecklist);
         }
+      });
+
+      // Convertendo images path em uma importacao da imagem
+      this.process.processMovements.forEach((processMovement, i) => {
+        this.process.processMovements[i].user.imgSrc = require('@/assets/avatar/' + processMovement.user.imgSrc);
       });
 
     });

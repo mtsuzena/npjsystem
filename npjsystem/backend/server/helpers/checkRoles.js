@@ -123,6 +123,14 @@ exports.check = function(route, method, roles){
             auth = authenticator(roles, db.ROLES.CREATE_SYSTEM_LOG);
         }
     }
+    else if(route.indexOf("processMovements") > -1){
+        if(method == "GET"){
+            auth = authenticator(roles, db.ROLES.READ_PROCESS_MOVEMENTS);
+        }
+        else if(method == "POST"){
+            auth = authenticator(roles, db.ROLES.CREATE_PROCESS_MOVEMENTS);
+        }
+    }
 
     if(auth){
         return true;

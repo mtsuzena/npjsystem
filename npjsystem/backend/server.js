@@ -10,6 +10,10 @@ app.use(function(req, res, next) {
 });
 
 app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
+// Routes -> Remover do Server.js
+// Criar arquivo chamado routes.js e migrar as rotas pra la
 app.use('/api/', require('./server/routes/role.route'));
 app.use('/api/', require('./server/routes/profile.route'));
 app.use('/api/', require('./server/routes/user.route'));
@@ -31,6 +35,9 @@ app.use(function (error, req, res, next) {
 		return res.status(409).send({errorMessage: error.message});
 	}
 	if (error.message === 'Role not found') {
+		return res.status(404).send({errorMessage: error.message});
+	}
+	if (error.message === 'No such file') {
 		return res.status(404).send({errorMessage: error.message});
 	}
 	if (error.message === 'Customer not found') {

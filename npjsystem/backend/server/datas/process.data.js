@@ -26,7 +26,10 @@ exports.getProcesses = function () {
                                 model: db.customer
                             },
                         ]
-                    }
+                    },
+                    {
+                        model: db.document
+                    },
                 ]
             },
             {
@@ -67,6 +70,9 @@ exports.getProcess = function (id) {
                                 model: db.customer
                             },
                         ]
+                    },
+                    {
+                        model: db.document
                     }
                 ]
             },
@@ -111,7 +117,10 @@ exports.getProcessesByUserId = function (userId) {
                                 model: db.customer
                             },
                         ]
-                    }
+                    },
+                    {
+                        model: db.document
+                    },
                 ]
             },
             {
@@ -155,7 +164,10 @@ exports.getProcessByProcessNumber = function (processNumber) {
                                 model: db.customer
                             },
                         ]
-                    }
+                    },
+                    {
+                        model: db.document
+                    },
                 ]
             },
             {
@@ -199,7 +211,10 @@ exports.getProcessByNumber = function (number) {
                                 model: db.customer
                             },
                         ]
-                    }
+                    },
+                    {
+                        model: db.document
+                    },
                 ]
             },
             {

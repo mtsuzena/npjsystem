@@ -33,6 +33,7 @@ db.processType = require("../models/processType.model")(sequelize, Sequelize);
 db.processChecklist = require("../models/processChecklist.model")(sequelize, Sequelize);
 db.processMovement = require("./processMovement.model")(sequelize, Sequelize);
 db.process = require("../models/process.model")(sequelize, Sequelize);
+db.document = require("../models/document.model")(sequelize, Sequelize);
 db.systemLog = require("../models/systemLog.model")(sequelize, Sequelize);
 
 // ##
@@ -51,16 +52,13 @@ db.systemLog.belongsTo(db.user);
 // PROCESS_TYPE RELATIONSHIPS
 db.processType.hasMany(db.process);
 
-
 // CUSTOMER RELATIONSHIPS
 db.customer.hasMany(db.consultation);
 db.customer.hasMany(db.process);
 
-
 // PROCESS MOVEMENTS RELATIONSHIPS
 db.processMovement.belongsTo(db.process);
 db.processMovement.belongsTo(db.user);
-
 
 // PROCESS RELATIONSHIPS
 db.process.belongsTo(db.user);
@@ -69,15 +67,16 @@ db.process.belongsTo(db.customer);
 db.process.hasMany(db.processChecklist);
 db.process.hasMany(db.processMovement);
 
-
 // PROCESS CHECKLIST RELATIONSHIPS
 db.processChecklist.belongsTo(db.process);
+db.processChecklist.hasOne(db.document);
 
+// DOCUMENT RELATIONSHIPS
+db.document.belongsTo(db.processChecklist);
 
 // CONSULTATION RELATIONSHIPS
 db.consultation.belongsTo(db.user);
 db.consultation.belongsTo(db.customer);
-
 
 // PROFILE RELATIONSHIPS
 db.profile.belongsToMany(db.role, {
@@ -87,14 +86,12 @@ db.profile.belongsToMany(db.role, {
 });
 db.profile.hasMany(db.user);
 
-
 // ROLE RELATIONSHIPS
 db.role.belongsToMany(db.profile, {
   through: "profile_roles",
   foreignKey: "roleId",
   otherKey: "profileId"
 });
-
 
 // ROLES
 db.ROLES = {

@@ -6,7 +6,10 @@ exports.getProcessChecklists = function () {
         include: [
             {
                 model: db.process
-            }
+            },
+            {
+                model: db.document
+            },
         ]
     });
 };
@@ -16,7 +19,10 @@ exports.getProcessChecklist = function (id) {
         include: [
             {
                 model: db.process
-            }
+            },
+            {
+                model: db.document
+            },
         ]
     });
 };

@@ -87,6 +87,24 @@ exports.check = function(route, method, roles){
             auth = authenticator(roles, db.ROLES.DELETE_PROCESS);
         }
     }
+    else if(route.indexOf("documents/upload") > -1){
+        if(method == "POST"){
+            auth = authenticator(roles, db.ROLES.UPLOAD_DOCUMENT);
+        }
+    }
+    else if(route.indexOf("documents/download") > -1){
+        if(method == "GET"){
+            auth = authenticator(roles, db.ROLES.DOWNLOAD_DOCUMENT);
+        }
+    }
+    else if(route.indexOf("documents") > -1){
+        if(method == "POST"){
+            auth = authenticator(roles, db.ROLES.CREATE_DOCUMENT);
+        }
+        if(method == "PUT"){
+            auth = authenticator(roles, db.ROLES.UPDATE_DOCUMENT);
+        }
+    }
     else if(route.indexOf("customers") > -1){
         if(method == "GET"){
             auth = authenticator(roles, db.ROLES.READ_CUSTOMER);

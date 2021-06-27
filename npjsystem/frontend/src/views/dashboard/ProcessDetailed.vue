@@ -66,10 +66,12 @@
             <v-data-table
               v-model="checklistsDone"
               :headers="headers"
+              :custom-sort="customSortChecklists"
               :items="process.processChecklists"
               item-key="name"
               show-select
               class="elevation-1"
+              @click:row="getProcessChecklistId"
             >
               <template v-slot:item.deadline="{ item }">
                 <span>{{ new Date(item.deadline).toLocaleString() }}</span>
@@ -81,6 +83,29 @@
                 <span v-if="item.status == 2">Aprovado</span>
               </template>
 
+              <template v-slot:item.document.fileName="{ item }">
+                <v-btn v-if="item.document !== null" class="mx-2" fab dark small color="blue" @click="downloadDocument(item.document.fileName)">
+                  <v-icon dark>mdi-file-download</v-icon>
+                </v-btn>
+                
+                <input
+                  v-if="item.document === null"
+                  style="display: none"
+                  type="file" 
+                  @change="onFileSelected"
+                  ref="fileInput"
+                >
+                <v-btn 
+                  v-if="item.document === null" 
+                  class="mx-2" 
+                  fab 
+                  dark 
+                  small 
+                  color="red" 
+                  @click="$refs.fileInput.click()">
+                    <v-icon dark>mdi-file-upload</v-icon>
+                </v-btn>
+              </template>
             </v-data-table>
           </v-card-text>
         </base-material-card>
@@ -121,6 +146,7 @@
 
 import axios from 'axios'
 const configs = require('../../config/configs');
+const FileDownload = require('js-file-download');
 
 export default {
   name: 'ProcessDetailed',
@@ -128,6 +154,8 @@ export default {
   },
   data() {
     return {
+      processChecklistId: null,
+      selectedFile: null,
       process: {},
       processStatus: '',
       checklistsDone: [],
@@ -145,7 +173,11 @@ export default {
         },
         { 
           text: 'Responsavel', 
-          value: "status" 
+          value: "user.name" 
+        },
+        { 
+          text: 'Documento', 
+          value: "document.fileName" ,
         },
         { 
           text: 'Status', 
@@ -155,6 +187,79 @@ export default {
     }
   },
   methods: {
+    getProcessChecklistId(processChecklist){
+      this.processChecklistId = processChecklist.id;
+    },
+    onFileSelected(event){
+      this.selectedFile = event.target.files[0];
+      this.uploadDocument();
+    },
+    uploadDocument(processChecklistId){
+      let apiUpload = axios.create({
+        baseURL: configs.API_URL,
+        headers: {
+            'auth-token': window.localStorage.token,
+            'Content-Type': 'multipart/form-data'
+          }
+      });
+
+      let apiAddDoc = axios.create({
+        baseURL: configs.API_URL,
+        headers: {
+          'auth-token': window.localStorage.token
+        }
+      });
+
+      let formData = new FormData();
+      formData.append('file', this.selectedFile);
+
+      apiUpload.post('documents/upload', formData).then((responseuUploadDocument) => {
+        let fileName = responseuUploadDocument.data.fileName;
+        apiAddDoc.post('documents', {"fileName": fileName, "processChecklistId": this.processChecklistId}).then((responseuAddDocument) => {
+          window.location.reload(true);
+        });
+      });
+    },
+    downloadDocument(value){
+      console.log('Cliquei no botao');
+      console.log(value);
+
+      let api = axios.create({
+        baseURL: configs.API_URL,
+        responseType: 'arraybuffer',
+        headers: {
+            'auth-token': window.localStorage.token,
+            'Accept': 'application/docx'
+          }
+      });
+
+      api.get(`documents/download/${value}`).then((responseDonwloadDocument) => {
+        const blob = new Blob([responseDonwloadDocument.data], {
+          type: 'application/docx',
+        });
+        FileDownload(blob, value);
+      });
+
+    },
+    customSortChecklists(items, index, isDesc) {
+      let itemsSorted = [];
+
+      // preenchendo o array primeiramente com os checklists nao feitos
+      items.forEach(function(checklist) {
+        if(checklist.isChecked === false){
+          itemsSorted.push(checklist);
+        }
+      });
+
+      // preenchendo o array com os checklists feitos
+      items.forEach(function(checklist) {
+        if(checklist.isChecked === true){
+          itemsSorted.push(checklist);
+        }
+      });
+
+      return itemsSorted;
+    }
   },
   beforeCreate(){
     let api = axios.create({

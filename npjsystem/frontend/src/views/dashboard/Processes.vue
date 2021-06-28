@@ -45,13 +45,10 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-btn
-        class="ma-2"
-        color="success"
-      >
-        Cadastrar Processo
-      </v-btn>
-    </v-row>  
+      <dialog-new-process
+
+      ></dialog-new-process>
+    </v-row>
   </v-container>
 </template>
 
@@ -64,11 +61,12 @@ const configs = require('../../config/configs');
 export default {
   name: 'Processes',
   components: {
+    DialogNewProcess: () => import('./components/DialogNewProcess'),
   },
   data() {
     return {
       processes: [],
-      search: '', 
+      search: '',
       processHeaders: [
         {
           sortable: false,
@@ -124,7 +122,7 @@ export default {
     const tokenDecoded = jwt.decode(window.localStorage.token);
 
     api.get('processes').then((responseGetProcesses) => {
-      this.processes = responseGetProcesses.data;   
+      this.processes = responseGetProcesses.data;
     });
   }
 }

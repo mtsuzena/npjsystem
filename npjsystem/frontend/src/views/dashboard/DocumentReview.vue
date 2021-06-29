@@ -21,7 +21,7 @@
             <div>
               <v-stepper
                 non-linear
-                value="3"
+                value="1"
               >
                 <v-stepper-header>
                   <v-stepper-step
@@ -92,7 +92,7 @@ export default {
   },
   data() {
     return {
-      materialCardColor: 'orange',
+      materialCardColor: 'red',
     }
   },
   methods: {

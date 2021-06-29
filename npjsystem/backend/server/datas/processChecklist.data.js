@@ -10,6 +10,10 @@ exports.getProcessChecklists = function () {
             {
                 model: db.document
             },
+            {
+                model: db.user,
+                attributes: ['id', 'name', 'lastName']
+            },
         ]
     });
 };
@@ -22,6 +26,10 @@ exports.getProcessChecklist = function (id) {
             },
             {
                 model: db.document
+            },
+            {
+                model: db.user,
+                attributes: ['id', 'name', 'lastName']
             },
         ]
     });

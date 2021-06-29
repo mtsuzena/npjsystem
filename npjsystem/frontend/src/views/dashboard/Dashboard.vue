@@ -137,7 +137,7 @@ export default {
         {
           sortable: false,
           text: 'Responsavel',
-          value: 'process.user.name',
+          value: 'user.fullName',
           align: 'left',
         },
         {
@@ -183,6 +183,7 @@ export default {
 
         process.processChecklists.forEach((procesChecklist, i) => {
           if(!procesChecklist.isChecked){
+            procesChecklist.user.fullName = procesChecklist.user.name + ' ' + procesChecklist.user.lastName; 
             this.pendingChecklists.push(procesChecklist);
             if(isPending){
               pendingProcesses += 1;
@@ -190,6 +191,8 @@ export default {
             }
           }
         });
+
+        console.log(this.pendingChecklists);
 
       });
 

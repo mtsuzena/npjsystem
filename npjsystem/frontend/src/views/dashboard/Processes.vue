@@ -101,7 +101,7 @@ export default {
         {
           sortable: false,
           text: 'Responsável',
-          value: 'user.name',
+          value: 'user.fullName',
           align: 'left',
         },
       ],
@@ -123,6 +123,9 @@ export default {
 
     api.get('processes').then((responseGetProcesses) => {
       this.processes = responseGetProcesses.data;
+      this.processes.forEach((process, i) => {
+        this.processes[i].user.fullName = process.user.name + ' ' + process.user.lastName;
+      });
     });
   }
 }

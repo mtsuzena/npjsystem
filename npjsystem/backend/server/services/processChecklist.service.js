@@ -40,10 +40,21 @@ exports.updateProcessChecklist = async function (id, processChecklist) {
         existingProcessChecklist.status = processChecklist.status;
     }
 
-    existingProcessChecklist.name = processChecklist.name;
-    existingProcessChecklist.isChecked = processChecklist.isChecked;
-    existingProcessChecklist.deadline = processChecklist.deadline;
-    existingProcessChecklist.processId = processChecklist.processId;
+    if(processChecklist.isChecked){
+        existingProcessChecklist.isChecked = processChecklist.isChecked;
+    }
+
+    if(processChecklist.deadline){
+        existingProcessChecklist.deadline = processChecklist.deadline;
+    }
+
+    if(processChecklist.processId){
+        existingProcessChecklist.processId = processChecklist.processId;
+    }
+
+    if(processChecklist.userId){
+        existingProcessChecklist.userId = processChecklist.userId;
+    }
 
     return processChecklistData.updateProcessChecklist(existingProcessChecklist);
 }

@@ -30,6 +30,10 @@ exports.getProcesses = function () {
                     {
                         model: db.document
                     },
+                    {
+                        model: db.user,
+                        attributes: ['id', 'name', 'lastName']
+                    },
                 ]
             },
             {
@@ -73,7 +77,11 @@ exports.getProcess = function (id) {
                     },
                     {
                         model: db.document
-                    }
+                    },
+                    {
+                        model: db.user,
+                        attributes: ['id', 'name', 'lastName']
+                    },
                 ]
             },
             {
@@ -120,6 +128,10 @@ exports.getProcessesByUserId = function (userId) {
                     },
                     {
                         model: db.document
+                    },
+                    {
+                        model: db.user,
+                        attributes: ['id', 'name', 'lastName']
                     },
                 ]
             },
@@ -168,6 +180,10 @@ exports.getProcessByProcessNumber = function (processNumber) {
                     {
                         model: db.document
                     },
+                    {
+                        model: db.user,
+                        attributes: ['id', 'name', 'lastName']
+                    },
                 ]
             },
             {
@@ -214,6 +230,10 @@ exports.getProcessByNumber = function (number) {
                     },
                     {
                         model: db.document
+                    },
+                    {
+                        model: db.user,
+                        attributes: ['id', 'name', 'lastName']
                     },
                 ]
             },

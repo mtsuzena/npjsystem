@@ -2,21 +2,21 @@ const config = require("../config/database.js");
 
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(
-  config.DB,
-  config.USER,
-  config.PASSWORD,
-  {
-    host: config.HOST,
-    dialect: config.dialect,
-    operatorsAliases: false,
-    logging: false,
-    pool: {
-      max: config.pool.max,
-      min: config.pool.min,
-      acquire: config.pool.acquire,
-      idle: config.pool.idle
+    config.DB,
+    config.USER,
+    config.PASSWORD,
+    {
+      host: config.HOST,
+      dialect: config.dialect,
+      operatorsAliases: false,
+      logging: false,
+      pool: {
+        max: config.pool.max,
+        min: config.pool.min,
+        acquire: config.pool.acquire,
+        idle: config.pool.idle
+      }
     }
-  }
 );
 
 const db = {};
@@ -43,6 +43,7 @@ db.systemLog = require("../models/systemLog.model")(sequelize, Sequelize);
 db.user.belongsTo(db.profile);
 db.user.hasMany(db.consultation);
 db.user.hasMany(db.process);
+db.user.hasMany(db.processChecklist);
 db.user.hasMany(db.systemLog);
 db.user.hasMany(db.processMovement);
 
@@ -70,6 +71,7 @@ db.process.hasMany(db.processMovement);
 // PROCESS CHECKLIST RELATIONSHIPS
 db.processChecklist.belongsTo(db.process);
 db.processChecklist.hasOne(db.document);
+db.processChecklist.belongsTo(db.user);
 
 // DOCUMENT RELATIONSHIPS
 db.document.belongsTo(db.processChecklist);
@@ -80,9 +82,9 @@ db.consultation.belongsTo(db.customer);
 
 // PROFILE RELATIONSHIPS
 db.profile.belongsToMany(db.role, {
-    through: "profile_roles",
-    foreignKey: "profileId",
-    otherKey: "roleId"
+  through: "profile_roles",
+  foreignKey: "profileId",
+  otherKey: "roleId"
 });
 db.profile.hasMany(db.user);
 

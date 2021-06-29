@@ -84,6 +84,7 @@
                 'items-per-page-text':'Pendências por página'
               }"
               class="py-3"
+              @click:row="redirectToDetailedProcessScreen"
             >
               <template v-slot:item.deadline="{ item }">
                 <span>{{ new Date(item.deadline).toLocaleString() }}</span>
@@ -150,6 +151,9 @@ export default {
     }
   },
   methods: {
+    redirectToDetailedProcessScreen(processChecklist) {
+      this.$router.push(`pages/processDetailed/${processChecklist.process.number}`);
+    },
   },
   beforeCreate(){
     let api = axios.create({
@@ -191,8 +195,6 @@ export default {
             }
           }
         });
-
-        console.log(this.pendingChecklists);
 
       });
 

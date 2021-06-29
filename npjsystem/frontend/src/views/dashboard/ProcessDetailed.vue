@@ -330,7 +330,9 @@ export default {
         const blob = new Blob([responseDonwloadDocument.data], {
           type: 'application/docx',
         });
-        FileDownload(blob, value);
+        let splitDocName = value.split('-', 2);
+        let docName = splitDocName[1];
+        FileDownload(blob, docName);
       });
 
     },

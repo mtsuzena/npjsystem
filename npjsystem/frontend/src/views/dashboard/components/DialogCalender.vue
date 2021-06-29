@@ -11,6 +11,7 @@
         v-model="dialog"
         max-width="40%"
         persistent
+        scrollable
       >
         <v-card>
           <v-toolbar>
@@ -148,6 +149,15 @@
             >
               Salvar
             </v-btn>
+            <v-btn
+              :disabled="!valid"
+              color="blue darken-1"
+              form="dialogForm"
+              text
+              type="submit"
+            >
+              Salvar
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -271,8 +281,11 @@
         })
       },
       close () {
-        this.clear();
-        this.$emit('closeDialog')
+        this.dialog = false;
+        setTimeout(()=>{
+          this.clear();
+          this.$emit('closeDialog')
+        },1000);
       },
       clear(){
      //   this.customerId = '';
@@ -296,12 +309,10 @@
 
             await api.post('/customers', this.customer)
               .then((response) => {
-                console.log("Em cima da meia da meia")
-                console.log(response)
+
                 this.consultations.customerId = response.data.id
                 api.post('/consultations', this.consultations)
                   .then((response) => {
-                    console.log(response)
                     this.close()
                     this.$emit('saveDialog')
                   }, (error) => {
@@ -311,7 +322,6 @@
                 console.log(error)
               })
           }
-
           this.clear();
         }
       },

@@ -11,6 +11,7 @@
         v-model="dialog"
         max-width="40%"
         persistent
+        scrollable
       >
         <v-card>
           <v-toolbar>

@@ -79,8 +79,9 @@
 
               <template v-slot:item.status="{ item }">
                 <span v-if="item.status == 0">Não iniciado</span>
-                <span v-if="item.status == 1">Em aprovação</span>
-                <span v-if="item.status == 2">Aprovado</span>
+                <span v-if="item.status == 1">Em elaboração</span>
+                <span v-if="item.status == 2">Em aprovação</span>
+                <span v-if="item.status == 3">Aprovado</span>
               </template>
 
               <template v-slot:item.document.fileName="{ item }">
@@ -139,6 +140,16 @@
         </v-timeline-item>
       </v-timeline>
     </v-row>
+    <base-material-snackbar
+      v-model="snackbar"
+      :type="color"
+      v-bind="{
+        [parsedDirection[0]]: true,
+        [parsedDirection[1]]: true
+      }"
+    >
+      {{alertMsg}}
+    </base-material-snackbar>
   </v-container>
 </template>
 
@@ -162,6 +173,16 @@ export default {
       checklistsDone: [],
       oldChecklists: [],
       selected: [],
+      alertMsg: '',
+      snackbar: false,
+      color: 'info',
+      colors: [
+        'info',
+        'success',
+        'warning',
+        'error',
+      ],
+      direction: 'top center',
       headers: [
         {
           text: 'Nome Checklist',
@@ -206,11 +227,12 @@ export default {
         //Caso nao possua um documento, gerar alerta de error
         if(this.checklistsDone[lastChecklist].document === null){
           this.checklistsDone.splice(lastChecklist, 1);
-          console.log('Nao é possivel marcar o checklist como feito pois o mesmo nao possui um documento');
+          this.generateAlert(3, 'Nao é possivel marcar o checklist como feito pois o mesmo nao possui um documento');
           return false;
         }
 
-        api.put(`processChecklists/${this.checklistsDone[lastChecklist].id}`, {"isChecked": "true"});
+        api.put(`processChecklists/${this.checklistsDone[lastChecklist].id}`, {"isChecked": "true", "status": "2"});
+        window.location.reload(true);
       }
       
       //Salva checklist como nao feito -> isChecked false
@@ -225,18 +247,26 @@ export default {
           });
 
           if(checklistRemovido){
-            api.put(`processChecklists/${oldChecklists.id}`, {"isChecked": "false"});
+            api.put(`processChecklists/${oldChecklists.id}`, {"isChecked": "false", "status": "1"});
+            window.location.reload(true);
           }
 
         });
 
       }
-
       
       this.oldChecklists = this.checklistsDone;
     }
   },
+  computed: {
+    parsedDirection () {
+      return this.direction.split(' ')
+    },
+  },
   methods: {
+    setAlertColor (color) {
+      this.color = this.colors[color];
+    },
     getProcessChecklistId(processChecklist){
       this.processChecklistId = processChecklist.id;
     },
@@ -266,9 +296,25 @@ export default {
       apiUpload.post('documents/upload', formData).then((responseuUploadDocument) => {
         let fileName = responseuUploadDocument.data.fileName;
         apiAddDoc.post('documents', {"fileName": fileName, "processChecklistId": this.processChecklistId}).then((responseuAddDocument) => {
-          window.location.reload(true);
+          apiAddDoc.put(`processChecklists/${this.processChecklistId}`, {"status": "1"}).then((res)=> {
+            window.location.reload(true);
+          });
         });
       });
+
+    },
+    sleep(milliseconds) {
+      const date = Date.now();
+      let currentDate = null;
+      do {
+        currentDate = Date.now();
+      } while (currentDate - date < milliseconds);
+    },
+    generateAlert(color, msg){
+      this.alertMsg = msg;
+      this.setAlertColor(color);
+      this.direction = 'top right';
+      this.snackbar = true;
     },
     downloadDocument(value){
       let api = axios.create({

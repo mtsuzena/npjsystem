@@ -154,11 +154,13 @@ export default {
   },
   data() {
     return {
+      build: true,
       processChecklistId: null,
       selectedFile: null,
       process: {},
       processStatus: '',
       checklistsDone: [],
+      oldChecklists: [],
       selected: [],
       headers: [
         {
@@ -184,6 +186,44 @@ export default {
           value: 'status' 
         },
       ],
+    }
+  },
+  watch: {
+    checklistsDone(){
+      let api = axios.create({
+        baseURL: configs.API_URL,
+        headers: {
+          'auth-token': window.localStorage.token
+        }
+      });
+
+      // Salva Checklist como Done -> isChecked true
+      if(this.checklistsDone.length > this.oldChecklists.length){
+        let lastChecklist = this.checklistsDone.length - 1;
+        api.put(`processChecklists/${this.checklistsDone[lastChecklist].id}`, {"isChecked": "true"});
+      }
+      
+      //Salva checklist como nao feito -> isChecked false
+      if(this.checklistsDone.length < this.oldChecklists.length){        
+        this.oldChecklists.forEach((oldChecklists, i) => {
+          let checklistRemovido = true;
+
+          this.checklistsDone.forEach((newChecklists, i) => {
+            if(newChecklists.name === oldChecklists.name){
+              checklistRemovido = false;
+            }
+          });
+
+          if(checklistRemovido){
+            api.put(`processChecklists/${oldChecklists.id}`, {"isChecked": "false"});
+          }
+
+        });
+
+      }
+
+      
+      this.oldChecklists = this.checklistsDone;
     }
   },
   methods: {
@@ -221,9 +261,6 @@ export default {
       });
     },
     downloadDocument(value){
-      console.log('Cliquei no botao');
-      console.log(value);
-
       let api = axios.create({
         baseURL: configs.API_URL,
         responseType: 'arraybuffer',
@@ -292,6 +329,7 @@ export default {
         this.process.processChecklists[i].user.fullName = procesChecklist.user.name + ' ' + procesChecklist.user.lastName;
         if(procesChecklist.isChecked){
           this.checklistsDone.push(procesChecklist);
+          this.oldChecklists = this.checklistsDone;
         }
       });
 

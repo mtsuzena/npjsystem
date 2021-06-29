@@ -109,9 +109,9 @@ VALUES (503, 'Gabriel', 'Manoel Leonardo Moura', '', 'gabrielmanoelleonardomoura
 
 
 -- adiciona checklists
-INSERT INTO "processChecklists"(id, name, "processId", "userId", status, "isChecked",deadline,"createdAt", "updatedAt") VALUES (501, 'Checklist 1', 502, 501, 0, false, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));
-INSERT INTO "processChecklists"(id, name, "processId", "userId", status, "isChecked",deadline,"createdAt", "updatedAt") VALUES (502, 'Checklist 2', 502, 502, 1, true, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));
-INSERT INTO "processChecklists"(id, name, "processId", "userId", status,  "isChecked",deadline,"createdAt", "updatedAt") VALUES (503, 'Checklist 3', 502, 503, 2, true, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));
+INSERT INTO "processChecklists"(id, name, "processId", "userId", status, deadline,"createdAt", "updatedAt") VALUES (501, 'Checklist 1', 502, 501, 0, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));
+INSERT INTO "processChecklists"(id, name, "processId", "userId", status, deadline,"createdAt", "updatedAt") VALUES (502, 'Checklist 2', 502, 502, 1, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));
+INSERT INTO "processChecklists"(id, name, "processId", "userId", status, deadline,"createdAt", "updatedAt") VALUES (503, 'Checklist 3', 502, 503, 2, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));
 
 
 commit;

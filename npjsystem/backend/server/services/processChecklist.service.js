@@ -27,20 +27,15 @@ exports.deleteProcessChecklist = async function (id) {
 }
 
 exports.updateProcessChecklist = async function (id, processChecklist) {
-    if(!processChecklist.processId) throw new Error('ProcessChecklist shall have a Process');
-    if(!processChecklist.name) throw new Error('ProcessChecklist shall have a Name');
 
     const existingProcessChecklist = await processChecklistData.getProcessChecklist(id);
     if (!existingProcessChecklist) throw new Error('ProcessChecklist not found');
-
-    const existingProcess = await processService.getProcess(processChecklist.processId);
-    if (!existingProcess) throw new Error('Process not found');
 
     if (processChecklist.status){
         existingProcessChecklist.status = processChecklist.status;
     }
 
-    if(processChecklist.isChecked){
+    if(processChecklist.isChecked != null){
         existingProcessChecklist.isChecked = processChecklist.isChecked;
     }
 
@@ -49,11 +44,17 @@ exports.updateProcessChecklist = async function (id, processChecklist) {
     }
 
     if(processChecklist.processId){
+        const existingProcess = await processService.getProcess(processChecklist.processId);
+        if (!existingProcess) throw new Error('Process not found');
         existingProcessChecklist.processId = processChecklist.processId;
     }
 
     if(processChecklist.userId){
         existingProcessChecklist.userId = processChecklist.userId;
+    }
+
+    if(processChecklist.name){
+        existingProcessChecklist.name = processChecklist.name;
     }
 
     return processChecklistData.updateProcessChecklist(existingProcessChecklist);

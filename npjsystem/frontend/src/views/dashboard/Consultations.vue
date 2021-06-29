@@ -139,7 +139,7 @@ export default {
       this.dialog = true
     },
     closeDialog() {
-      this.dialog = false
+      this.dialog = false;
     },
     saveObject() {
       this.getConsultation();

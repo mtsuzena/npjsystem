@@ -61,7 +61,19 @@
 
                 <v-stepper-items>
                   <v-stepper-content step="1">
-                    <span> INSERIR LISTA DE DOCUMENTOS PARA APROVAÇÃO AQUI!</span>
+                    <v-data-table
+                      :headers="paraAprovarHeaders"
+                      :items="processChecklistsParaAprovar"
+                      item-key="name"
+                      class="elevation-1"
+                    >
+                      <template v-slot:item.btnEnviarParaAprovacao="{ item }">
+                        <v-btn class="mx-2" dark small color="red" @click="enviarParaAprovacao(item)">
+                          <v-icon dark>mdi-send</v-icon>
+                          <span>Enviar para aprovação</span>
+                        </v-btn>
+                      </template>
+                    </v-data-table>
                   </v-stepper-content>
 
                   <v-stepper-content step="2">
@@ -93,9 +105,58 @@ export default {
   data() {
     return {
       materialCardColor: 'red',
+      processChecklistsParaAprovar: [
+        {
+          name: 'nome test',
+          user: {
+            fullName: 'Nome Responsavel'
+          },
+          document: {
+            fileName: 'Nome do Doc'
+          }
+        },
+        {
+          name: 'nome test 2',
+          user: {
+            fullName: 'Nome Responsavel 2'
+          },
+          document: {
+            fileName: 'Nome do Doc 2'
+          }
+        },
+      ],
+      processChecklistEmAprovacao: {},
+      processChecklistsAprovados: [],
+      paraAprovarHeaders: [
+        {
+          text: 'Nome Checklist',
+          align: 'start',
+          sortable: false,
+          value: 'name',
+        },
+        { 
+          text: 'Responsavel', 
+          value: "user.fullName",
+          align: 'center',
+        },
+        { 
+          text: 'Documento', 
+          value: "document.fileName",
+          align: 'center',
+        },
+        { 
+          text: 'Aprovar', 
+          value: "btnEnviarParaAprovacao",
+          align: 'center',
+        },
+      ],
     }
   },
   methods: {
+    enviarParaAprovacao(processChecklistParaAprovar){
+      this.processChecklistEmAprovacao = processChecklistParaAprovar;
+      console.log(this.processChecklistEmAprovacao);
+    },
     paraAprovarClicado(){
       this.materialCardColor = 'red';
     },

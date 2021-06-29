@@ -149,15 +149,6 @@
             >
               Salvar
             </v-btn>
-            <v-btn
-              :disabled="!valid"
-              color="blue darken-1"
-              form="dialogForm"
-              text
-              type="submit"
-            >
-              Salvar
-            </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

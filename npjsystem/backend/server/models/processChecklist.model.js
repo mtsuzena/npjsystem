@@ -15,8 +15,9 @@ module.exports = (sequelize, Sequelize) => {
       },
       /* 
       0 - Não iniciado
-      1 - Em aprovação
-      2 - Aprovado
+      1 - Em elaboração
+      2 - Em aprovação
+      3 - Aprovado
       */
       status: {
         type: Sequelize.INTEGER,

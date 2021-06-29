@@ -6,7 +6,7 @@
       persistent
       scrollable
     >
-      <!--0004141-41.2021.8.16.0025  trocar no campo processo-->
+
       <template v-slot:activator="{ on, attrs }">
         <v-btn
           class="ma-2"
@@ -26,6 +26,8 @@
             </v-col>
           </v-toolbar>
         </v-card-title>
+      <v-card-text>
+
 
         <v-form
           id="formProcess"
@@ -148,6 +150,7 @@
             ></v-select>
           </v-col>
         </v-form>
+      </v-card-text>
 
         <v-divider></v-divider>
 

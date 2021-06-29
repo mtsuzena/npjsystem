@@ -200,6 +200,16 @@ export default {
       // Salva Checklist como Done -> isChecked true
       if(this.checklistsDone.length > this.oldChecklists.length){
         let lastChecklist = this.checklistsDone.length - 1;
+        console.log(this.checklistsDone[lastChecklist]);
+
+        //Verifica se o checklist possui um documento antes de atualizar para Done
+        //Caso nao possua um documento, gerar alerta de error
+        if(this.checklistsDone[lastChecklist].document === null){
+          this.checklistsDone.splice(lastChecklist, 1);
+          console.log('Nao é possivel marcar o checklist como feito pois o mesmo nao possui um documento');
+          return false;
+        }
+
         api.put(`processChecklists/${this.checklistsDone[lastChecklist].id}`, {"isChecked": "true"});
       }
       

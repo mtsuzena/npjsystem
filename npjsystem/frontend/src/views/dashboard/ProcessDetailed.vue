@@ -173,7 +173,7 @@ export default {
         },
         { 
           text: 'Responsavel', 
-          value: "user.name" 
+          value: "user.fullName" 
         },
         { 
           text: 'Documento', 
@@ -289,6 +289,7 @@ export default {
       }
 
       this.process.processChecklists.forEach((procesChecklist, i) => {
+        this.process.processChecklists[i].user.fullName = procesChecklist.user.name + ' ' + procesChecklist.user.lastName;
         if(procesChecklist.isChecked){
           this.checklistsDone.push(procesChecklist);
         }

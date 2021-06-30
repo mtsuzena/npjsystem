@@ -97,6 +97,7 @@
 
 import axios from 'axios'
 const configs = require('../../config/configs');
+const jwt = require('jsonwebtoken');
 
 export default {
   name: 'DocumentReview',
@@ -105,26 +106,33 @@ export default {
   data() {
     return {
       materialCardColor: 'red',
-      processChecklistsParaAprovar: [
-        {
-          name: 'nome test',
-          user: {
-            fullName: 'Nome Responsavel'
-          },
-          document: {
-            fileName: 'Nome do Doc'
-          }
-        },
-        {
-          name: 'nome test 2',
-          user: {
-            fullName: 'Nome Responsavel 2'
-          },
-          document: {
-            fileName: 'Nome do Doc 2'
-          }
-        },
-      ],
+      processChecklistsParaAprovar: [],
+      // processChecklistsParaAprovar: [
+      //   {
+      //     name: 'nome test',
+      //     user: {
+      //       fullName: 'Nome Responsavel'
+      //     },
+      //     document: {
+      //       fileName: 'Nome do Doc'
+      //     },
+      //     process: {
+      //       number: 'Number'
+      //     }
+      //   },
+      //   {
+      //     name: 'nome test 2',
+      //     user: {
+      //       fullName: 'Nome Responsavel 2'
+      //     },
+      //     document: {
+      //       fileName: 'Nome do Doc 2'
+      //     },
+      //     process: {
+      //       number: 'Number2'
+      //     }
+      //   },
+      // ],
       processChecklistEmAprovacao: {},
       processChecklistsAprovados: [],
       paraAprovarHeaders: [
@@ -135,13 +143,18 @@ export default {
           value: 'name',
         },
         { 
-          text: 'Responsavel', 
-          value: "user.fullName",
+          text: 'Numero do Processo', 
+          value: "process.number",
           align: 'center',
         },
         { 
           text: 'Documento', 
           value: "document.fileName",
+          align: 'center',
+        },
+        { 
+          text: 'Responsavel', 
+          value: "user.fullName",
           align: 'center',
         },
         { 
@@ -167,40 +180,38 @@ export default {
       this.materialCardColor = 'green';
     },
   },
-  // beforeCreate(){
-  //   let api = axios.create({
-  //     baseURL: configs.API_URL,
-  //     headers: {
-  //       'auth-token': window.localStorage.token
-  //     }
-  //   });
+  beforeCreate(){
+    let api = axios.create({
+      baseURL: configs.API_URL,
+      headers: {
+        'auth-token': window.localStorage.token
+      }
+    });
+    const tokenDecoded = jwt.decode(window.localStorage.token);
+    api.get(`users/${tokenDecoded.id}`).then((responseGetUserById) => {
+      this.user = responseGetUserById.data;
+    });
 
-  //   api.get(`processes/byProcessNumber/${this.$route.params.processNumber}`).then((responseGetProcessByNumber) => {
+    api.get(`processes/byUserId/${tokenDecoded.id}`).then((responseGetProcessesByUserId) => {
 
-  //     this.process = responseGetProcessByNumber.data;
+      let processes = responseGetProcessesByUserId.data;
 
-  //     if(this.process.isFiled){
-  //       this.processStatus = '(processo arquivado)'
-  //     }else{
-  //       // CRIAR LOGICA DOS DIAS DE TRAMITAÇÃO AQUI...
+      processes.forEach((process, i) => {
+        process.processChecklists.forEach((procesChecklist, i) => {
+          if(procesChecklist.status === 2){
+            let splitDocName = procesChecklist.document.fileName.split('-', 2);
+            let docName = splitDocName[1];
+            procesChecklist.document.fileName = docName; 
+            this.processChecklistsParaAprovar.push(procesChecklist);
+          }
+          if(procesChecklist.status === 3){
+            this.processChecklistsAprovados.push(procesChecklist);
+          }
+        });
 
-  //       let beginsDate = new Date(this.process.begins_date);
-  //       let currentDate = new Date();
+      });
+    });
 
-  //       let difference = (currentDate.getTime()-beginsDate.getTime()) / 1000 / 60 / 60 / 24;
-
-  //       let differenceInDecimal = parseInt(difference, 10);
-
-  //       this.processStatus = `(${differenceInDecimal} dia(s) em tramitação)`;
-  //     }
-
-  //     this.process.processChecklists.forEach((procesChecklist, i) => {
-  //       if(procesChecklist.isChecked){
-  //         this.checklistsDone.push(procesChecklist);
-  //       }
-  //     });
-
-  //   });
-  // }
+  },
 }
 </script>

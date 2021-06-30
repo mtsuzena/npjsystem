@@ -109,15 +109,13 @@
                 </v-btn>
               </template>
             </v-data-table>
+            <dialog-checklist
+                :process="process"
+                @updateList="updateList"
+              ></dialog-checklist>
           </v-card-text>
         </base-material-card>
       </v-col>
-    </v-row>
-    <v-row>
-      <dialog-checklist
-        :process="process"
-        @updateList="updateList"
-      ></dialog-checklist>
     </v-row>
     <v-row
       align="start"

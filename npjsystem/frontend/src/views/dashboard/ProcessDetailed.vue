@@ -31,7 +31,8 @@
                 <span>Data de Autuação: {{ new Date(process.begins_date).toLocaleString() }}</span>
               </v-col>
               <v-col>
-                <span>Data de Audiência: {{ new Date(process.court_hearing_date).toLocaleString() }}</span>
+                <span v-if="!process.court_hearing_date">Data de Audiência: Nenhuma data marcada</span>
+                <span v-else>Data de Audiência: {{ new Date(process.court_hearing_date).toLocaleString() }}</span>
               </v-col>
             </v-row>
             <v-row>
@@ -51,6 +52,7 @@
         </base-material-card>
       </v-col>
     </v-row>
+
     <v-row
       align="start"
       justify="space-around"
@@ -87,21 +89,21 @@
                 <v-btn v-if="item.document !== null" class="mx-2" fab dark small color="blue" @click="downloadDocument(item.document.fileName)">
                   <v-icon dark>mdi-file-download</v-icon>
                 </v-btn>
-                
+
                 <input
                   v-if="item.document === null"
                   style="display: none"
-                  type="file" 
+                  type="file"
                   @change="onFileSelected"
                   ref="fileInput"
                 >
-                <v-btn 
-                  v-if="item.document === null" 
-                  class="mx-2" 
-                  fab 
-                  dark 
-                  small 
-                  color="red" 
+                <v-btn
+                  v-if="item.document === null"
+                  class="mx-2"
+                  fab
+                  dark
+                  small
+                  color="red"
                   @click="$refs.fileInput.click()">
                     <v-icon dark>mdi-file-upload</v-icon>
                 </v-btn>
@@ -110,6 +112,12 @@
           </v-card-text>
         </base-material-card>
       </v-col>
+    </v-row>
+    <v-row>
+      <dialog-checklist
+       :process="process"
+       @updateList="updateList"
+      ></dialog-checklist>
     </v-row>
     <v-row
       align="start"
@@ -139,6 +147,8 @@
         </v-timeline-item>
       </v-timeline>
     </v-row>
+
+
   </v-container>
 </template>
 
@@ -147,10 +157,17 @@
 import axios from 'axios'
 const configs = require('../../config/configs');
 const FileDownload = require('js-file-download');
+let api = axios.create({
+  baseURL: configs.API_URL,
+  headers: {
+    'auth-token': window.localStorage.token
+  }
+});
 
 export default {
   name: 'ProcessDetailed',
   components: {
+    DialogChecklist: () => import('./components/DialogChecklist'),
   },
   data() {
     return {
@@ -167,26 +184,37 @@ export default {
           sortable: false,
           value: 'name',
         },
-        { 
-          text: 'Prazo de finalização', 
-          value: 'deadline' 
+        {
+          text: 'Prazo de finalização',
+          value: 'deadline'
         },
-        { 
-          text: 'Responsavel', 
-          value: "user.fullName" 
+        {
+          text: 'Responsavel',
+          value: "user.fullName"
         },
-        { 
-          text: 'Documento', 
+        {
+          text: 'Documento',
           value: "document.fileName" ,
         },
-        { 
-          text: 'Status', 
-          value: 'status' 
+        {
+          text: 'Status',
+          value: 'status'
         },
       ],
     }
   },
   methods: {
+    async updateList(){
+        await  api.get(`/processChecklists`)
+          .then((response) => {
+            this.process.processChecklists = [];
+            response.data.forEach((value) => {
+              if (value.processId == this.process.id){
+                this.process.processChecklists.push(value);
+              }
+            });
+          });
+    },
     getProcessChecklistId(processChecklist){
       this.processChecklistId = processChecklist.id;
     },
@@ -262,12 +290,6 @@ export default {
     }
   },
   beforeCreate(){
-    let api = axios.create({
-      baseURL: configs.API_URL,
-      headers: {
-        'auth-token': window.localStorage.token
-      }
-    });
 
     api.get(`processes/byProcessNumber/${this.$route.params.processNumber}`).then((responseGetProcessByNumber) => {
 

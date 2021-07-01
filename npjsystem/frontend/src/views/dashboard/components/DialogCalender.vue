@@ -129,11 +129,12 @@
                   />
                 </v-col>
                 <v-col cols="12">
-                  <v-text-field
+                  <v-textarea
+                    outlined
+                    name="input-7-4"
+                    label="Motivo do Atendimento"
                     v-model="consultations.motivo"
-                    label="Motivo"
-                    type="text"
-                  />
+                  ></v-textarea>
                 </v-col>
               </v-row>
             </v-container>

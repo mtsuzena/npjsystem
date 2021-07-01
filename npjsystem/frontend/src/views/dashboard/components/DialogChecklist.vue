@@ -10,7 +10,7 @@
       <template v-slot:activator="{ on, attrs }">
         <v-btn
           class="ma-2"
-          color="error"
+          color="green"
           v-bind="attrs"
           v-on="on"
         >

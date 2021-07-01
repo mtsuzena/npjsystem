@@ -59,12 +59,15 @@
     >
       <v-col>
         <base-material-card
-          color="red"
+          color="green"
           title="Lista de checagem do andamento processual"
           class="px-5 py-3"
         >
           <v-card-text>
             <v-data-table
+              :footer-props="{
+                'items-per-page-text':'Checklists por página'
+              }"
               v-model="checklistsDone"
               :headers="headers"
               :custom-sort="customSortChecklists"
@@ -86,7 +89,7 @@
               </template>
 
               <template v-slot:item.document.fileName="{ item }">
-                <v-btn v-if="item.document !== null" class="mx-2" fab dark small color="blue" @click="downloadDocument(item.document.fileName)">
+                <v-btn v-if="item.document !== null" class="mx-2" fab dark small color="#0986b8" @click="downloadDocument(item.document.fileName)">
                   <v-icon dark>mdi-file-download</v-icon>
                 </v-btn>
 
@@ -233,7 +236,7 @@ export default {
         //Caso nao possua um documento, gerar alerta de error
         if(this.checklistsDone[lastChecklist].document === null){
           this.checklistsDone.splice(lastChecklist, 1);
-          this.generateAlert(3, 'Nao é possivel marcar o checklist como feito pois o mesmo nao possui um documento');
+          this.generateAlert(3, 'Não há um documento anexado');
           return false;
         }
 
@@ -251,6 +254,12 @@ export default {
               checklistRemovido = false;
             }
           });
+
+          if(oldChecklists.status === 2){
+            this.checklistsDone.push(oldChecklists);
+            this.generateAlert(3, 'Documento em aprovação');
+            return false;
+          }
 
           if(checklistRemovido){
             api.put(`processChecklists/${oldChecklists.id}`, {"isChecked": "false", "status": "1"});

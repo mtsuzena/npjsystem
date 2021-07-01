@@ -38,6 +38,7 @@ INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (537, 'CREATE_DOCUM
 INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (538, 'UPDATE_DOCUMENT', (SELECT NOW()), (SELECT NOW()));
 INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (539, 'UPLOAD_DOCUMENT', (SELECT NOW()), (SELECT NOW()));
 INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (540, 'DOWNLOAD_DOCUMENT', (SELECT NOW()), (SELECT NOW()));
+INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (541, 'REVIEW_DOCUMENT', (SELECT NOW()), (SELECT NOW()));
 
 INSERT INTO profiles(id, name, description, "createdAt", "updatedAt") VALUES (501, 'ADMIN', 'System Admin', (SELECT NOW()), (SELECT NOW()));
 
@@ -81,6 +82,7 @@ insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") value
 insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 501, 538);
 insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 501, 539);
 insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 501, 540);
+insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 501, 541);
 
 insert into users (id, "name", email, "imgSrc","lastName", "aboutMe", "cep", "state", "city", "addres", "password", "userActive", "profileId", "createdAt", "updatedAt") values (501, 'Genilma Moura', 'admin@gmail.com', '@/assets/avatar/avatar_masculino_exemplo_1.jpeg', 'Last Name', 'About Me kkk \n asd', '83704304', 'PR', 'City Admin', 'Addres Admin', '$2a$10$efMdAjZunBI8XnV.UZ8OW.0BQqDOa3sXeXcWboGy8ejlisBtBPEom', true, 501, (SELECT NOW()), (SELECT NOW()));
 
@@ -99,6 +101,9 @@ INSERT INTO processes(id, "number", "requerido", "pastaFisica", "userId", "custo
 INSERT INTO profiles (id, name, description, "createdAt", "updatedAt")
 VALUES (502, 'PROFESSOR', 'PROFESSOR', now(),now());
 
+-- adicionar roles pro professor
+insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 502, 541);
+
 --criar usuers professores
 INSERT INTO users (id, name, "lastName", "imgSrc", email, "aboutMe", cep, state, city, addres, password, "userActive", "createdAt", "updatedAt", "profileId")
 VALUES (502, 'Carlos', 'Eduardo Mário Nicolas Aragão', '', 'gabrielmanoelleonardomoura@danzarin.com.br',
@@ -106,6 +111,16 @@ VALUES (502, 'Carlos', 'Eduardo Mário Nicolas Aragão', '', 'gabrielmanoelleona
 INSERT INTO users (id, name, "lastName", "imgSrc", email, "aboutMe", cep, state, city, addres, password, "userActive", "createdAt", "updatedAt", "profileId")
 VALUES (503, 'Gabriel', 'Manoel Leonardo Moura', '', 'gabrielmanoelleonardomoura@danzarin.com.br',
         'About Me kkk \n asd', '83709590', 'PR', 'Araucária', 'Rua das Camélias', '$2a$10$efMdAjZunBI8XnV.UZ8OW.0BQqDOa3sXeXcWboGy8ejlisBtBPEom', true, now(), now(), 502);
+
+
+-- criar perfil estagiario
+INSERT INTO profiles (id, name, description, "createdAt", "updatedAt")
+VALUES (503, 'ESTAGIARIO', 'ESTAGIARIO', now(),now());
+
+INSERT INTO users (id, name, "lastName", "imgSrc", email, "aboutMe", cep, state, city, addres, password, "userActive", "createdAt", "updatedAt", "profileId")
+VALUES (504, 'NomeStag', 'Manoel Leonardo Moura', '', 'stag@gmail.com',
+        'About Me kkk \n asd', '83709590', 'PR', 'Araucária', 'Rua das Camélias', '$2a$10$efMdAjZunBI8XnV.UZ8OW.0BQqDOa3sXeXcWboGy8ejlisBtBPEom', true, now(), now(), 503);
+
 
 
 -- adiciona checklists

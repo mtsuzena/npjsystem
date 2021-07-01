@@ -21,7 +21,7 @@
             <div>
               <v-stepper
                 non-linear
-                value="1"
+                :value="steper"
               >
                 <v-stepper-header>
                   <v-stepper-step
@@ -84,19 +84,20 @@
                       color="green"
                       :title="`Processo 090l090293.91283`"
                       class="px-5 py-3"
+                      v-if="processChecklistEmAprovacao !== null"
                     >
                       <v-card-text>
                         <v-divider></v-divider>
                         <br></br>
                         <v-row>
                           <v-col>
-                            <span>Elaborador: Mateus Suzena</span>
+                            <span>Elaborador: {{processChecklistEmAprovacao.user.name}}</span>
                           </v-col>
                           <v-col>
-                            <span>Nome da Atividade: Petição Inicial</span>
+                            <span>Nome da Atividade: {{processChecklistEmAprovacao.name}}</span>
                           </v-col>
                           <v-col>
-                            <span>Prazo da Atividade: 30/06/2021</span>
+                            <span>Prazo da Atividade: {{ new Date(processChecklistEmAprovacao.deadline).toLocaleString() }}</span>
                           </v-col>
                         </v-row>
                         <br></br>
@@ -139,7 +140,14 @@
                         </v-row>
                       </v-card-text>
                     </base-material-card>
-                    <div class="text-center">
+                    <base-material-card
+                      color="red"
+                      title="Selecione um documento para aprovar"
+                      class="px-5 py-3"
+                      v-else
+                    >
+                    </base-material-card>
+                    <div v-if="processChecklistEmAprovacao !== null" class="text-center">
                       <v-btn 
                       class="mx-2"
                       color="green"
@@ -183,9 +191,10 @@ export default {
   },
   data() {
     return {
+      steper: '1',
       materialCardColor: 'green',
       processChecklistsParaAprovar: [],
-      processChecklistEmAprovacao: {},
+      processChecklistEmAprovacao: null,
       processChecklistsAprovados: [],
       paraAprovarHeaders: [
         {
@@ -220,18 +229,16 @@ export default {
   methods: {
     enviarParaAprovacao(processChecklistParaAprovar){
       this.processChecklistEmAprovacao = processChecklistParaAprovar;
-      console.log(this.processChecklistEmAprovacao);
+      this.steper = '2';
     },
     paraAprovarClicado(){
-      // this.materialCardColor = 'green';
-      this.materialCardColor = 'green';
+      this.steper = '1';
     },
     emAprovacaoClicado(){
-      // this.materialCardColor = '#0986b8';
-      this.materialCardColor = 'green';
+      this.steper = '2';
     },
     aprovadoClicado(){
-      this.materialCardColor = 'green';
+      this.steper = '3';
     },
   },
   beforeCreate(){

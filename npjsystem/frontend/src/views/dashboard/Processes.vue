@@ -34,20 +34,16 @@
               :items="processes"
               :search="search"
               :footer-props="{
-                'items-per-page-text':'Pendências por página'
+                'items-per-page-text':'Processos por página'
               }"
               item-key="number"
               @click:row="redirectToDetailedProcessScreen"
               class="py-3"
             />
           </v-card-text>
+          <dialog-new-process></dialog-new-process>
         </base-material-card>
       </v-col>
-    </v-row>
-    <v-row>
-      <dialog-new-process
-
-      ></dialog-new-process>
     </v-row>
   </v-container>
 </template>

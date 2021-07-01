@@ -62,13 +62,16 @@
                 <v-stepper-items>
                   <v-stepper-content step="1">
                     <v-data-table
+                      :footer-props="{
+                        'items-per-page-text':'Documentos por página'
+                      }"
                       :headers="paraAprovarHeaders"
                       :items="processChecklistsParaAprovar"
                       item-key="name"
                       class="elevation-1"
                     >
                       <template v-slot:item.btnEnviarParaAprovacao="{ item }">
-                        <v-btn class="mx-2" dark small color="red" @click="enviarParaAprovacao(item)">
+                        <v-btn class="mx-2" dark small color="green" @click="enviarParaAprovacao(item)">
                           <v-icon dark>mdi-send</v-icon>
                           <span>Enviar para aprovação</span>
                         </v-btn>
@@ -77,7 +80,82 @@
                   </v-stepper-content>
 
                   <v-stepper-content step="2">
-                    <span> INSERIR LISTA DE DOCUMENTOS QUE ESTAO EM APROVAÇÃO AQUI!</span>
+                    <base-material-card
+                      color="green"
+                      :title="`Processo 090l090293.91283`"
+                      class="px-5 py-3"
+                    >
+                      <v-card-text>
+                        <v-divider></v-divider>
+                        <br></br>
+                        <v-row>
+                          <v-col>
+                            <span>Elaborador: Mateus Suzena</span>
+                          </v-col>
+                          <v-col>
+                            <span>Nome da Atividade: Petição Inicial</span>
+                          </v-col>
+                          <v-col>
+                            <span>Prazo da Atividade: 30/06/2021</span>
+                          </v-col>
+                        </v-row>
+                        <br></br>
+                        <v-divider></v-divider>
+                        <br></br>
+                        <v-row>
+                          <v-col>
+                            <div class="text-center">
+                            <span>Documento em Revisão</span>
+                              <v-btn class="mx-2" large color="green" @click="downloadDocument(item.document.fileName)">
+                                <v-icon dark>mdi-file-download</v-icon>
+                              </v-btn>
+                            </div>
+                          </v-col>
+                          <v-divider
+                            class="test"
+                            vertical
+                            width="100"
+                            heigth="100"
+                          ></v-divider>
+                          <v-col>
+                            <div class="text-center">
+                              <v-btn class="mx-2" large color="green" @click="downloadDocument(item.document.fileName)">
+                                <v-icon dark>mdi-file-upload</v-icon>
+                              </v-btn>
+                              <span>Anexar documento revisado</span>
+                            </div>
+                          </v-col>
+                        </v-row>
+                        <v-row>
+                          <v-col>
+                            <div class="text-center">
+                              <v-textarea
+                                outlined
+                                name="input-7-4"
+                                label="Considerações"
+                              ></v-textarea>
+                            </div>
+                          </v-col>
+                        </v-row>
+                      </v-card-text>
+                    </base-material-card>
+                    <div class="text-center">
+                      <v-btn 
+                      class="mx-2"
+                      color="green"
+                      @click="enviarParaAprovacao(item)"
+                      >
+                        <span>Aprovar</span>
+                      </v-btn>
+                      <v-btn 
+                        class="mx-2" 
+                        color="#d40000" 
+                        @click="enviarParaAprovacao(item)"
+                      >
+                        <v-icon dark>mdi-arrow-back</v-icon>
+                        <span>Reprovar</span>
+                      </v-btn>
+                    </div>
                   </v-stepper-content>
 
                   <v-stepper-content step="3">
@@ -105,34 +183,8 @@ export default {
   },
   data() {
     return {
-      materialCardColor: 'red',
+      materialCardColor: 'green',
       processChecklistsParaAprovar: [],
-      // processChecklistsParaAprovar: [
-      //   {
-      //     name: 'nome test',
-      //     user: {
-      //       fullName: 'Nome Responsavel'
-      //     },
-      //     document: {
-      //       fileName: 'Nome do Doc'
-      //     },
-      //     process: {
-      //       number: 'Number'
-      //     }
-      //   },
-      //   {
-      //     name: 'nome test 2',
-      //     user: {
-      //       fullName: 'Nome Responsavel 2'
-      //     },
-      //     document: {
-      //       fileName: 'Nome do Doc 2'
-      //     },
-      //     process: {
-      //       number: 'Number2'
-      //     }
-      //   },
-      // ],
       processChecklistEmAprovacao: {},
       processChecklistsAprovados: [],
       paraAprovarHeaders: [
@@ -171,10 +223,12 @@ export default {
       console.log(this.processChecklistEmAprovacao);
     },
     paraAprovarClicado(){
-      this.materialCardColor = 'red';
+      // this.materialCardColor = 'green';
+      this.materialCardColor = 'green';
     },
     emAprovacaoClicado(){
-      this.materialCardColor = 'orange';
+      // this.materialCardColor = '#0986b8';
+      this.materialCardColor = 'green';
     },
     aprovadoClicado(){
       this.materialCardColor = 'green';

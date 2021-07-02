@@ -121,12 +121,15 @@
                 <v-col
                   cols="12"
                 >
-                  <v-select
+                  <v-autocomplete
                     v-model="select"
                     :items="items"
+                    :filter="customFilter"
+                    item-text="text"
+                    item-value="value"
                     label="Responsável pelo atendimento"
                     required
-                  />
+                  ></v-autocomplete>
                 </v-col>
                 <v-col cols="12">
                   <v-textarea
@@ -197,12 +200,12 @@
         valid: true,
         nameRules: [
           v => !!v || 'Preencha o Nome!',
-          v => (v && v.length <= 10) || 'Tamanho máximo de 10 caracteres!',
+          v => (v && v.length <= 40) || 'Tamanho máximo de 40 caracteres!',
           v => /[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/.test(v) || 'Não inserir numeros ou caractéres especiais!',
         ],
         lastNameRules: [
           v => !!v || 'Preencha o o Sobrenome!',
-          v => (v && v.length <= 20) || 'Tamanho máximo de 20 caracteres!',
+          v => (v && v.length <= 40) || 'Tamanho máximo de 40 caracteres!',
           v => /[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/.test(v) || 'Não inserir numeros ou caractéres especiais!',
         ],
         email: '',
@@ -239,11 +242,15 @@
     watch:{
       time(){
         this.getUsers()
-      }
+      },
     },
     methods: {
-      attUsers () {
-        this.getUsers()
+      customFilter (item, queryText, itemText) {
+        const textOne = item.text.toLowerCase();
+        const searchText = queryText.toLowerCase();
+
+        return textOne.indexOf(searchText) > -1;
+
       },
       async getUsers () {
         this.items = []
@@ -257,6 +264,7 @@
               value: value.id,
             })
           })
+          console.log(this.items);
         })
       },
       async getConsultationById (consultationId) {

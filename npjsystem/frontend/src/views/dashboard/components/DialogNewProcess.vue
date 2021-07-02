@@ -26,131 +26,139 @@
             </v-col>
           </v-toolbar>
         </v-card-title>
-      <v-card-text>
+        <v-card-text>
 
-
-        <v-form
-          id="formProcess"
-          ref="form"
-          lazy-validation
-          v-model="valid"
-        >
-          <v-col cols="12">
-            <v-text-field
-              v-model.trim="process.number"
-              label="Processo:"
-              prepend-icon="fas fa-folder-open"
-              :rules="processRules"
-              v-mask="'#######-##.####.#.##.####'"
-            />
-          </v-col>
-
-          <v-col
-            cols="12"
+          <v-form
+            id="formProcess"
+            ref="form"
+            lazy-validation
+            v-model="valid"
           >
-            <v-dialog
-              ref="dialog"
-              v-model="modalActing"
-              :return-value.sync="dateActing"
-              persistent
-              width="290px"
+            <v-col cols="12">
+              <v-text-field
+                v-model.trim="process.number"
+                label="Processo:"
+                prepend-icon="fas fa-folder-open"
+                :rules="processRules"
+                v-mask="'#######-##.####.#.##.####'"
+              />
+            </v-col>
+
+            <v-col
+              cols="12"
             >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  v-model="dateActing"
-                  label="Data de atuação:"
-                  prepend-icon="mdi-calendar"
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                  :rules="dateRules"
-                ></v-text-field>
-              </template>
-              <v-date-picker
-                v-model="dateActing"
-                scrollable
-                :min="disabledDates"
+              <v-dialog
+                ref="dialog"
+                v-model="modalActing"
+                :return-value.sync="dateActing"
+                persistent
+                width="290px"
               >
-                <v-spacer></v-spacer>
-                <v-btn
-                  text
-                  color="primary"
-                  @click="modalActing = false"
+                <template v-slot:activator="{ on, attrs }">
+                  <v-text-field
+                    v-model="dateActing"
+                    label="Data de atuação:"
+                    prepend-icon="mdi-calendar"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                    :rules="dateRules"
+                  ></v-text-field>
+                </template>
+                <v-date-picker
+                  v-model="dateActing"
+                  scrollable
+                  :min="disabledDates"
                 >
-                  Cancelar
-                </v-btn>
-                <v-btn
-                  text
-                  color="primary"
-                  @click="$refs.dialog.save(dateActing)"
-                >
-                  OK
-                </v-btn>
-              </v-date-picker>
-            </v-dialog>
-          </v-col>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    text
+                    color="primary"
+                    @click="modalActing = false"
+                  >
+                    Cancelar
+                  </v-btn>
+                  <v-btn
+                    text
+                    color="primary"
+                    @click="$refs.dialog.save(dateActing)"
+                  >
+                    OK
+                  </v-btn>
+                </v-date-picker>
+              </v-dialog>
+            </v-col>
 
-          <v-col
-            class="d-flex"
-            cols="12"
-          >
-            <v-select
-              prepend-icon="fas fa-file"
-              label="Assunto: "
-              :rules="selectRules"
-              :items="items"
-              v-model="process.processTypeId"
-              @click.once.prevent="getProcessTypes"
-            ></v-select>
-          </v-col>
-
-          <v-col cols="12">
-            <v-select
-              label="Requerente:"
-              prepend-icon="fas fa-user-friends"
-              :rules="customerRules"
-              v-model="process.customerId"
-              :items="customers"
-              @click.once.prevent="getCustomer"
+            <v-col
+              class="d-flex"
+              cols="12"
             >
-            </v-select>
-          </v-col>
+              <v-autocomplete
+                prepend-icon="fas fa-file"
+                v-model="process.processTypeId"
+                :items="items"
+                :filter="customFilter"
+                item-text="text"
+                item-value="value"
+                label="Assunto: "
+                required
+                :rules="selectRules"
+                @click.once.prevent="getProcessTypes"
+              ></v-autocomplete>
+            </v-col>
 
-          <v-col cols="12">
-            <v-text-field
-              label="Requerido:"
-              prepend-icon="fas fa-user-friends"
-              :rules="reqRules"
-              v-model="process.requerido"
+            <v-col cols="12">
+              <v-autocomplete
+                :rules="customerRules"
+                label="Requerente:"
+                prepend-icon="fas fa-user-friends"
+                :filter="customFilter"
+                v-model="process.customerId"
+                :items="customers"
+                item-text="text"
+                item-value="value"
+                @click.once.prevent="getCustomer"
+              ></v-autocomplete>
+            </v-col>
+
+            <v-col cols="12">
+              <v-text-field
+                label="Requerido:"
+                prepend-icon="fas fa-user-friends"
+                :rules="reqRules"
+                v-model="process.requerido"
+              >
+              </v-text-field>
+            </v-col>
+
+            <v-col cols="12">
+              <v-text-field
+                label="Pasta física:"
+                prepend-icon="fas fa-folder"
+                :rules="pastFisic"
+                v-model="process.pastaFisica"
+              >
+              </v-text-field>
+            </v-col>
+
+            <v-col
+              class="d-flex"
+              cols="12"
             >
-            </v-text-field>
-          </v-col>
-
-          <v-col cols="12">
-            <v-text-field
-              label="Pasta física:"
-              prepend-icon="fas fa-folder"
-              :rules="pastFisic"
-              v-model="process.pastaFisica"
-            >
-            </v-text-field>
-          </v-col>
-
-          <v-col
-            class="d-flex"
-            cols="12"
-          >
-            <v-select
-              prepend-icon="fas fa-chalkboard-teacher"
-              label="Professor(a) responsável:"
-              :rules="teacherRules"
-              :items="teachers"
-              v-model="process.userId"
-              @click.once.prevent="getProfilesTeacher"
-            ></v-select>
-          </v-col>
-        </v-form>
-      </v-card-text>
+              <v-autocomplete
+                prepend-icon="fas fa-chalkboard-teacher"
+                label="Professor(a) responsável:"
+                :rules="teacherRules"
+                :items="teachers"
+                v-model="process.userId"
+                item-text="text"
+                item-value="value"
+                :filter="customFilter"
+                @click.once.prevent="getProfilesTeacher"
+              ></v-autocomplete>
+            </v-col>
+          </v-form>
+        </v-card-text>
 
         <v-divider></v-divider>
 
@@ -244,6 +252,11 @@ export default {
     }
   },
   methods: {
+    customFilter(item, queryText, itemText) {
+      const textOne = item.text.toLowerCase();
+      const searchText = queryText.toLowerCase();
+      return textOne.indexOf(searchText) > -1;
+    },
     formatDate(v) {
       let data = new Date(),
         dia = data.getDate().toString().padStart(2, '0'),
@@ -256,7 +269,7 @@ export default {
         this.process.begins_date = new Date(this.dateActing);
         api.post('/processes', this.process)
           .then((response) => {
-             this.$router.push(`processDetailed/${response.data.number}`);
+            this.$router.push(`processDetailed/${response.data.number}`);
           }, (error) => {
             console.log(error);
           });
@@ -294,16 +307,18 @@ export default {
       this.customers = [];
       await api.get(`customers`).then((responseCustomers) => {
         responseCustomers.data.forEach((value) => {
-            this.customers.push({
-              text: value.name + ' ' + value.lastName,
-              value: value.id
-            });
+          this.customers.push({
+            text: value.name + ' ' + value.lastName,
+            value: value.id
+          });
         })
       })
     }
   },
   watch: {},
-  created() {}
+  created() {
+    console.log(this.items)
+  }
 }
 </script>
 

@@ -230,8 +230,6 @@ export default {
       // Salva Checklist como Done -> isChecked true
       if(this.checklistsDone.length > this.oldChecklists.length){
         let lastChecklist = this.checklistsDone.length - 1;
-        console.log(this.checklistsDone[lastChecklist]);
-
         //Verifica se o checklist possui um documento antes de atualizar para Done
         //Caso nao possua um documento, gerar alerta de error
         if(this.checklistsDone[lastChecklist].document === null){
@@ -258,6 +256,12 @@ export default {
           if(oldChecklists.status === 2){
             this.checklistsDone.push(oldChecklists);
             this.generateAlert(3, 'Documento em aprovação');
+            return false;
+          }
+
+          if(oldChecklists.status === 3){
+            this.checklistsDone.push(oldChecklists);
+            this.generateAlert(3, 'Documento está aprovado');
             return false;
           }
 

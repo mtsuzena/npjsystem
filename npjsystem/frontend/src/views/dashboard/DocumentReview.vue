@@ -179,7 +179,16 @@
                   </v-stepper-content>
 
                   <v-stepper-content step="3">
-                    <span> INSERIR LISTA DE DOCUMENTOS QUE FORAM APROVADOS AQUI!</span>
+                    <v-data-table
+                      :footer-props="{
+                        'items-per-page-text':'Documentos por página'
+                      }"
+                      :headers="aprovadosHeaders"
+                      :items="processChecklistsAprovados"
+                      item-key="name"
+                      class="elevation-1"
+                    >
+                    </v-data-table>
                   </v-stepper-content>
                 </v-stepper-items>
               </v-stepper>
@@ -266,6 +275,29 @@ export default {
           align: 'center',
         },
       ],
+      aprovadosHeaders: [
+        {
+          text: 'Nome Checklist',
+          align: 'start',
+          sortable: false,
+          value: 'name',
+        },
+        { 
+          text: 'Numero do Processo', 
+          value: "process.number",
+          align: 'center',
+        },
+        { 
+          text: 'Documento', 
+          value: "document.fileNameWithoutHash",
+          align: 'center',
+        },
+        { 
+          text: 'Responsavel', 
+          value: "user.fullName",
+          align: 'center',
+        },
+      ],
     }
   },
   computed: {
@@ -292,6 +324,7 @@ export default {
       this.documentUploaded = true;
     },
     reprovarDocument(){
+      apiDocGlobal.put(`processChecklists/${this.processChecklistEmAprovacao.id}`, {"status": "1", "consideracoesRevisaoProfessor": this.consideracoesRevisaoProfessor, "isChecked": "false"});
       this.steper = '1';
       this.processChecklistEmAprovacao = null;
       this.generateAlert(3, "Documento reprovado");
@@ -301,9 +334,8 @@ export default {
         this.uploadDocument();
       }
 
-      apiDocGlobal.put(`processChecklists/${this.processChecklistEmAprovacao.id}`, {"status": "3", "consideracoesRevisaoProfessor": this.consideracoesRevisaoProfessor}).then((res)=> {
-        console.log(res);
-      });
+      apiDocGlobal.put(`processChecklists/${this.processChecklistEmAprovacao.id}`, {"status": "3", "consideracoesRevisaoProfessor": this.consideracoesRevisaoProfessor});
+      this.processChecklistsAprovados.push(this.processChecklistEmAprovacao);
       this.steper = '3';
       this.processChecklistEmAprovacao = null;
       this.generateAlert(1, "Documento aprovado");
@@ -357,35 +389,35 @@ export default {
   },
   beforeCreate(){
     let api = axios.create({
-      baseURL: configs.API_URL,
-      headers: {
-        'auth-token': window.localStorage.token
-      }
-    });
-    const tokenDecoded = jwt.decode(window.localStorage.token);
-    api.get(`users/${tokenDecoded.id}`).then((responseGetUserById) => {
-      this.user = responseGetUserById.data;
-    });
+        baseURL: configs.API_URL,
+        headers: {
+          'auth-token': window.localStorage.token
+        }
+      });
+      const tokenDecoded = jwt.decode(window.localStorage.token);
+      api.get(`users/${tokenDecoded.id}`).then((responseGetUserById) => {
+        this.user = responseGetUserById.data;
+      });
 
-    api.get(`processes/byUserId/${tokenDecoded.id}`).then((responseGetProcessesByUserId) => {
+      api.get(`processes/byUserId/${tokenDecoded.id}`).then((responseGetProcessesByUserId) => {
 
-      let processes = responseGetProcessesByUserId.data;
+        let processes = responseGetProcessesByUserId.data;
 
-      processes.forEach((process, i) => {
-        process.processChecklists.forEach((procesChecklist, i) => {
-          if(procesChecklist.status === 2){
+        processes.forEach((process, i) => {
+          process.processChecklists.forEach((procesChecklist, i) => {
             let splitDocName = procesChecklist.document.fileName.split('-', 2);
             let docName = splitDocName[1];
             procesChecklist.document.fileNameWithoutHash = docName; 
-            this.processChecklistsParaAprovar.push(procesChecklist);
-          }
-          if(procesChecklist.status === 3){
-            this.processChecklistsAprovados.push(procesChecklist);
-          }
-        });
+            if(procesChecklist.status === 2){
+              this.processChecklistsParaAprovar.push(procesChecklist);
+            }
+            if(procesChecklist.status === 3){
+              this.processChecklistsAprovados.push(procesChecklist);
+            }
+          });
 
+        });
       });
-    });
   },
 }
 </script>

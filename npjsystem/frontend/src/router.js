@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 Vue.use(Router)
-
+const jwt = require('jsonwebtoken');
 export default new Router({
   mode: 'hash',
   base: process.env.BASE_URL,
@@ -29,6 +29,17 @@ export default new Router({
         {
           name: 'Revisão de Documentos',
           path: 'pages/documentReview',
+          beforeEnter(to, from, next){
+            let token = jwt.decode(window.localStorage.getItem('token'));
+            if (token.roles.find((role)=>role.name === 'REVIEW_DOCUMENT')){
+              next()
+            }else{
+              window.alert('Área restrita.');
+              next({
+                path: '/'
+              })
+            }
+          },
           component: () => import('@/views/dashboard/DocumentReview'),
         },
         {

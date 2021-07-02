@@ -246,6 +246,7 @@ export default {
       selectedFile: null,
       processChecklistsParaAprovar: [],
       processChecklistEmAprovacao: null,
+      processChecklistEmAprovacaoId: null,
       processChecklistsAprovados: [],
       paraAprovarHeaders: [
         {
@@ -308,6 +309,7 @@ export default {
   methods: {
     enviarParaAprovacao(processChecklistParaAprovar){
       this.processChecklistEmAprovacao = processChecklistParaAprovar;
+      this.processChecklistEmAprovacaoAux = processChecklistParaAprovar;
       this.steper = '2';
     },
     paraAprovarClicado(){
@@ -324,21 +326,23 @@ export default {
       this.documentUploaded = true;
     },
     reprovarDocument(){
-      apiDocGlobal.put(`processChecklists/${this.processChecklistEmAprovacao.id}`, {"status": "1", "consideracoesRevisaoProfessor": this.consideracoesRevisaoProfessor, "isChecked": "false"});
+      if(this.documentUploaded){
+        this.uploadDocument();
+      }
+      apiDocGlobal.put(`processChecklists/${this.processChecklistEmAprovacao.id}`, {"status": "4", "consideracoesRevisaoProfessor": this.consideracoesRevisaoProfessor, "isChecked": "false"});
       this.steper = '1';
-      this.processChecklistEmAprovacao = null;
       this.generateAlert(3, "Documento reprovado");
+      this.processChecklistEmAprovacao = null;
     },
     aprovarDocument(){
       if(this.documentUploaded){
         this.uploadDocument();
       }
-
       apiDocGlobal.put(`processChecklists/${this.processChecklistEmAprovacao.id}`, {"status": "3", "consideracoesRevisaoProfessor": this.consideracoesRevisaoProfessor});
       this.processChecklistsAprovados.push(this.processChecklistEmAprovacao);
       this.steper = '3';
-      this.processChecklistEmAprovacao = null;
       this.generateAlert(1, "Documento aprovado");
+      this.processChecklistEmAprovacao = null;
     },
     uploadDocument(){
       let apiUpload = axios.create({
@@ -354,7 +358,7 @@ export default {
 
       apiUpload.post('documents/upload', formData).then((responseuUploadDocument) => {
         let fileName = responseuUploadDocument.data.fileName;
-        apiDocGlobal.put(`documents/${this.processChecklistEmAprovacao.document.id}`, {"fileName": fileName});
+        apiDocGlobal.put(`documents/${this.processChecklistEmAprovacaoAux.document.id}`, {"fileName": fileName});
       });
     },
     downloadDocument(){
@@ -405,13 +409,16 @@ export default {
 
         processes.forEach((process, i) => {
           process.processChecklists.forEach((procesChecklist, i) => {
-            let splitDocName = procesChecklist.document.fileName.split('-', 2);
-            let docName = splitDocName[1];
-            procesChecklist.document.fileNameWithoutHash = docName; 
             if(procesChecklist.status === 2){
+              let splitDocName = procesChecklist.document.fileName.split('-', 2);
+              let docName = splitDocName[1];
+              procesChecklist.document.fileNameWithoutHash = docName; 
               this.processChecklistsParaAprovar.push(procesChecklist);
             }
             if(procesChecklist.status === 3){
+              let splitDocName = procesChecklist.document.fileName.split('-', 2);
+              let docName = splitDocName[1];
+              procesChecklist.document.fileNameWithoutHash = docName; 
               this.processChecklistsAprovados.push(procesChecklist);
             }
           });

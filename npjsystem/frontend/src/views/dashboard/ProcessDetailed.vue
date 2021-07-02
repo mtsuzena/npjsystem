@@ -86,6 +86,7 @@
                 <span v-if="item.status == 1">Em elaboração</span>
                 <span v-if="item.status == 2">Em aprovação</span>
                 <span v-if="item.status == 3">Aprovado</span>
+                <span v-if="item.status == 4">Reprovado</span>
               </template>
 
               <template v-slot:item.document.fileName="{ item }">

@@ -88,6 +88,19 @@
                 </v-date-picker>
               </v-dialog>
             </v-col>
+            <v-col cols="12">
+              <v-autocomplete
+                label="Responsável: "
+                :items="items"
+                item-text="text"
+                item-value="value"
+                :filter="customFilter"
+                @click.once.prevent="getUser"
+                v-model="processChecklist.userId"
+                prepend-icon="fas fa-user-friends"
+                :rules="usersRules"
+              ></v-autocomplete>
+            </v-col>
 
           </v-form>
         </v-card-text>
@@ -144,22 +157,41 @@ export default {
       dateRules: [
         v => !!v || 'Selecione a data de finalização do checklist!',
       ],
+      usersRules: [
+        v => !!v || 'Selecione um responsável!',
+      ],
       modalFinish: false,
       dateFinish: '',
       disabledDates: this.formatDate(new Date(Date.now() - 8640000)),
       dialog: false,
       valid: true,
+      items: [],
       processChecklist: {
         name: '',
         deadline: '',
         processId: this.process.id,
         isChecked: false,
-        userId: this.process.userId,
+        userId: '',
         createAt: new Date(),
       }
     }
   },
   methods: {
+    async getUser() {
+      await api.get(`users/`).then((responseUsers) => {
+        responseUsers.data.forEach((value) => {
+          this.items.push({
+            text: value.name + ' ' + value.lastName,
+            value: value.id
+          });
+        })
+      })
+    },
+    customFilter(item, queryText, itemText) {
+      const textOne = item.text.toLowerCase();
+      const searchText = queryText.toLowerCase();
+      return textOne.indexOf(searchText) > -1;
+    },
     formatDate(v) {
       let data = new Date(),
         dia = data.getDate().toString().padStart(2, '0'),
@@ -187,7 +219,8 @@ export default {
     }
   },
   watch: {},
-  created() {}
+  created() {
+  }
 }
 </script>
 

@@ -102,16 +102,17 @@
                 item-value="value"
                 label="Assunto: "
                 required
+                :rules="selectRules"
                 @click.once.prevent="getProcessTypes"
               ></v-autocomplete>
             </v-col>
 
             <v-col cols="12">
               <v-autocomplete
+                :rules="customerRules"
                 label="Requerente:"
                 prepend-icon="fas fa-user-friends"
                 :filter="customFilter"
-                :rules="customerRules"
                 v-model="process.customerId"
                 :items="customers"
                 item-text="text"
@@ -254,9 +255,7 @@ export default {
     customFilter(item, queryText, itemText) {
       const textOne = item.text.toLowerCase();
       const searchText = queryText.toLowerCase();
-
       return textOne.indexOf(searchText) > -1;
-
     },
     formatDate(v) {
       let data = new Date(),

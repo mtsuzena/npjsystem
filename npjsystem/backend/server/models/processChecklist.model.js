@@ -9,6 +9,9 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false
       },
+      consideracoesRevisaoProfessor: {
+        type: Sequelize.STRING
+      },
       isChecked: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
@@ -18,6 +21,7 @@ module.exports = (sequelize, Sequelize) => {
       1 - Em elaboração
       2 - Em aprovação
       3 - Aprovado
+      4 - Reprovado
       */
       status: {
         type: Sequelize.INTEGER,

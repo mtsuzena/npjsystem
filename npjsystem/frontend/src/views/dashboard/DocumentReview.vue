@@ -107,7 +107,7 @@
                           <v-col>
                             <div class="text-center">
                             <span>Documento em Revisão</span>
-                              <v-btn class="mx-2" large color="green" @click="downloadDocument(item.document.fileName)">
+                              <v-btn class="mx-2" large color="green" @click="downloadDocument()">
                                 <v-icon dark>mdi-file-download</v-icon>
                               </v-btn>
                             </div>
@@ -120,7 +120,18 @@
                           ></v-divider>
                           <v-col>
                             <div class="text-center">
-                              <v-btn class="mx-2" large color="green" @click="downloadDocument(item.document.fileName)">
+                              <input
+                                style="display: none"
+                                type="file"
+                                @change="onFileSelected"
+                                ref="fileInput"
+                              >
+                              <v-btn 
+                                class="mx-2" 
+                                large 
+                                color="green"
+                                @click="$refs.fileInput.click()"
+                              >
                                 <v-icon dark>mdi-file-upload</v-icon>
                               </v-btn>
                               <span>Anexar documento revisado</span>
@@ -134,6 +145,7 @@
                                 outlined
                                 name="input-7-4"
                                 label="Considerações"
+                                v-model.trim="consideracoesRevisaoProfessor"
                               ></v-textarea>
                             </div>
                           </v-col>
@@ -151,14 +163,14 @@
                       <v-btn 
                       class="mx-2"
                       color="green"
-                      @click="enviarParaAprovacao(item)"
+                      @click="aprovarDocument"
                       >
                         <span>Aprovar</span>
                       </v-btn>
                       <v-btn 
                         class="mx-2" 
                         color="#d40000" 
-                        @click="enviarParaAprovacao(item)"
+                        @click="reprovarDocument"
                       >
                         <v-icon dark>mdi-arrow-back</v-icon>
                         <span>Reprovar</span>
@@ -176,6 +188,16 @@
         </base-material-card>
       </v-col>
     </v-row>
+    <base-material-snackbar
+      v-model="snackbar"
+      :type="color"
+      v-bind="{
+        [parsedDirection[0]]: true,
+        [parsedDirection[1]]: true
+      }"
+    >
+      {{alertMsg}}
+    </base-material-snackbar>
   </v-container>
 </template>
 
@@ -184,6 +206,13 @@
 import axios from 'axios'
 const configs = require('../../config/configs');
 const jwt = require('jsonwebtoken');
+const FileDownload = require('js-file-download');
+const apiDocGlobal = axios.create({
+  baseURL: configs.API_URL,
+  headers: {
+    'auth-token': window.localStorage.token
+  }
+});
 
 export default {
   name: 'DocumentReview',
@@ -191,8 +220,21 @@ export default {
   },
   data() {
     return {
+      consideracoesRevisaoProfessor: null,
+      alertMsg: '',
+      snackbar: false,
+      color: 'info',
+      colors: [
+        'info',
+        'success',
+        'warning',
+        'error',
+      ],
+      direction: 'top center',
+      documentUploaded: false,
       steper: '1',
       materialCardColor: 'green',
+      selectedFile: null,
       processChecklistsParaAprovar: [],
       processChecklistEmAprovacao: null,
       processChecklistsAprovados: [],
@@ -210,7 +252,7 @@ export default {
         },
         { 
           text: 'Documento', 
-          value: "document.fileName",
+          value: "document.fileNameWithoutHash",
           align: 'center',
         },
         { 
@@ -226,6 +268,11 @@ export default {
       ],
     }
   },
+  computed: {
+    parsedDirection () {
+      return this.direction.split(' ')
+    },
+  },
   methods: {
     enviarParaAprovacao(processChecklistParaAprovar){
       this.processChecklistEmAprovacao = processChecklistParaAprovar;
@@ -239,6 +286,73 @@ export default {
     },
     aprovadoClicado(){
       this.steper = '3';
+    },
+    onFileSelected(event){
+      this.selectedFile = event.target.files[0];
+      this.documentUploaded = true;
+    },
+    reprovarDocument(){
+      this.steper = '1';
+      this.processChecklistEmAprovacao = null;
+      this.generateAlert(3, "Documento reprovado");
+    },
+    aprovarDocument(){
+      if(this.documentUploaded){
+        this.uploadDocument();
+      }
+
+      apiDocGlobal.put(`processChecklists/${this.processChecklistEmAprovacao.id}`, {"status": "3", "consideracoesRevisaoProfessor": this.consideracoesRevisaoProfessor}).then((res)=> {
+        console.log(res);
+      });
+      this.steper = '3';
+      this.processChecklistEmAprovacao = null;
+      this.generateAlert(1, "Documento aprovado");
+    },
+    uploadDocument(){
+      let apiUpload = axios.create({
+        baseURL: configs.API_URL,
+        headers: {
+            'auth-token': window.localStorage.token,
+            'Content-Type': 'multipart/form-data'
+          }
+      });
+
+      let formData = new FormData();
+      formData.append('file', this.selectedFile);
+
+      apiUpload.post('documents/upload', formData).then((responseuUploadDocument) => {
+        let fileName = responseuUploadDocument.data.fileName;
+        apiDocGlobal.put(`documents/${this.processChecklistEmAprovacao.document.id}`, {"fileName": fileName});
+      });
+    },
+    downloadDocument(){
+      let api = axios.create({
+        baseURL: configs.API_URL,
+        responseType: 'arraybuffer',
+        headers: {
+            'auth-token': window.localStorage.token,
+            'Accept': 'application/docx'
+          }
+      });
+
+      api.get(`documents/download/${this.processChecklistEmAprovacao.document.fileName}`).then((responseDonwloadDocument) => {
+        const blob = new Blob([responseDonwloadDocument.data], {
+          type: 'application/docx',
+        });
+        let splitDocName = this.processChecklistEmAprovacao.document.fileName.split('-', 2);
+        let docName = splitDocName[1];
+        FileDownload(blob, docName);
+      });
+
+    },
+    setAlertColor (color) {
+      this.color = this.colors[color];
+    },
+    generateAlert(color, msg){
+      this.alertMsg = msg;
+      this.setAlertColor(color);
+      this.direction = 'top right';
+      this.snackbar = true;
     },
   },
   beforeCreate(){
@@ -262,7 +376,7 @@ export default {
           if(procesChecklist.status === 2){
             let splitDocName = procesChecklist.document.fileName.split('-', 2);
             let docName = splitDocName[1];
-            procesChecklist.document.fileName = docName; 
+            procesChecklist.document.fileNameWithoutHash = docName; 
             this.processChecklistsParaAprovar.push(procesChecklist);
           }
           if(procesChecklist.status === 3){
@@ -272,7 +386,6 @@ export default {
 
       });
     });
-
   },
 }
 </script>

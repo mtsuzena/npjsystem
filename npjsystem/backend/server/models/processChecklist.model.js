@@ -9,6 +9,9 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false
       },
+      consideracoesRevisaoProfessor: {
+        type: Sequelize.STRING
+      },
       isChecked: {
         type: Sequelize.BOOLEAN,
         defaultValue: false

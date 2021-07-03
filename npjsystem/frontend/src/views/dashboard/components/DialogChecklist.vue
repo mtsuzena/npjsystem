@@ -208,7 +208,7 @@ export default {
         await api.post('/processChecklists', this.processChecklist)
           .then((response) => {
               this.dialog = false;
-              this.$emit('updateList');
+              this.$emit('updateList', response.data.id);
               this.$refs.form.reset();
             }, (error) => {
               console.log(error);

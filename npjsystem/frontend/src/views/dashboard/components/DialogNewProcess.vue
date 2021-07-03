@@ -302,20 +302,21 @@ export default {
         api.post('/processes', this.process)
           .then((response) => {
 
-           this.checklistOne.userId = this.process.userId;
-           this.checklistTwo.userId = this.process.userId;
-           this.checklistThree.userId = this.process.userId;
-           this.checklistFour.userId = this.process.userId;
-
-            this.checklistOne.processId = response.data.id;
-            this.checklistTwo.processId = response.data.id;
-            this.checklistThree.processId = response.data.id;
-            this.checklistFour.processId = response.data.id;
-
-            api.post('/processChecklists',this.checklistOne);
-           api.post('/processChecklists',this.checklistTwo);
-           api.post('/processChecklists',this.checklistThree);
-           api.post('/processChecklists',this.checklistFour);
+            //Inserção de checklists defaults
+           // this.checklistOne.userId = this.process.userId;
+           // this.checklistTwo.userId = this.process.userId;
+           // this.checklistThree.userId = this.process.userId;
+           // this.checklistFour.userId = this.process.userId;
+           //
+           //  this.checklistOne.processId = response.data.id;
+           //  this.checklistTwo.processId = response.data.id;
+           //  this.checklistThree.processId = response.data.id;
+           //  this.checklistFour.processId = response.data.id;
+           //
+           //  api.post('/processChecklists',this.checklistOne);
+           // api.post('/processChecklists',this.checklistTwo);
+           // api.post('/processChecklists',this.checklistThree);
+           // api.post('/processChecklists',this.checklistFour);
 
             this.$router.push(`processDetailed/${response.data.number}`);
           }, (error) => {

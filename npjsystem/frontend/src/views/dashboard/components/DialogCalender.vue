@@ -68,6 +68,7 @@
                     v-model.trim="customer.email"
                     label="Email*"
                     type="email"
+                    :rules="emailRules"
                   />
                 </v-col>
 
@@ -127,8 +128,9 @@
                     :filter="customFilter"
                     item-text="text"
                     item-value="value"
-                    label="Responsável pelo atendimento"
+                    :label="selectName"
                     required
+                    persistent-hint
                   ></v-autocomplete>
                 </v-col>
                 <v-col cols="12">
@@ -195,6 +197,7 @@
         items: [],
         time: null,
         select: null,
+        selectName: 'Responsável pelo atendimento: ',
         menu: false,
         name: '',
         valid: true,
@@ -208,7 +211,10 @@
           v => (v && v.length <= 40) || 'Tamanho máximo de 40 caracteres!',
           v => /[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$/.test(v) || 'Não inserir numeros ou caractéres especiais!',
         ],
-        email: '',
+        emailRules: [
+          v => !!v || 'Preencha o email',
+          v => /.+@.+\..+/.test(v) || 'Insiria um email válido!',
+        ],
         cpfRules: [
           v => !!v || 'Preencha o cpf',
           v => /([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})/.test(v) || 'Insiria um cpf válido!',
@@ -248,9 +254,7 @@
       customFilter (item, queryText, itemText) {
         const textOne = item.text.toLowerCase();
         const searchText = queryText.toLowerCase();
-
         return textOne.indexOf(searchText) > -1;
-
       },
       async getUsers () {
         this.items = []
@@ -264,7 +268,6 @@
               value: value.id,
             })
           })
-          console.log(this.items);
         })
       },
       async getConsultationById (consultationId) {
@@ -276,6 +279,10 @@
           this.customer.email = value.customer.email;
           this.customer.cellphone = value.customer.cellphone;
           this.consultations.motivo = value.motivo;
+          this.consultations.customerId = value.customer.id;
+
+          //Consultation de bozo, refazer dps essse macacao sem fim
+          this.selectName = value.user.name;
           let x = new Date(value.consultationDate);
           this.time = x.toLocaleTimeString();
         })
@@ -283,29 +290,19 @@
       close () {
         this.dialog = false;
         setTimeout(()=>{
-          this.clear();
           this.$emit('closeDialog')
         },1000);
-      },
-      clear(){
-     //   this.customerId = '';
-        this.customer.name = '';
-        this.customer.lastName = '';
-        this.customer.cpf = '';
-        this.customer.email = '';
-        this.customer.cellphone = '';
-        this.time = null;
       },
       async save () {
         if (this.$refs.form.validate()) {
 
-          if (this.customerId !== ' '){ //caso seja vazio ir para o else e atualizar a consulta
+          if (this.customerId !== '' && this.consultationId === ''){
             this.consultations.consultationDate.setHours(
               parseInt(this.time.substring(0, 2)),
               parseInt(this.time.substring(7, this.time.length - 2))
             );
             this.consultations.consultationDate = this.dateCalender
-            this.consultations.userId = this.select
+            this.consultations.userId = this.select;
 
             await api.post('/customers', this.customer)
               .then((response) => {
@@ -321,8 +318,17 @@
               }, (error) => {
                 console.log(error)
               })
+          }else if (this.consultationId !== ''){
+
+                this.consultations.userId = this.select;
+                await api.put(`/customers/${this.consultations.customerId}`, this.customer);
+                await api.put(`/consultations/${this.consultationId}`, this.consultations).then((response) => {
+                  this.close();
+                  this.$emit('saveDialog');
+                }, (error) => {
+                  this.close()
+                });
           }
-          this.clear();
         }
       },
     },

@@ -296,7 +296,7 @@ export default {
     },
   },
   methods: {
-    async updateList(){
+    async updateList(id){
       let apiUpdateListProcess = axios.create({
         baseURL: configs.API_URL,
         headers: {
@@ -305,14 +305,10 @@ export default {
         }
       });
 
-      await  apiUpdateListProcess.get(`/processChecklists`)
+      await  apiUpdateListProcess.get(`/processChecklists/${id}`)
         .then((response) => {
-          this.process.processChecklists = [];
-          response.data.forEach((value) => {
-            if (value.processId == this.process.id){
-              this.process.processChecklists.push(value);
-            }
-          });
+          response.data.user.fullName = response.data.user.name + ' ' +  response.data.user.lastName;
+          this.process.processChecklists.push(response.data);
         });
     },
     corBotaoUploadParaChecklistReprovado(checklist){
@@ -352,7 +348,7 @@ export default {
       let formData = new FormData();
       formData.append('file', this.selectedFile);
 
-      // Se o status for 4, o documento esta reprovado e na hora de upar 
+      // Se o status for 4, o documento esta reprovado e na hora de upar
       // um novo doc temos que fazer um put no doc existente
       if(this.processChecklistSelected.status === 4 || this.processChecklistSelected.status === 1){
         apiUpload.post('documents/upload', formData).then((responseuUploadDocument) => {

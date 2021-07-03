@@ -251,6 +251,12 @@ export default {
           return false;
         }
 
+        if(this.checklistsDone[lastChecklist].status === 4 && !this.checklistsDone[lastChecklist].documentoReprovadoCorrigido){
+          this.checklistsDone.splice(lastChecklist, 1);
+          this.generateAlert(3, 'Insira o documento corrigido');
+          return false;
+        }
+
         api.put(`processChecklists/${this.checklistsDone[lastChecklist].id}`, {"isChecked": "true", "status": "2"});
         window.location.reload(true);
       }
@@ -266,21 +272,17 @@ export default {
             }
           });
 
-          if(oldChecklists.status === 2){
-            this.checklistsDone.push(oldChecklists);
-            this.generateAlert(3, 'Documento em aprovação');
-            return false;
-          }
-
-          if(oldChecklists.status === 3){
-            this.checklistsDone.push(oldChecklists);
-            this.generateAlert(3, 'Documento está aprovado');
-            return false;
-          }
-
           if(checklistRemovido){
-            api.put(`processChecklists/${oldChecklists.id}`, {"isChecked": "false", "status": "1"});
-            window.location.reload(true);
+            if(oldChecklists.status === 2){
+              this.checklistsDone.push(oldChecklists);
+              this.generateAlert(3, 'Documento em aprovação');
+              return false;
+            }
+            if(oldChecklists.status === 3){
+              this.checklistsDone.push(oldChecklists);
+              this.generateAlert(3, 'Documento está aprovado');
+              return false;
+            }
           }
 
         });

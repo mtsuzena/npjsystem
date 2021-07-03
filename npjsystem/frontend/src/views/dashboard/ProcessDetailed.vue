@@ -288,7 +288,7 @@ export default {
           return false;
         }
 
-        api.put(`processChecklists/${this.checklistsDone[lastChecklist].id}`, {"isChecked": "true", "status": "2"});
+        api.put(`processChecklists/${this.checklistsDone[lastChecklist].id}`, {"isChecked": "true", "status": "2", "processId": this.checklistsDone[lastChecklist].processId, "name": this.checklistsDone[lastChecklist].name});
         window.location.reload(true);
       }
 
@@ -414,7 +414,7 @@ export default {
         apiUpload.post('documents/upload', formData).then((responseuUploadDocument) => {
           let fileName = responseuUploadDocument.data.fileName;
           apiAddDoc.post('documents', {"fileName": fileName, "processChecklistId": this.processChecklistId}).then((responseuAddDocument) => {
-            apiAddDoc.put(`processChecklists/${this.processChecklistId}`, {"status": "1"}).then((res)=> {
+            apiAddDoc.put(`processChecklists/${this.processChecklistId}`, {"status": "1", "processId": this.processChecklistSelected.processId, "name": this.processChecklistSelected.name}).then((res)=> {
               window.location.reload(true);
             });
           });

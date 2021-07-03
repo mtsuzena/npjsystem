@@ -147,7 +147,7 @@
             >
               <v-autocomplete
                 prepend-icon="fas fa-chalkboard-teacher"
-                label="Professor(a) responsável:"
+                label="Advogado(a) responsável:"
                 :rules="teacherRules"
                 :items="teachers"
                 v-model="process.userId"
@@ -294,7 +294,7 @@ export default {
       this.teachers = [];
       await api.get(`users`).then((responseUsersTeachers) => {
         responseUsersTeachers.data.forEach((value) => {
-          if (value.profile.name === 'PROFESSOR') {
+          if (value.profile.name === 'PROFESSOR' || value.profile.name === 'ADMIN') {
             this.teachers.push({
               text: value.name + ' ' + value.lastName,
               value: value.id

@@ -329,17 +329,29 @@ export default {
       if(this.documentUploaded){
         this.uploadDocument();
       }
-      apiDocGlobal.put(`processChecklists/${this.processChecklistEmAprovacao.id}`, {"status": "4", "consideracoesRevisaoProfessor": this.consideracoesRevisaoProfessor, "isChecked": "false"});
+      apiDocGlobal.put(`processChecklists/${this.processChecklistEmAprovacao.id}`, {"status": "4", "consideracoesRevisaoProfessor": this.consideracoesRevisaoProfessor, "isChecked": "false", "documentoReprovadoCorrigido": "false"});
       this.steper = '1';
       this.generateAlert(3, "Documento reprovado");
+      // remove o checklist da lista de checklists para aprovar
+      this.removeChecklistDaListaParaAprovar();
+      // limpa processChecklistEmAprovacao
       this.processChecklistEmAprovacao = null;
     },
     aprovarDocument(){
+      // Se um documento foi anexado entao chama a api pra salvar o doc
       if(this.documentUploaded){
         this.uploadDocument();
       }
+
+      // atualiza status do checklist e adiciona as consdieracoes
       apiDocGlobal.put(`processChecklists/${this.processChecklistEmAprovacao.id}`, {"status": "3", "consideracoesRevisaoProfessor": this.consideracoesRevisaoProfessor});
+      
+      // remove o checklist da lista de checklists para aprovar
+      this.removeChecklistDaListaParaAprovar();
+
+      // adiciona o checklist na lista de aprovados
       this.processChecklistsAprovados.push(this.processChecklistEmAprovacao);
+      
       this.steper = '3';
       this.generateAlert(1, "Documento aprovado");
       this.processChecklistEmAprovacao = null;
@@ -384,6 +396,13 @@ export default {
     setAlertColor (color) {
       this.color = this.colors[color];
     },
+    removeChecklistDaListaParaAprovar(){
+      this.processChecklistsParaAprovar.forEach((checklistEmAprovacao, i) => {
+        if(checklistEmAprovacao.id === this.processChecklistEmAprovacao.id){
+          this.processChecklistsParaAprovar.splice(i, 1);
+        }
+      });
+    },
     generateAlert(color, msg){
       this.alertMsg = msg;
       this.setAlertColor(color);
@@ -409,6 +428,8 @@ export default {
 
         processes.forEach((process, i) => {
           process.processChecklists.forEach((procesChecklist, i) => {
+            procesChecklist.user.fullName = procesChecklist.user.name + ' ' + procesChecklist.user.lastName;
+
             if(procesChecklist.status === 2){
               let splitDocName = procesChecklist.document.fileName.split('-', 2);
               let docName = splitDocName[1];

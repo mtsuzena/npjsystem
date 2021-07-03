@@ -61,5 +61,9 @@ exports.updateProcessChecklist = async function (id, processChecklist) {
         existingProcessChecklist.consideracoesRevisaoProfessor = processChecklist.consideracoesRevisaoProfessor;
     }
 
+    if(processChecklist.documentoReprovadoCorrigido != null){
+        existingProcessChecklist.documentoReprovadoCorrigido = processChecklist.documentoReprovadoCorrigido;
+    }
+
     return processChecklistData.updateProcessChecklist(existingProcessChecklist);
 }

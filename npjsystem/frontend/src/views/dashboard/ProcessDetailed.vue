@@ -95,7 +95,7 @@
                 </v-btn>
 
                 <input
-                  v-if="item.document === null"
+                  v-if="item.document === null || item.status == 4"
                   style="display: none"
                   type="file"
                   @change="onFileSelected"
@@ -108,6 +108,17 @@
                   dark
                   small
                   color="red"
+                  @click="$refs.fileInput.click()">
+                    <v-icon dark>mdi-file-upload</v-icon>
+                </v-btn>
+
+                <v-btn
+                  v-if="item.status == 4"
+                  class="mx-2"
+                  fab
+                  dark
+                  small
+                  :color="corBotaoUploadParaChecklistReprovado(item)"
                   @click="$refs.fileInput.click()">
                     <v-icon dark>mdi-file-upload</v-icon>
                 </v-btn>
@@ -177,6 +188,7 @@ export default {
     return {
       build: true,
       processChecklistId: null,
+      processChecklistSelected: null,
       selectedFile: null,
       process: {},
       processStatus: '',
@@ -303,17 +315,25 @@ export default {
           });
         });
     },
+    corBotaoUploadParaChecklistReprovado(checklist){
+      if(checklist.documentoReprovadoCorrigido){
+        return "green";
+      }else{
+        return "yellow";
+      }
+    },
     setAlertColor (color) {
       this.color = this.colors[color];
     },
     getProcessChecklistId(processChecklist){
       this.processChecklistId = processChecklist.id;
+      this.processChecklistSelected = processChecklist;
     },
     onFileSelected(event){
       this.selectedFile = event.target.files[0];
       this.uploadDocument();
     },
-    uploadDocument(processChecklistId){
+    uploadDocument(){
       let apiUpload = axios.create({
         baseURL: configs.API_URL,
         headers: {
@@ -332,15 +352,27 @@ export default {
       let formData = new FormData();
       formData.append('file', this.selectedFile);
 
-      apiUpload.post('documents/upload', formData).then((responseuUploadDocument) => {
-        let fileName = responseuUploadDocument.data.fileName;
-        apiAddDoc.post('documents', {"fileName": fileName, "processChecklistId": this.processChecklistId}).then((responseuAddDocument) => {
-          apiAddDoc.put(`processChecklists/${this.processChecklistId}`, {"status": "1"}).then((res)=> {
-            window.location.reload(true);
+      // Se o status for 4, o documento esta reprovado e na hora de upar 
+      // um novo doc temos que fazer um put no doc existente
+      if(this.processChecklistSelected.status === 4){
+        apiUpload.post('documents/upload', formData).then((responseuUploadDocument) => {
+          let fileName = responseuUploadDocument.data.fileName;
+          apiAddDoc.put(`documents/${this.processChecklistSelected.document.id}`, {"fileName": fileName}).then((res)=> {
+            apiAddDoc.put(`processChecklists/${this.processChecklistId}`, {"documentoReprovadoCorrigido": "true"}).then((res)=> {
+              window.location.reload(true);
+            });
           });
         });
-      });
-
+      }else{
+        apiUpload.post('documents/upload', formData).then((responseuUploadDocument) => {
+          let fileName = responseuUploadDocument.data.fileName;
+          apiAddDoc.post('documents', {"fileName": fileName, "processChecklistId": this.processChecklistId}).then((responseuAddDocument) => {
+            apiAddDoc.put(`processChecklists/${this.processChecklistId}`, {"status": "1"}).then((res)=> {
+              window.location.reload(true);
+            });
+          });
+        });
+      }
     },
     sleep(milliseconds) {
       const date = Date.now();

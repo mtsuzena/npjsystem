@@ -168,28 +168,67 @@
       justify="space-around"
       class="grey lighten-5"
     >
-      <v-timeline>
-        <v-timeline-item
-          v-for="processMovement in process.processMovements"
-          :key="processMovement"
-          large
+      <v-col>
+        <base-material-card
+            color="green"
+            title="Movimentações do processo"
+            class="px-5 py-3"
         >
-          <template v-slot:icon>
-            <v-avatar>
-              <img :src="processMovement.user.imgSrc">
-            </v-avatar>
-          </template>
-          <template v-slot:opposite>
-            <span>{{processMovement.user.name}}</span>
-          </template>
-          <v-card class="elevation-2">
-            <v-card-title class="text-h5">
-              {{processMovement.actionName}}
-            </v-card-title>
-            <v-card-text>{{processMovement.actionDescription}}</v-card-text>
-          </v-card>
-        </v-timeline-item>
-      </v-timeline>
+          <br>
+          <v-divider></v-divider>
+          <v-row>
+            <v-col>
+              <v-text-field
+                label="Titulo"
+                class="purple-input"
+                v-model="tituloMovimentacao"
+              />
+            </v-col>
+            <v-col>
+              <v-text-field
+                label="Descrição"
+                class="purple-input"
+                v-model="descricaoMovimentacao"
+              />
+            </v-col>
+            <v-col>
+              <div align="center">
+                <v-btn
+                  class="ma-2"
+                  color="green"
+                  @click="salvarMovimentacaoDoProcesso"
+                >
+                  Inserir movimentação
+                </v-btn>
+              </div>
+            </v-col>
+          </v-row>
+          <v-divider></v-divider>
+          <br>
+          <v-timeline>
+            <v-timeline-item
+              v-for="processMovement in process.processMovements"
+              :key="processMovement"
+              large
+            >
+              <template v-slot:icon>
+                <v-avatar>
+                  <img :src="processMovement.user.imgSrc">
+                </v-avatar>
+              </template>
+              <template v-slot:opposite>
+                <span>{{processMovement.user.name}}</span>
+              </template>
+              <v-card class="elevation-2">
+                <v-card-title class="text-h5">
+                  {{processMovement.actionName}}
+                </v-card-title>
+                <v-card-text>{{processMovement.actionDescription}}</v-card-text>
+              </v-card>
+            </v-timeline-item>
+          </v-timeline>
+        </base-material-card>
+      </v-col>
     </v-row>
     <base-material-snackbar
       v-model="snackbar"
@@ -209,6 +248,7 @@
 import axios from 'axios'
 const configs = require('../../config/configs');
 const FileDownload = require('js-file-download');
+const jwt = require('jsonwebtoken');
 
 export default {
   name: 'ProcessDetailed',
@@ -217,6 +257,8 @@ export default {
   },
   data() {
     return {
+      tituloMovimentacao: null,
+      descricaoMovimentacao: null,
       build: true,
       processChecklistId: null,
       processChecklistSelected: null,
@@ -368,6 +410,26 @@ export default {
       }else{
         return "yellow";
       }
+    },
+    async salvarMovimentacaoDoProcesso(){
+      const user = jwt.decode(window.localStorage.token);
+      let processMovement = {
+        actionName: this.tituloMovimentacao,
+        actionDescription: this.descricaoMovimentacao,
+        userId: user.id,
+        processId: this.process.id
+      };
+
+      let api = axios.create({
+        baseURL: configs.API_URL,
+        headers: {
+          'auth-token': window.localStorage.token,
+        }
+      });
+
+      await api.post(`processMovements`, processMovement);
+
+      this.updateProcessMovements();
     },
     setAlertColor (color) {
       this.color = this.colors[color];

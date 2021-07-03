@@ -113,7 +113,7 @@
                 </v-btn>
 
                 <v-btn
-                  v-if="item.status == 4"
+                  v-if="item.status == 4 || item.status == 1"
                   class="mx-2"
                   fab
                   dark
@@ -354,7 +354,7 @@ export default {
 
       // Se o status for 4, o documento esta reprovado e na hora de upar 
       // um novo doc temos que fazer um put no doc existente
-      if(this.processChecklistSelected.status === 4){
+      if(this.processChecklistSelected.status === 4 || this.processChecklistSelected.status === 1){
         apiUpload.post('documents/upload', formData).then((responseuUploadDocument) => {
           let fileName = responseuUploadDocument.data.fileName;
           apiAddDoc.put(`documents/${this.processChecklistSelected.document.id}`, {"fileName": fileName}).then((res)=> {

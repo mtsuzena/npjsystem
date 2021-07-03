@@ -18,7 +18,7 @@ module.exports = (sequelize, Sequelize) => {
       },
       documentoReprovadoCorrigido: {
         type: Sequelize.BOOLEAN,
-        defaultValue: false
+        defaultValue: true
       },
       /* 
       0 - Não iniciado

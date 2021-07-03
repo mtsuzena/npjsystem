@@ -428,6 +428,8 @@ export default {
 
         processes.forEach((process, i) => {
           process.processChecklists.forEach((procesChecklist, i) => {
+            procesChecklist.user.fullName = procesChecklist.user.name + ' ' + procesChecklist.user.lastName;
+
             if(procesChecklist.status === 2){
               let splitDocName = procesChecklist.document.fileName.split('-', 2);
               let docName = splitDocName[1];

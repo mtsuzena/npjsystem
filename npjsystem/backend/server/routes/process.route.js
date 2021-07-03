@@ -2,10 +2,7 @@ const express = require('express');
 const router = express.Router();
 const processService = require('../services/process.service');
 const verify = require('../helpers/verifyToken');
-const authConfig = require('../config/auth.config');
 const processMovementService = require('../services/processMovement.service');
-const userService = require('../services/user.service');
-const jwt = require('jsonwebtoken');
 
 router.get('/processes', verify, async function (req, res, next){
     try {

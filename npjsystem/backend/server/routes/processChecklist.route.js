@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const processChecklistService = require('../services/processChecklist.service');
 const verify = require('../helpers/verifyToken');
+const processMovementService = require('../services/processMovement.service');
 
 router.get('/processChecklists', verify, async function (req, res, next){
     try {
@@ -25,6 +26,11 @@ router.post('/processChecklists', verify, async function (req, res, next){
     const processChecklist = req.body;
     try {
         const newProcessChecklist = await processChecklistService.saveProcessChecklist(processChecklist);
+        
+        // gera log criacao checklist
+        const token = req.header('auth-token');
+        await processMovementService.gerarMovimentacaoDeCriacaoDeChecklist(token, newProcessChecklist);
+
         res.status(201).json(newProcessChecklist);
     } catch (error) {
         next(error);

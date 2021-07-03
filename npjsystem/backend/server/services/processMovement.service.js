@@ -59,3 +59,40 @@ exports.gerarMovimentacaoDeCriacaoDeProcesso  = async function (token, newProces
     processMovementData.saveProcessMovement(processMovement);
 
 }
+
+exports.gerarMovimentacaoDeCriacaoDeChecklist = async function (token, newChecklist) {
+
+    const userDecoded = jwt.verify(token, authConfig.TOKEN_SECRET);
+    const user = await userService.getUser(userDecoded.id);
+
+    let data = new Date();
+    var dia = data.getDate(); 
+    var mes = data.getMonth();
+    var ano = data.getFullYear(); 
+    var hora = data.getHours();
+    var min = data.getMinutes();
+    var seg = data.getSeconds();
+
+    let actionName = "Crição de checklist";
+    let actionDescription = 
+        'Usuário ' 
+        + user.name 
+        + ' ' 
+        + user.lastName
+        + ' criou o checklist '
+        + newChecklist.name
+        + ' no dia'
+        + ' ' + dia + '/' + (mes+1) + '/' + ano
+        + ' às '
+        + hora + ':' + min + ':' + seg + '.';
+
+    processMovement = {
+        actionName: actionName, 
+        actionDescription: actionDescription,
+        processId: newChecklist.processId,
+        userId: user.id
+    };
+
+    processMovementData.saveProcessMovement(processMovement);
+
+}

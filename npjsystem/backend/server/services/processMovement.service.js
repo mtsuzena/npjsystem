@@ -1,6 +1,9 @@
 const processMovementData = require('../datas/processMovement.data');
 const processService = require('./process.service');
 const usersData = require('../datas/user.data.js');
+const userService = require('../services/user.service');
+const jwt = require('jsonwebtoken');
+const authConfig = require('../config/auth.config');
 
 exports.getProcessMovementsByProcessId = async function (processId) {
     return processMovementData.getProcessMovementsByProcessId(processId);
@@ -19,4 +22,77 @@ exports.saveProcessMovement = async function (processMovement) {
     if (!existingUser) throw new Error('User not found');
 
     return processMovementData.saveProcessMovement(processMovement);
+}
+
+exports.gerarMovimentacaoDeCriacaoDeProcesso  = async function (token, newProcess) {
+    const userDecoded = jwt.verify(token, authConfig.TOKEN_SECRET);
+    const user = await userService.getUser(userDecoded.id);
+
+    let data = new Date();
+    var dia = data.getDate(); 
+    var mes = data.getMonth();
+    var ano = data.getFullYear(); 
+    var hora = data.getHours();
+    var min = data.getMinutes();
+    var seg = data.getSeconds();
+
+    let actionName = "Criação de processo";
+    let actionDescription = 
+        'Usuário ' 
+        + user.name 
+        + ' ' 
+        + user.lastName
+        + ' iniciou o processo '
+        + newProcess.number
+        + ' no dia'
+        + ' ' + dia + '/' + (mes+1) + '/' + ano
+        + ' às '
+        + hora + ':' + min + ':' + seg + '.';
+
+    processMovement = {
+        actionName: actionName, 
+        actionDescription: actionDescription,
+        processId: newProcess.id,
+        userId: user.id
+    };
+
+    processMovementData.saveProcessMovement(processMovement);
+
+}
+
+exports.gerarMovimentacaoDeCriacaoDeChecklist = async function (token, newChecklist) {
+
+    const userDecoded = jwt.verify(token, authConfig.TOKEN_SECRET);
+    const user = await userService.getUser(userDecoded.id);
+
+    let data = new Date();
+    var dia = data.getDate(); 
+    var mes = data.getMonth();
+    var ano = data.getFullYear(); 
+    var hora = data.getHours();
+    var min = data.getMinutes();
+    var seg = data.getSeconds();
+
+    let actionName = "Crição de checklist";
+    let actionDescription = 
+        'Usuário ' 
+        + user.name 
+        + ' ' 
+        + user.lastName
+        + ' criou o checklist '
+        + newChecklist.name
+        + ' no dia'
+        + ' ' + dia + '/' + (mes+1) + '/' + ano
+        + ' às '
+        + hora + ':' + min + ':' + seg + '.';
+
+    processMovement = {
+        actionName: actionName, 
+        actionDescription: actionDescription,
+        processId: newChecklist.processId,
+        userId: user.id
+    };
+
+    processMovementData.saveProcessMovement(processMovement);
+
 }

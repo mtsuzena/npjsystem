@@ -342,6 +342,24 @@ export default {
         .then((response) => {
           response.data.user.fullName = response.data.user.name + ' ' +  response.data.user.lastName;
           this.process.processChecklists.push(response.data);
+          this.updateProcessMovements();
+        });
+    },
+    async updateProcessMovements(){
+      let apiUpdateListProcess = axios.create({
+        baseURL: configs.API_URL,
+        headers: {
+          'auth-token': window.localStorage.token,
+        }
+      });
+
+      await  apiUpdateListProcess.get(`/processMovements/${this.process.id}`)
+        .then((response) => {
+          this.process.processMovements = response.data;
+          this.process.processMovements.forEach((processMovement, i) => {
+            this.process.processMovements[i].user.imgSrc = require('@/assets/avatar/' + processMovement.user.imgSrc);
+          });
+          this.process.processMovements.reverse();
         });
     },
     corBotaoUploadParaChecklistReprovado(checklist){
@@ -495,6 +513,8 @@ export default {
       this.process.processMovements.forEach((processMovement, i) => {
         this.process.processMovements[i].user.imgSrc = require('@/assets/avatar/' + processMovement.user.imgSrc);
       });
+
+      this.process.processMovements.reverse();
 
     });
   }

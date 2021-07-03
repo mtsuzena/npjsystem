@@ -248,7 +248,39 @@ export default {
         userId: '',
         begins_date: '',
         isFiled: false
-      }
+      },
+      checklistOne: {
+        name: "Petição",
+        deadline: "2021-08-10T12:00:00.000Z",
+        processId: '',
+        isChecked: false,
+        createdAt: new Date(),
+        userId: ''
+      },
+      checklistTwo: {
+        name: "Procuração e Declaração",
+        deadline: "2021-08-10T12:00:00.000Z",
+        processId: '',
+        isChecked: false,
+        createdAt: new Date(),
+        userId: ''
+      },
+      checklistThree: {
+        name: "Documentos Pessoais",
+        deadline: "2021-08-10T12:00:00.000Z",
+        processId: '',
+        isChecked: false,
+        createdAt: new Date(),
+        userId: ''
+      },
+      checklistFour: {
+        name: "Documentos gerais",
+        deadline: "2021-08-10T12:00:00.000Z",
+        processId: '',
+        isChecked: false,
+        createdAt: new Date(),
+        userId: ''
+      },
     }
   },
   methods: {
@@ -269,10 +301,29 @@ export default {
         this.process.begins_date = new Date(this.dateActing);
         api.post('/processes', this.process)
           .then((response) => {
+
+           this.checklistOne.userId = this.process.userId;
+           this.checklistTwo.userId = this.process.userId;
+           this.checklistThree.userId = this.process.userId;
+           this.checklistFour.userId = this.process.userId;
+
+            this.checklistOne.processId = response.data.id;
+            this.checklistTwo.processId = response.data.id;
+            this.checklistThree.processId = response.data.id;
+            this.checklistFour.processId = response.data.id;
+
+            api.post('/processChecklists',this.checklistOne);
+           api.post('/processChecklists',this.checklistTwo);
+           api.post('/processChecklists',this.checklistThree);
+           api.post('/processChecklists',this.checklistFour);
+
             this.$router.push(`processDetailed/${response.data.number}`);
           }, (error) => {
             console.log(error);
           });
+
+
+
       }
     },
     async getProcessTypes() {

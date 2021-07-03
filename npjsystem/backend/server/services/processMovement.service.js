@@ -36,7 +36,7 @@ exports.gerarMovimentacaoDeCriacaoDeProcesso  = async function (token, newProces
     var min = data.getMinutes();
     var seg = data.getSeconds();
 
-    let actionName = "Criação de processo";
+    let actionName = "Criação de Processo";
     let actionDescription = 
         'Usuário ' 
         + user.name 
@@ -57,11 +57,9 @@ exports.gerarMovimentacaoDeCriacaoDeProcesso  = async function (token, newProces
     };
 
     processMovementData.saveProcessMovement(processMovement);
-
 }
 
 exports.gerarMovimentacaoDeCriacaoDeChecklist = async function (token, newChecklist) {
-
     const userDecoded = jwt.verify(token, authConfig.TOKEN_SECRET);
     const user = await userService.getUser(userDecoded.id);
 
@@ -73,7 +71,7 @@ exports.gerarMovimentacaoDeCriacaoDeChecklist = async function (token, newCheckl
     var min = data.getMinutes();
     var seg = data.getSeconds();
 
-    let actionName = "Crição de checklist";
+    let actionName = "Crição de Checklist";
     let actionDescription = 
         'Usuário ' 
         + user.name 
@@ -94,5 +92,49 @@ exports.gerarMovimentacaoDeCriacaoDeChecklist = async function (token, newCheckl
     };
 
     processMovementData.saveProcessMovement(processMovement);
+}
 
+exports.gerarLogMovimentacaoChecklist = async function (token, newChecklist) {
+    const userDecoded = jwt.verify(token, authConfig.TOKEN_SECRET);
+    const user = await userService.getUser(userDecoded.id);
+
+    let data = new Date();
+    var dia = data.getDate(); 
+    var mes = data.getMonth();
+    var ano = data.getFullYear(); 
+    var hora = data.getHours();
+    var min = data.getMinutes();
+    var seg = data.getSeconds();
+
+    let actionName = "Movimentação de Checklist";
+
+    let actionDescription = 'Usuário ' + user.name + ' ' + user.lastName;
+
+    if(newChecklist.status === '1'){
+        actionDescription = actionDescription + ' movimentou o checklist ' + newChecklist.name + ' para em Elaboração ';
+    }
+    if(newChecklist.status === '2'){
+        actionDescription = actionDescription + ' enviou o checklist ' + newChecklist.name + ' para aprovação ';
+    }
+    if(newChecklist.status === '3'){
+        actionDescription = actionDescription + ' aprovou o checklist ' + newChecklist.name + ' ';
+    }
+    if(newChecklist.status === '4'){
+        actionDescription = actionDescription + ' reprovou o checklist ' + newChecklist.name + ' ';
+    }
+
+    actionDescription = actionDescription
+    + 'no dia'
+    + ' ' + dia + '/' + (mes+1) + '/' + ano
+    + ' às '
+    + hora + ':' + min + ':' + seg + '.';
+
+    processMovement = {
+        actionName: actionName, 
+        actionDescription: actionDescription,
+        processId: newChecklist.processId,
+        userId: user.id
+    };
+
+    processMovementData.saveProcessMovement(processMovement);
 }

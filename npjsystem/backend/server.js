@@ -142,8 +142,8 @@ app.use(function (error, req, res, next) {
 
 const db = require("./server/models");
 
-db.sequelize.sync();
-// db.sequelize.sync({force: true});
+// db.sequelize.sync();
+db.sequelize.sync({force: true});
 
 app.listen(3001, () => console.log('Server up and running'));
 

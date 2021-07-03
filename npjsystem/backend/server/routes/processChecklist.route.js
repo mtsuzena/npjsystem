@@ -40,7 +40,14 @@ router.post('/processChecklists', verify, async function (req, res, next){
 router.put('/processChecklists/:id', verify, async function (req, res, next){
     const processChecklist = req.body;
     try {
-        await processChecklistService.updateProcessChecklist(req.params.id, processChecklist)
+        await processChecklistService.updateProcessChecklist(req.params.id, processChecklist);
+
+        // gera log criacao checklist
+        if(processChecklist.status){
+            const token = req.header('auth-token');
+            await processMovementService.gerarLogMovimentacaoChecklist(token, processChecklist);   
+        }
+
         res.status(204).end();
     } catch (error) {
         next(error);

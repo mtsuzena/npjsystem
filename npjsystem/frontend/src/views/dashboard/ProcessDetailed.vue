@@ -90,9 +90,24 @@
               </template>
 
               <template v-slot:item.document.fileName="{ item }">
-                <v-btn v-if="item.document !== null" class="mx-2" fab dark small color="#0986b8" @click="downloadDocument(item.document.fileName)">
-                  <v-icon dark>mdi-file-download</v-icon>
-                </v-btn>
+                <v-tooltip left>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn 
+                      v-if="item.document !== null" 
+                      class="mx-2" 
+                      fab 
+                      dark 
+                      small 
+                      color="#0986b8"
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="downloadDocument(item.document.fileName)"
+                    >
+                      <v-icon dark>mdi-file-download</v-icon>
+                    </v-btn>
+                  </template>
+                  <span>Baixar documento anexado</span>
+                </v-tooltip>
 
                 <input
                   v-if="item.document === null || item.status == 4"
@@ -101,27 +116,43 @@
                   @change="onFileSelected"
                   ref="fileInput"
                 >
-                <v-btn
-                  v-if="item.document === null"
-                  class="mx-2"
-                  fab
-                  dark
-                  small
-                  color="red"
-                  @click="$refs.fileInput.click()">
-                    <v-icon dark>mdi-file-upload</v-icon>
-                </v-btn>
 
-                <v-btn
-                  v-if="item.status == 4 || item.status == 1"
-                  class="mx-2"
-                  fab
-                  dark
-                  small
-                  :color="corBotaoUploadParaChecklistReprovado(item)"
-                  @click="$refs.fileInput.click()">
-                    <v-icon dark>mdi-file-upload</v-icon>
-                </v-btn>
+                <v-tooltip right>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-if="item.document === null"
+                      class="mx-2"
+                      fab
+                      dark
+                      small
+                      color="red"
+                      v-bind="attrs"
+                      v-on="on"
+                      @click="$refs.fileInput.click()">
+                        <v-icon dark>mdi-file-upload</v-icon>
+                    </v-btn>
+                    </template>
+                  <span>Anexar documento</span>
+                </v-tooltip>
+
+                <v-tooltip right>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-if="item.status == 4 || item.status == 1"
+                      class="mx-2"
+                      fab
+                      dark
+                      small
+                      v-bind="attrs"
+                      v-on="on"
+                      :color="corBotaoUploadParaChecklistReprovado(item)"
+                      @click="$refs.fileInput.click()">
+                        <v-icon dark>mdi-file-upload</v-icon>
+                    </v-btn>
+                    </template>
+                  <span>Anexar documento corrigido</span>
+                </v-tooltip>
+
               </template>
             </v-data-table>
             <dialog-checklist
@@ -251,6 +282,12 @@ export default {
           return false;
         }
 
+        if(this.checklistsDone[lastChecklist].status === 4 && !this.checklistsDone[lastChecklist].documentoReprovadoCorrigido){
+          this.checklistsDone.splice(lastChecklist, 1);
+          this.generateAlert(3, 'Insira o documento corrigido');
+          return false;
+        }
+
         api.put(`processChecklists/${this.checklistsDone[lastChecklist].id}`, {"isChecked": "true", "status": "2"});
         window.location.reload(true);
       }
@@ -266,21 +303,17 @@ export default {
             }
           });
 
-          if(oldChecklists.status === 2){
-            this.checklistsDone.push(oldChecklists);
-            this.generateAlert(3, 'Documento em aprovação');
-            return false;
-          }
-
-          if(oldChecklists.status === 3){
-            this.checklistsDone.push(oldChecklists);
-            this.generateAlert(3, 'Documento está aprovado');
-            return false;
-          }
-
           if(checklistRemovido){
-            api.put(`processChecklists/${oldChecklists.id}`, {"isChecked": "false", "status": "1"});
-            window.location.reload(true);
+            if(oldChecklists.status === 2){
+              this.checklistsDone.push(oldChecklists);
+              this.generateAlert(3, 'Documento em aprovação');
+              return false;
+            }
+            if(oldChecklists.status === 3){
+              this.checklistsDone.push(oldChecklists);
+              this.generateAlert(3, 'Documento está aprovado');
+              return false;
+            }
           }
 
         });

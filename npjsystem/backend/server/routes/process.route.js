@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const processService = require('../services/process.service');
 const verify = require('../helpers/verifyToken');
+const processMovementService = require('../services/processMovement.service');
 
 router.get('/processes', verify, async function (req, res, next){
     try {
@@ -42,7 +43,14 @@ router.get('/processes/byProcessNumber/:processNumber', verify, async function (
 router.post('/processes', verify, async function (req, res, next){
     const process = req.body;
     try {
+        // Salvando processo
         const newProcess = await processService.saveProcess(process);
+
+        // -- Gerando movimentacao do processo --
+        const token = req.header('auth-token');
+        await processMovementService.gerarMovimentacaoDeCriacaoDeProcesso(token, newProcess);
+
+        //retorna response
         res.status(201).json(newProcess);
     } catch (error) {
         next(error);

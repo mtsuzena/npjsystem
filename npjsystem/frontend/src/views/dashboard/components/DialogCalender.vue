@@ -19,14 +19,6 @@
             <v-spacer></v-spacer>
             <v-toolbar-title>Agendar para o dia {{ dateCalender | dateFormat }}</v-toolbar-title>
             <v-spacer />
-            <v-btn
-              color="blue darken-1"
-              icon
-              text
-              @click="close"
-            >
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
           </v-toolbar>
 
           <v-card-text>
@@ -39,6 +31,7 @@
                     label="Nome do Cliente*"
                     required
                     type="text"
+                    append-icon="fas fa-id-card-alt"
                   />
                 </v-col>
 
@@ -49,6 +42,7 @@
                     label="Sobrenome do Cliente*"
                     required
                     type="text"
+                    append-icon="fas fa-id-card-alt"
                   />
                 </v-col>
 
@@ -60,6 +54,7 @@
                     label="CPF*"
                     required
                     type="text"
+                    append-icon="fas fa-id-card"
                   />
                 </v-col>
 
@@ -69,6 +64,7 @@
                     label="Email*"
                     type="email"
                     :rules="emailRules"
+                    append-icon="fas fa-envelope"
                   />
                 </v-col>
 
@@ -80,6 +76,7 @@
                     label="Telefone*"
                     required
                     type="phone"
+                    append-icon="fas fa-phone"
                   />
                 </v-col>
 
@@ -106,6 +103,7 @@
                         label="Selecionar horário"
                         readonly
                         v-on="on"
+                        append-icon="fas fa-hourglass-half"
                       />
                     </template>
                     <v-time-picker
@@ -131,6 +129,7 @@
                     :label="selectName"
                     required
                     persistent-hint
+                    append-icon="fas fa-chalkboard-teacher"
                   ></v-autocomplete>
                 </v-col>
                 <v-col cols="12">
@@ -147,8 +146,16 @@
           <v-card-actions>
             <v-spacer />
             <v-btn
+              color="#034405"
+              text
+              @click="close"
+            >
+              CANCELAR
+
+            </v-btn>
+            <v-btn
               :disabled="!valid"
-              color="blue darken-1"
+              color="#034405"
               form="dialogForm"
               text
               type="submit"

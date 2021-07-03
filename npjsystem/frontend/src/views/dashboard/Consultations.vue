@@ -14,12 +14,13 @@
       @closeDialog="closeDialog"
       @saveDialog="saveObject"
     ></dialog-calender>
-
     <div>
+
       <v-sheet
         tile
-        height="54"
+        height="75"
         class="d-flex"
+        color="transparent"
       >
         <v-btn
           icon
@@ -28,33 +29,19 @@
         >
           <v-icon>mdi-chevron-left</v-icon>
         </v-btn>
-        <v-select
-          v-model="type"
-          :items="types"
-          dense
-          outlined
-          hide-details
-          class="ma-2"
-          label="type"
-        />
-        <v-select
-          v-model="mode"
-          :items="modes"
-          dense
-          outlined
-          hide-details
-          label="event-overlap-mode"
-          class="ma-2"
-        />
-        <v-select
-          v-model="weekday"
-          :items="weekdays"
-          dense
-          outlined
-          hide-details
-          label="weekdays"
-          class="ma-2"
-        />
+        <v-container class="fluid">
+          <v-select
+            cols="12"
+            v-model="weekday"
+            :items="weekdays"
+            dense
+            outlined
+            hide-details
+            label="Dias da semana"
+            class="d-flex pa-2 mb-3"
+          />
+        </v-container>
+
         <v-spacer/>
         <v-btn
           icon
@@ -64,27 +51,28 @@
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
       </v-sheet>
-      <v-sheet height="600">
-        <v-calendar
-          ref="calendar"
-          v-model="value"
-          :weekdays="weekday"
-          :type="type"
-          :events="events"
-          :event-overlap-mode="mode"
-          :event-overlap-threshold="30"
-          :event-color="getEventColor"
-          @click:date="openDialogCalender"
-          @click:event="showEvents"
-          :dark="true"
-        />
-      </v-sheet>
+
+          <v-sheet height="900">
+            <v-calendar
+              ref="calendar"
+              v-model="value"
+              :weekdays="weekday"
+              :events="events"
+              :event-overlap-mode="mode"
+              :event-overlap-threshold="30"
+              :event-color="getEventColor"
+              @click:date="openDialogCalender"
+              @click:event="showEvents"
+              locale="pt-br"
+              color="green"
+            />
+          </v-sheet>
+
     </div>
   </v-container>
 </template>
 
 <script>
-
 
 import axios from "axios";
 import configs from "../../config/configs";
@@ -111,8 +99,6 @@ export default {
       calenderDateSelected: Date,
       dialog: false,
       consultations: {},
-      type: 'month',
-      types: ['mês', 'semana', 'dia', '4 dias'],
       mode: 'stack',
       modes: ['stack', 'column'],
       weekday: [0, 1, 2, 3, 4, 5, 6],
@@ -210,3 +196,10 @@ export default {
   }
 }
 </script>
+
+
+<style scoped>
+>>>.v-calendar-weekly__day-label .transparent{
+  background-color:#b5b5b5 !important;
+}
+</style>

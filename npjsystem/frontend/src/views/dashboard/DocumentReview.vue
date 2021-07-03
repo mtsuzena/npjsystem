@@ -329,7 +329,7 @@ export default {
       if(this.documentUploaded){
         this.uploadDocument();
       }
-      apiDocGlobal.put(`processChecklists/${this.processChecklistEmAprovacao.id}`, {"status": "4", "consideracoesRevisaoProfessor": this.consideracoesRevisaoProfessor, "isChecked": "false"});
+      apiDocGlobal.put(`processChecklists/${this.processChecklistEmAprovacao.id}`, {"status": "4", "consideracoesRevisaoProfessor": this.consideracoesRevisaoProfessor, "isChecked": "false", "documentoReprovadoCorrigido": "false"});
       this.steper = '1';
       this.generateAlert(3, "Documento reprovado");
       // remove o checklist da lista de checklists para aprovar

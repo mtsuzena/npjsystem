@@ -16,6 +16,10 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.BOOLEAN,
         defaultValue: false
       },
+      documentoReprovadoCorrigido: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
       /* 
       0 - Não iniciado
       1 - Em elaboração

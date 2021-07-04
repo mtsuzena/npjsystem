@@ -270,8 +270,9 @@
 
         await api.get(`users/freeOnDate/${this.dateCalender}`).then((responseGetUserById) => {
           responseGetUserById.data.forEach((value) => {
+
             this.items.push({
-              text: value.name,
+              text: value.name + ' ' + value.lastName,
               value: value.id,
             })
           })
@@ -289,7 +290,7 @@
           this.consultations.customerId = value.customer.id;
 
           //Consultation de bozo, refazer dps essse macacao sem fim
-          this.selectName = value.user.name;
+          this.selectName = value.user.name + ' ' + value.user.lastName;
           let x = new Date(value.consultationDate);
           this.time = x.toLocaleTimeString();
         })

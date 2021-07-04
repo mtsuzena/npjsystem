@@ -52,184 +52,232 @@
         </base-material-card>
       </v-col>
     </v-row>
-    <v-row
-      align="start"
-      justify="space-around"
-      class="grey lighten-5"
-    >
-      <v-col>
-        <base-material-card
+
+<!--Tabs-->
+
+    <template>
+      <v-card color="basil">
+
+        <v-tabs
+          v-model="tab"
+          background-color="transparent"
           color="green"
-          title="Lista de checagem do andamento processual"
-          class="px-5 py-3"
+          grow
         >
-          <v-card-text>
-            <v-data-table
-              :footer-props="{
+          <v-tab>
+            Andamento processual
+          </v-tab>
+          <v-tab>
+            Movimentações do processo
+          </v-tab>
+          <v-tab>
+            Audiências
+          </v-tab>
+        </v-tabs>
+
+        <v-tabs-items v-model="tab">
+
+
+          <v-tab-item>
+            <v-card flat>
+              <v-card-text>
+                <v-row
+                  align="start"
+                  justify="space-around"
+                  class="lighten-5"
+                >
+                  <v-col>
+                    <base-material-card
+                      color="green"
+                      title="Lista de checagem do andamento processual"
+                      class="px-5 py-3"
+                    >
+                      <v-card-text>
+                        <v-data-table
+                          :footer-props="{
                 'items-per-page-text':'Checklists por página'
               }"
-              v-model="checklistsDone"
-              :headers="headers"
-              :custom-sort="customSortChecklists"
-              :items="process.processChecklists"
-              item-key="name"
-              show-select
-              class="elevation-1"
-              @click:row="getProcessChecklistId"
-            >
-              <template v-slot:item.deadline="{ item }">
-                <span>{{ new Date(item.deadline).toLocaleString() }}</span>
-              </template>
+                          v-model="checklistsDone"
+                          :headers="headers"
+                          :custom-sort="customSortChecklists"
+                          :items="process.processChecklists"
+                          item-key="name"
+                          show-select
+                          class="elevation-1"
+                          @click:row="getProcessChecklistId"
+                        >
+                          <template v-slot:item.deadline="{ item }">
+                            <span>{{ new Date(item.deadline).toLocaleString() }}</span>
+                          </template>
 
-              <template v-slot:item.status="{ item }">
-                <span v-if="item.status == 0">Não iniciado</span>
-                <span v-if="item.status == 1">Em elaboração</span>
-                <span v-if="item.status == 2">Em aprovação</span>
-                <span v-if="item.status == 3">Aprovado</span>
-                <span v-if="item.status == 4">Reprovado</span>
-              </template>
+                          <template v-slot:item.status="{ item }">
+                            <span v-if="item.status == 0">Não iniciado</span>
+                            <span v-if="item.status == 1">Em elaboração</span>
+                            <span v-if="item.status == 2">Em aprovação</span>
+                            <span v-if="item.status == 3">Aprovado</span>
+                            <span v-if="item.status == 4">Reprovado</span>
+                          </template>
 
-              <template v-slot:item.document.fileName="{ item }">
-                <v-tooltip left>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn 
-                      v-if="item.document !== null" 
-                      class="mx-2" 
-                      fab 
-                      dark 
-                      small 
-                      color="#0986b8"
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="downloadDocument(item.document.fileName)"
+                          <template v-slot:item.document.fileName="{ item }">
+                            <v-tooltip left>
+                              <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                  v-if="item.document !== null"
+                                  class="mx-2"
+                                  fab
+                                  dark
+                                  small
+                                  color="#0986b8"
+                                  v-bind="attrs"
+                                  v-on="on"
+                                  @click="downloadDocument(item.document.fileName)"
+                                >
+                                  <v-icon dark>mdi-file-download</v-icon>
+                                </v-btn>
+                              </template>
+                              <span>Baixar documento anexado</span>
+                            </v-tooltip>
+
+                            <input
+                              v-if="item.document === null || item.status == 4"
+                              style="display: none"
+                              type="file"
+                              @change="onFileSelected"
+                              ref="fileInput"
+                            >
+
+                            <v-tooltip right>
+                              <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                  v-if="item.document === null"
+                                  class="mx-2"
+                                  fab
+                                  dark
+                                  small
+                                  color="red"
+                                  v-bind="attrs"
+                                  v-on="on"
+                                  @click="$refs.fileInput.click()">
+                                  <v-icon dark>mdi-file-upload</v-icon>
+                                </v-btn>
+                              </template>
+                              <span>Anexar documento</span>
+                            </v-tooltip>
+
+                            <v-tooltip right>
+                              <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                  v-if="item.status == 4 || item.status == 1"
+                                  class="mx-2"
+                                  fab
+                                  dark
+                                  small
+                                  v-bind="attrs"
+                                  v-on="on"
+                                  :color="corBotaoUploadParaChecklistReprovado(item)"
+                                  @click="$refs.fileInput.click()">
+                                  <v-icon dark>mdi-file-upload</v-icon>
+                                </v-btn>
+                              </template>
+                              <span>Anexar documento corrigido</span>
+                            </v-tooltip>
+
+                          </template>
+                        </v-data-table>
+                        <dialog-checklist
+                          :process="process"
+                          @updateList="updateList"
+                        ></dialog-checklist>
+                      </v-card-text>
+                    </base-material-card>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
+          </v-tab-item>
+
+          <v-tab-item>
+            <v-card flat>
+              <v-card-text>
+                <v-row
+                  align="start"
+                  justify="space-around"
+                  class="lighten-5"
+                >
+                  <v-col>
+                    <base-material-card
+                      color="green"
+                      title="Movimentações do processo"
+                      class="px-5 py-3"
                     >
-                      <v-icon dark>mdi-file-download</v-icon>
-                    </v-btn>
-                  </template>
-                  <span>Baixar documento anexado</span>
-                </v-tooltip>
+                      <br>
+                      <v-divider></v-divider>
+                      <v-row>
+                        <v-col>
+                          <v-text-field
+                            label="Titulo"
+                            class="purple-input"
+                            v-model="tituloMovimentacao"
+                          />
+                        </v-col>
+                        <v-col>
+                          <v-text-field
+                            label="Descrição"
+                            class="purple-input"
+                            v-model="descricaoMovimentacao"
+                          />
+                        </v-col>
+                        <v-col>
+                          <div align="center">
+                            <v-btn
+                              class="ma-2"
+                              color="green"
+                              @click="salvarMovimentacaoDoProcesso"
+                            >
+                              Inserir movimentação
+                            </v-btn>
+                          </div>
+                        </v-col>
+                      </v-row>
+                      <v-divider></v-divider>
+                      <br>
+                      <v-timeline>
+                        <v-timeline-item
+                          v-for="processMovement in process.processMovements"
+                          :key="processMovement"
+                          large
+                        >
+                          <template v-slot:icon>
+                            <v-avatar>
+                              <img :src="processMovement.user.imgSrc">
+                            </v-avatar>
+                          </template>
+                          <template v-slot:opposite>
+                            <span>{{processMovement.user.name}}</span>
+                          </template>
+                          <v-card class="elevation-2">
+                            <v-card-title class="text-h5">
+                              {{processMovement.actionName}}
+                            </v-card-title>
+                            <v-card-text>{{processMovement.actionDescription}}</v-card-text>
+                          </v-card>
+                        </v-timeline-item>
+                      </v-timeline>
+                    </base-material-card>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
+          </v-tab-item>
 
-                <input
-                  v-if="item.document === null || item.status == 4"
-                  style="display: none"
-                  type="file"
-                  @change="onFileSelected"
-                  ref="fileInput"
-                >
 
-                <v-tooltip right>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      v-if="item.document === null"
-                      class="mx-2"
-                      fab
-                      dark
-                      small
-                      color="red"
-                      v-bind="attrs"
-                      v-on="on"
-                      @click="$refs.fileInput.click()">
-                        <v-icon dark>mdi-file-upload</v-icon>
-                    </v-btn>
-                    </template>
-                  <span>Anexar documento</span>
-                </v-tooltip>
 
-                <v-tooltip right>
-                  <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                      v-if="item.status == 4 || item.status == 1"
-                      class="mx-2"
-                      fab
-                      dark
-                      small
-                      v-bind="attrs"
-                      v-on="on"
-                      :color="corBotaoUploadParaChecklistReprovado(item)"
-                      @click="$refs.fileInput.click()">
-                        <v-icon dark>mdi-file-upload</v-icon>
-                    </v-btn>
-                    </template>
-                  <span>Anexar documento corrigido</span>
-                </v-tooltip>
+        </v-tabs-items>
+      </v-card>
+    </template>
 
-              </template>
-            </v-data-table>
-            <dialog-checklist
-                :process="process"
-                @updateList="updateList"
-              ></dialog-checklist>
-          </v-card-text>
-        </base-material-card>
-      </v-col>
-    </v-row>
-    <v-row
-      align="start"
-      justify="space-around"
-      class="grey lighten-5"
-    >
-      <v-col>
-        <base-material-card
-            color="green"
-            title="Movimentações do processo"
-            class="px-5 py-3"
-        >
-          <br>
-          <v-divider></v-divider>
-          <v-row>
-            <v-col>
-              <v-text-field
-                label="Titulo"
-                class="purple-input"
-                v-model="tituloMovimentacao"
-              />
-            </v-col>
-            <v-col>
-              <v-text-field
-                label="Descrição"
-                class="purple-input"
-                v-model="descricaoMovimentacao"
-              />
-            </v-col>
-            <v-col>
-              <div align="center">
-                <v-btn
-                  class="ma-2"
-                  color="green"
-                  @click="salvarMovimentacaoDoProcesso"
-                >
-                  Inserir movimentação
-                </v-btn>
-              </div>
-            </v-col>
-          </v-row>
-          <v-divider></v-divider>
-          <br>
-          <v-timeline>
-            <v-timeline-item
-              v-for="processMovement in process.processMovements"
-              :key="processMovement"
-              large
-            >
-              <template v-slot:icon>
-                <v-avatar>
-                  <img :src="processMovement.user.imgSrc">
-                </v-avatar>
-              </template>
-              <template v-slot:opposite>
-                <span>{{processMovement.user.name}}</span>
-              </template>
-              <v-card class="elevation-2">
-                <v-card-title class="text-h5">
-                  {{processMovement.actionName}}
-                </v-card-title>
-                <v-card-text>{{processMovement.actionDescription}}</v-card-text>
-              </v-card>
-            </v-timeline-item>
-          </v-timeline>
-        </base-material-card>
-      </v-col>
-    </v-row>
+
+
     <base-material-snackbar
       v-model="snackbar"
       :type="color"
@@ -257,6 +305,12 @@ export default {
   },
   data() {
     return {
+
+      tab: null,
+      items: [
+        'Andamento processual', 'Movimentações do processo', 'Audiências',
+      ],
+      text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
       tituloMovimentacao: null,
       descricaoMovimentacao: null,
       build: true,

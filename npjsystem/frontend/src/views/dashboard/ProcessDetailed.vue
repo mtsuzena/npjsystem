@@ -270,6 +270,75 @@
             </v-card>
           </v-tab-item>
 
+          <v-tab-item>
+            <v-card flat>
+              <v-card-text>
+                <v-row
+                  align="start"
+                  justify="space-around"
+                  class="lighten-5"
+                >
+                  <v-col>
+                    <base-material-card
+                      color="green"
+                      title="Lista de checagem do andamento processual"
+                      class="px-5 py-3"
+                    >
+                      <v-card-text>
+                        <v-data-table
+                          :footer-props="{'items-per-page-text':'Checklists por página'}"
+                          :headers="headersCourt"
+                          :items="process.audiencias"
+                          item-key="name"
+                          class="elevation-1"
+                          @click:row="getProcessChecklistId"
+                        >
+                          <template v-slot:item.data="{ item }">
+                            <span>{{ new Date(item.data).toLocaleString() }}</span>
+                          </template>
+
+                          <template v-slot:item.tipo="{ item }">
+                            <span v-if="item.tipo == 0">Conciliação</span>
+                            <span v-if="item.tipo == 1">Instrução</span>
+                            <span v-if="item.tipo == 2">Julgamento</span>
+                          </template>
+
+                          <template v-slot:item.clienteNotificado="{item}">
+                              <v-checkbox
+                                v-model="item.clienteNotificado"
+                                label="Cliente notificado"
+                                v-if="item.clienteNotificado === true"
+                              ></v-checkbox>
+
+                              <v-checkbox
+                                v-model="item.clienteNotificado"
+                                label="Cliete não notificado"
+                                v-if="item.clienteNotificado === false"
+                              ></v-checkbox>
+                          </template>
+
+                          <template v-slot:item.testemunhasAudiencia="{ item }">
+                            <v-tooltip left>
+                              <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                  v-bind="attrs"
+                                  v-on="on"
+                                  class="mx-2" dark small color="green" >
+                                  <span>Testemunhas</span>
+                                </v-btn>
+                              </template>
+                              <span>Ver informações das testemunhas</span>
+                            </v-tooltip>
+                          </template>
+                        </v-data-table>
+                      </v-card-text>
+                    </base-material-card>
+                  </v-col>
+                </v-row>
+
+              </v-card-text>
+            </v-card>
+          </v-tab-item>
 
 
         </v-tabs-items>
@@ -332,6 +401,26 @@ export default {
         'error',
       ],
       direction: 'top center',
+      headersCourt: [
+        {
+          text: 'Tipo de audiência:',
+          align: 'start',
+          sortable: false,
+          value: 'tipo',
+        },
+        {
+          text: 'Data da audiência: ',
+          value: 'data'
+        },
+        {
+          text: 'Cliente notificado: ',
+          value: "clienteNotificado"
+        },
+        {
+          text: 'Informações de testemunhas:',
+          value: "testemunhasAudiencia" ,
+        },
+      ],
       headers: [
         {
           text: 'Nome Checklist',

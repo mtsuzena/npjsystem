@@ -44,6 +44,14 @@ exports.getProcesses = function () {
                         attributes: ['name', 'imgSrc']
                     }
                 ]
+            },
+            {
+                model: db.audiencia,
+                include: [
+                    {
+                        model: db.testemunhaAudiencia,
+                    }
+                ]
             }
         ]
     });
@@ -90,6 +98,14 @@ exports.getProcess = function (id) {
                     {
                         model: db.user,
                         attributes: ['name', 'imgSrc']
+                    }
+                ]
+            },
+            {
+                model: db.audiencia,
+                include: [
+                    {
+                        model: db.testemunhaAudiencia,
                     }
                 ]
             }
@@ -143,6 +159,14 @@ exports.getProcessesByUserId = function (userId) {
                         attributes: ['name', 'imgSrc']
                     }
                 ]
+            },
+            {
+                model: db.audiencia,
+                include: [
+                    {
+                        model: db.testemunhaAudiencia,
+                    }
+                ]
             }
         ]
     });
@@ -192,6 +216,14 @@ exports.getProcessByProcessNumber = function (processNumber) {
                     {
                         model: db.user,
                         attributes: ['name', 'imgSrc']
+                    }
+                ]
+            },
+            {
+                model: db.audiencia,
+                include: [
+                    {
+                        model: db.testemunhaAudiencia,
                     }
                 ]
             }
@@ -245,17 +277,25 @@ exports.getProcessByNumber = function (number) {
                         attributes: ['name', 'imgSrc']
                     }
                 ]
+            },
+            {
+                model: db.audiencia,
+                include: [
+                    {
+                        model: db.testemunhaAudiencia,
+                    }
+                ]
             }
         ]
     });
 };
 
 exports.saveProcess = function (process) {
-	return Process.create(process);
+    return Process.create(process);
 };
 
 exports.deleteProcess = function (id) {
-	return Process.destroy({
+    return Process.destroy({
         where: {
             id: id
         }

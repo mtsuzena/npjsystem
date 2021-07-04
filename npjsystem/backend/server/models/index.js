@@ -35,6 +35,8 @@ db.processMovement = require("./processMovement.model")(sequelize, Sequelize);
 db.process = require("../models/process.model")(sequelize, Sequelize);
 db.document = require("../models/document.model")(sequelize, Sequelize);
 db.systemLog = require("../models/systemLog.model")(sequelize, Sequelize);
+db.audiencia = require("../models/audiencia.model")(sequelize, Sequelize);
+db.testemunhaAudiencia = require("../models/testemunhaAudiencia.model")(sequelize, Sequelize);
 
 // ##
 // RELATIONSHIPS
@@ -61,12 +63,20 @@ db.customer.hasMany(db.process);
 db.processMovement.belongsTo(db.process);
 db.processMovement.belongsTo(db.user);
 
+// TESTEMUNHAS AUDIENCIA RELATIONSHIPS
+db.testemunhaAudiencia.belongsTo(db.audiencia);
+
+// AUDIENCIA RELATIONSHIPS
+db.audiencia.belongsTo(db.process);
+db.audiencia.hasMany(db.testemunhaAudiencia);
+
 // PROCESS RELATIONSHIPS
 db.process.belongsTo(db.user);
 db.process.belongsTo(db.processType);
 db.process.belongsTo(db.customer);
 db.process.hasMany(db.processChecklist);
 db.process.hasMany(db.processMovement);
+db.process.hasMany(db.audiencia);
 
 // PROCESS CHECKLIST RELATIONSHIPS
 db.processChecklist.belongsTo(db.process);
@@ -97,6 +107,10 @@ db.role.belongsToMany(db.profile, {
 
 // ROLES
 db.ROLES = {
+  CREATE_AUDIENCIA: "CREATE_AUDIENCIA",
+  READ_AUDIENCIA: "READ_AUDIENCIA",
+  CREATE_TESTEMUNHA_AUDIENCIA: "CREATE_TESTEMUNHA_AUDIENCIA",
+  READ_TESTEMUNHA_AUDIENCIA: "READ_TESTEMUNHA_AUDIENCIA",
   REVIEW_DOCUMENT: "REVIEW_DOCUMENT",
   CREATE_DOCUMENT: "CREATE_DOCUMENT",
   UPDATE_DOCUMENT: "UPDATE_DOCUMENT",

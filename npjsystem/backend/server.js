@@ -26,6 +26,8 @@ app.use('/api/', require('./server/routes/document.route'));
 app.use('/api/', require('./server/routes/processChecklist.route'));
 app.use('/api/', require('./server/routes/processMovement.route'));
 app.use('/api/', require('./server/routes/systemLog.route'));
+app.use('/api/', require('./server/routes/audiencia.route')); 
+app.use('/api/', require('./server/routes/testemunhaAudiencia.route')); 
 	 
 app.use(function (error, req, res, next) {
 	if (error.message === 'Document not found') {

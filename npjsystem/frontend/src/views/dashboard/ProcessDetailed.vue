@@ -315,22 +315,36 @@ export default {
 
       // Salva Checklist como Done -> isChecked true
       if(this.checklistsDone.length > this.oldChecklists.length){
-        let lastChecklist = this.checklistsDone.length - 1;
+
+        let posicaoCkNovo = null;
+
+        this.checklistsDone.forEach((ckDone, i) => {
+          let ckNovo = true;
+          this.oldChecklists.forEach((ckOld) => {
+            if(ckDone.id == ckOld.id){
+              ckNovo = false;
+            }
+          });
+          if(ckNovo){
+            posicaoCkNovo = i;
+          }
+        })
+
         //Verifica se o checklist possui um documento antes de atualizar para Done
         //Caso nao possua um documento, gerar alerta de error
-        if(this.checklistsDone[lastChecklist].document === null){
-          this.checklistsDone.splice(lastChecklist, 1);
+        if(this.checklistsDone[posicaoCkNovo].document === null){
+          this.checklistsDone.splice(posicaoCkNovo, 1);
           this.generateAlert(3, 'Não há um documento anexado');
           return false;
         }
 
-        if(this.checklistsDone[lastChecklist].status === 4 && !this.checklistsDone[lastChecklist].documentoReprovadoCorrigido){
-          this.checklistsDone.splice(lastChecklist, 1);
+        if(this.checklistsDone[posicaoCkNovo].status === 4 && !this.checklistsDone[posicaoCkNovo].documentoReprovadoCorrigido){
+          this.checklistsDone.splice(posicaoCkNovo, 1);
           this.generateAlert(3, 'Insira o documento corrigido');
           return false;
         }
 
-        api.put(`processChecklists/${this.checklistsDone[lastChecklist].id}`, {"isChecked": "true", "status": "2", "processId": this.checklistsDone[lastChecklist].processId, "name": this.checklistsDone[lastChecklist].name});
+        api.put(`processChecklists/${this.checklistsDone[posicaoCkNovo].id}`, {"isChecked": "true", "status": "2", "processId": this.checklistsDone[posicaoCkNovo].processId, "name": this.checklistsDone[posicaoCkNovo].name});
         window.location.reload(true);
       }
 

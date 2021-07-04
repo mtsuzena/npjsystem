@@ -587,6 +587,8 @@ export default {
       await api.post(`processMovements`, processMovement);
 
       this.updateProcessMovements();
+      this.tituloMovimentacao = null;
+      this.descricaoMovimentacao = null;
     },
     setAlertColor (color) {
       this.color = this.colors[color];

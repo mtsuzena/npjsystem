@@ -39,7 +39,14 @@
               item-key="number"
               @click:row="redirectToDetailedProcessScreen"
               class="py-3"
-            />
+            >
+              <template v-slot:item.begins_date="{ item }">
+                <span>{{ new Date(item.begins_date).toLocaleString() }}</span>
+              </template>
+              <template v-slot:item.court_hearing_date="{ item }">
+                <span>{{ new Date(item.court_hearing_date).toLocaleString() }}</span>
+              </template>
+            </v-data-table>
           </v-card-text>
           <dialog-new-process></dialog-new-process>
         </base-material-card>
@@ -78,7 +85,7 @@ export default {
         },
         {
           sortable: false,
-          text: 'Referente a:',
+          text: 'Assunto',
           value: 'processType.name',
           align: 'left ',
         },
@@ -90,13 +97,13 @@ export default {
         },
         {
           sortable: false,
-          text: 'Cliente',
-          value: 'customer.name',
+          text: 'Requerente',
+          value: 'customer.fullName',
           align: 'left',
         },
         {
           sortable: false,
-          text: 'Responsável',
+          text: 'Advogado(a) Responsável',
           value: 'user.fullName',
           align: 'left',
         },
@@ -121,6 +128,7 @@ export default {
       this.processes = responseGetProcesses.data;
       this.processes.forEach((process, i) => {
         this.processes[i].user.fullName = process.user.name + ' ' + process.user.lastName;
+        this.processes[i].customer.fullName = process.customer.name + ' ' + process.customer.lastName;
       });
     });
   }

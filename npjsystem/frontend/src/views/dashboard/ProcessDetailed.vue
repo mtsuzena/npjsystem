@@ -23,7 +23,7 @@
                 <span>Assunto: {{ process.processType.name }}</span>
               </v-col>
               <v-col>
-                <span>Professor Responsável: {{ process.user.name }}</span>
+                <span>Professor Responsável: {{ process.user.name }} {{ process.user.lastName }}</span>
               </v-col>
             </v-row>
             <v-row>
@@ -37,7 +37,7 @@
             </v-row>
             <v-row>
               <v-col>
-                <span>Requerente: {{ process.customer.name }}</span>
+                <span>Requerente: {{ process.customer.name }} {{ process.customer.lastName }}</span>
               </v-col>
               <v-col>
                 <span>Requerido: {{ process.requerido }}</span>
@@ -706,6 +706,7 @@ export default {
     api.get(`processes/byProcessNumber/${this.$route.params.processNumber}`).then((responseGetProcessByNumber) => {
 
       this.process = responseGetProcessByNumber.data;
+
 
       if(this.process.isFiled){
         this.processStatus = '(processo arquivado)'

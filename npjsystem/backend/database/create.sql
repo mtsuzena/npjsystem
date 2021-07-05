@@ -98,11 +98,11 @@ insert into users (id, "name", email, "imgSrc","lastName", "aboutMe", "cep", "st
 
 INSERT INTO "processTypes"(id, name, "createdAt", "updatedAt") VALUES (501, 'Ação de Alimentos', (SELECT NOW()), (SELECT NOW()));
 INSERT INTO customers(id, name, "lastName", "createdAt", "updatedAt") VALUES (501, 'Maria', 'da Silva', (SELECT NOW()), (SELECT NOW()));
-INSERT INTO processes(id, "number", "requerido", "pastaFisica", "userId", "customerId", "processTypeId", begins_date, court_hearing_date, "createdAt", "updatedAt") VALUES (501, '0004142-55.2021.8.16.0025', 'João Henrique da Silva', '73-E', 501, 501, 501, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));
+INSERT INTO processes(id, "number", "requerido", "pastaFisica", "userId", "customerId", "processTypeId", begins_date, court_hearing_date, "createdAt", "updatedAt") VALUES (501, '0004142-55.2021.8.16.0025', 'João Henrique da Silva', '73-E', 501, 501, 501, (SELECT NOW()), (SELECT NOW() + interval '3month'), (SELECT NOW()), (SELECT NOW()));
 
 INSERT INTO "processTypes"(id, name, "createdAt", "updatedAt") VALUES (502, 'Divórcio Consensual', (SELECT NOW()), (SELECT NOW()));     
 INSERT INTO customers(id, name, "lastName", "createdAt", "updatedAt") VALUES (502, 'Vanessa', 'Simoes', (SELECT NOW()), (SELECT NOW()));
-INSERT INTO processes(id, "number", "requerido", "pastaFisica", "userId", "customerId","processTypeId", begins_date, court_hearing_date, "createdAt", "updatedAt") VALUES (502, '0004141-41.2021.8.16.0025', 'Lucas Simoes', '75-E', 501, 502, 502, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));
+INSERT INTO processes(id, "number", "requerido", "pastaFisica", "userId", "customerId","processTypeId", begins_date, court_hearing_date, "createdAt", "updatedAt") VALUES (502, '0004141-41.2021.8.16.0025', 'Lucas Simoes', '75-E', 501, 502, 502, (SELECT NOW()), (SELECT NOW() + interval '2month'), (SELECT NOW()), (SELECT NOW()));
 
 
 -- criar perfil professor
@@ -131,12 +131,12 @@ VALUES (504, 'Jheniffer', 'Silva', '', 'jheniffer.silva@npjsystem.com',
 
 
 -- adiciona checklists
-INSERT INTO "processChecklists"(id, name, "processId", "userId", deadline,"createdAt", "updatedAt") VALUES (501, 'Petição', 502, 501, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));
+INSERT INTO "processChecklists"(id, name, "processId", "userId", deadline,"createdAt", "updatedAt") VALUES (501, 'Petição', 502, 501, (SELECT NOW() + interval '15days'), (SELECT NOW()), (SELECT NOW()));
 INSERT INTO "processChecklists"(id, name, "processId", "userId", deadline,"createdAt", "updatedAt") VALUES (502, 'Procuração e Declaração', 502, 502, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));
 
 -- adiciona checklists
-INSERT INTO "processChecklists"(id, name, "processId", "userId", deadline,"createdAt", "updatedAt") VALUES (503, 'Petição', 501, 501, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));
-INSERT INTO "processChecklists"(id, name, "processId", "userId", deadline,"createdAt", "updatedAt") VALUES (504, 'Procuração e Declaração', 501, 502, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));
+INSERT INTO "processChecklists"(id, name, "processId", "userId", deadline,"createdAt", "updatedAt") VALUES (503, 'Petição', 501, 501, (SELECT NOW() + interval '10days'), (SELECT NOW()), (SELECT NOW()));
+INSERT INTO "processChecklists"(id, name, "processId", "userId", deadline,"createdAt", "updatedAt") VALUES (504, 'Procuração e Declaração', 501, 502, (SELECT NOW() + interval '20days'), (SELECT NOW()), (SELECT NOW()));
 
 
 commit;

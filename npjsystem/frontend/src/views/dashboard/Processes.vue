@@ -44,7 +44,8 @@
                 <span>{{ new Date(item.begins_date).toLocaleString() }}</span>
               </template>
               <template v-slot:item.court_hearing_date="{ item }">
-                <span>{{ new Date(item.court_hearing_date).toLocaleString() }}</span>
+                <span v-if="item.court_hearing_date !== null">{{ new Date(item.court_hearing_date).toLocaleString() }}</span>
+                <span v-if="item.court_hearing_date === null">Nenhuma data marcada</span>
               </template>
             </v-data-table>
           </v-card-text>

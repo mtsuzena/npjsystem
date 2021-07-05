@@ -135,7 +135,7 @@ INSERT INTO "processChecklists"(id, name, "processId", "userId", deadline,"creat
 INSERT INTO "processChecklists"(id, name, "processId", "userId", deadline,"createdAt", "updatedAt") VALUES (502, 'Procuração e Declaração', 502, 502, (SELECT NOW()), (SELECT NOW()), (SELECT NOW()));
 
 -- adiciona checklists
-INSERT INTO "processChecklists"(id, name, "processId", "userId", deadline,"createdAt", "updatedAt") VALUES (503, 'Petição', 501, 501, (SELECT NOW() + interval '10days'), (SELECT NOW()), (SELECT NOW()));
+INSERT INTO "processChecklists"(id, name, "processId", "userId", deadline,"createdAt", "updatedAt") VALUES (503, 'Petição', 501, 501, (SELECT NOW() + interval '16days'), (SELECT NOW()), (SELECT NOW()));
 INSERT INTO "processChecklists"(id, name, "processId", "userId", deadline,"createdAt", "updatedAt") VALUES (504, 'Procuração e Declaração', 501, 502, (SELECT NOW() + interval '20days'), (SELECT NOW()), (SELECT NOW()));
 
 

@@ -27,12 +27,12 @@
       <v-list-item>
         <v-list-item-avatar
           class="align-self-center"
-          color="white"
+          color="transparent"
           contain
         >
           <v-img
-            src="https://demos.creative-tim.com/vuetify-material-dashboard/favicon.ico"
-            max-height="30"
+            src="./logo.png"
+            max-height="50"
           />
         </v-list-item-avatar>
 

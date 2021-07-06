@@ -138,5 +138,13 @@ INSERT INTO "processChecklists"(id, name, "processId", "userId", deadline,"creat
 INSERT INTO "processChecklists"(id, name, "processId", "userId", deadline,"createdAt", "updatedAt") VALUES (503, 'Petição', 501, 501, (SELECT NOW() + interval '16days'), (SELECT NOW()), (SELECT NOW()));
 INSERT INTO "processChecklists"(id, name, "processId", "userId", deadline,"createdAt", "updatedAt") VALUES (504, 'Procuração e Declaração', 501, 502, (SELECT NOW() + interval '20days'), (SELECT NOW()), (SELECT NOW()));
 
+INSERT INTO audiencias(id, "data", tipo, "processId", "createdAt", "updatedAt") VALUES (501, (SELECT NOW() + interval '20days'), 0, 502, (SELECT NOW()), (SELECT NOW()));
+INSERT INTO audiencias(id, "data", tipo, "processId", "createdAt", "updatedAt") VALUES (502, (SELECT NOW() + interval '10days'), 1, 502, (SELECT NOW()), (SELECT NOW()));
+INSERT INTO audiencias(id, "data", tipo, "processId", "createdAt", "updatedAt") VALUES (503, (SELECT NOW() + interval '15days'), 2, 502, (SELECT NOW()), (SELECT NOW()));
+
+INSERT INTO "processMovements" (id, "actionName", "actionDescription", "createdAt", "updatedAt", "userId", "processId") VALUES (501, 'Criação de Processo', 'Usuário Genilma Moura iniciou o processo 0004141-41.2021.8.16.0025 no dia 5/7/2021 às 23:14:58.', '2021-07-06 02:14:58.152000', '2021-07-06 02:14:58.152000', 501, 502);
+INSERT INTO "processMovements" (id, "actionName", "actionDescription", "createdAt", "updatedAt", "userId", "processId") VALUES (502, 'Crição de Checklist', 'Usuário Genilma Moura criou o checklist Petição no dia 5/7/2021 às 23:15:15.', '2021-07-06 02:15:15.160000', '2021-07-06 02:15:15.160000', 501, 502);
+INSERT INTO "processMovements" (id, "actionName", "actionDescription", "createdAt", "updatedAt", "userId", "processId") VALUES (503, 'Crição de Checklist', 'Usuário Genilma Moura criou o checklist Procuração e Declaração inicial no dia 5/7/2021 às 23:15:15.', '2021-07-06 02:15:15.160000', '2021-07-06 02:15:15.160000', 501, 502);
+
 
 commit;

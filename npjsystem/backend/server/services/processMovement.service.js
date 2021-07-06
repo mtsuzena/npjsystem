@@ -71,7 +71,7 @@ exports.gerarMovimentacaoDeCriacaoDeChecklist = async function (token, newCheckl
     var min = data.getMinutes();
     var seg = data.getSeconds();
 
-    let actionName = "Crição de Checklist";
+    let actionName = "Crição de Atividade";
     let actionDescription = 
         'Usuário ' 
         + user.name 

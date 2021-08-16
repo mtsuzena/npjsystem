@@ -57,7 +57,6 @@
 
     <template>
       <v-card color="basil">
-
         <v-tabs
           v-model="tab"
           background-color="transparent"
@@ -74,10 +73,7 @@
             Audiências
           </v-tab>
         </v-tabs>
-
         <v-tabs-items v-model="tab">
-
-
           <v-tab-item>
             <v-card flat>
               <v-card-text>
@@ -94,9 +90,7 @@
                     >
                       <v-card-text>
                         <v-data-table
-                          :footer-props="{
-                'items-per-page-text':'Checklists por página'
-              }"
+                          :footer-props="{'items-per-page-text':'Checklists por página'}"
                           v-model="checklistsDone"
                           :headers="headers"
                           :custom-sort="customSortChecklists"
@@ -139,6 +133,7 @@
                               mdi-delete
                             </v-icon>
                           </template>
+
                           <template v-slot:no-data>
                             <span>Sem atividades</span>
                           </template>
@@ -214,7 +209,6 @@
                               </template>
                               <span>Anexar documento corrigido</span>
                             </v-tooltip>
-
                           </template>
                         </v-data-table>
                         <dialog-checklist
@@ -228,7 +222,6 @@
               </v-card-text>
             </v-card>
           </v-tab-item>
-
           <v-tab-item>
             <v-card flat>
               <v-card-text>
@@ -302,7 +295,6 @@
               </v-card-text>
             </v-card>
           </v-tab-item>
-
           <v-tab-item>
             <v-card flat>
               <v-card-text>
@@ -349,7 +341,6 @@
                                 v-if="item.clienteNotificado === false"
                               ></v-checkbox>
                           </template>
-
                           <template v-slot:item.testemunhasAudiencia="{ item }">
                             <v-tooltip left>
                               <template v-slot:activator="{ on, attrs }">
@@ -368,18 +359,12 @@
                     </base-material-card>
                   </v-col>
                 </v-row>
-
               </v-card-text>
             </v-card>
           </v-tab-item>
-
-
         </v-tabs-items>
       </v-card>
     </template>
-
-
-
     <base-material-snackbar
       v-model="snackbar"
       :type="color"
@@ -437,7 +422,11 @@ export default {
       dialog: false,
       dialogDelete: false,
       editedIndex: -1,
-      editedItem: {},
+      editedItem: {
+        name: '',
+        deadline: '',
+        responsavel: '',
+      },
       color: 'info',
       colors: [
         'info',
@@ -585,8 +574,8 @@ export default {
   },
   methods: {
     editItem (item) {
-      console.log("Editando o item:")
-      console.log(item)
+      console.log("Editando o item:");
+      console.log(item);
     },
     deleteItem (item) {
       console.log("Deletando o item:")
@@ -621,13 +610,20 @@ export default {
         this.editedIndex = -1
       })
     },
-
     closeDelete () {
       this.dialogDelete = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
       })
+    },
+    save () {
+      // if (this.editedIndex > -1) {
+      //   Object.assign(this.desserts[this.editedIndex], this.editedItem)
+      // } else {
+      //   this.desserts.push(this.editedItem)
+      // }
+      // this.close()
     },
     async updateList(id){
       let apiUpdateListProcess = axios.create({

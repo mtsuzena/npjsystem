@@ -13,7 +13,7 @@
       <v-col
         cols="12"
         sm="6"
-        lg="4"
+        lg="3"
       >
         <base-material-stats-card
           color="orange"
@@ -26,7 +26,7 @@
       <v-col
         cols="12"
         sm="6"
-        lg="4"
+        lg="3"
       >
         <base-material-stats-card
             color="red"
@@ -39,7 +39,20 @@
       <v-col
         cols="12"
         sm="6"
-        lg="4"
+        lg="3"
+      >
+        <base-material-stats-card
+            color="orange"
+            icon="event"
+            title="Audiências marcadas"
+            :value="quantidadeAudienciasMarcadas"
+          />
+      </v-col>
+
+      <v-col
+        cols="12"
+        sm="6"
+        lg="3"
       >
         <base-material-stats-card
           color="success"
@@ -115,6 +128,7 @@ export default {
       filedProcesses: '',
       pendingProcesses: '',
       pendingChecklists: [],
+      quantidadeAudienciasMarcadas: 0,
       search: '', 
       pendingHeaders: [
         {
@@ -166,6 +180,11 @@ export default {
     api.get(`users/${tokenDecoded.id}`).then((responseGetUserById) => {
       this.user = responseGetUserById.data;
     });
+
+    api.get(`audiencias`).then((responseGetAudiencias) => {
+      this.quantidadeAudienciasMarcadas = responseGetAudiencias.data.length;
+    });
+
 
     api.get(`processes/byUserId/${tokenDecoded.id}`).then((responseGetProcessesByUserId) => {
 

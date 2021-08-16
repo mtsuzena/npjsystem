@@ -101,7 +101,7 @@ export default {
       consultations: {},
       mode: 'stack',
       modes: ['stack', 'column'],
-      weekday: [0, 1, 2, 3, 4, 5, 6],
+      weekday: [1, 2, 3, 4, 5],
       weekdays: [
         {text: 'Domingo - Sábado', value: [0, 1, 2, 3, 4, 5, 6]},
         {text: 'Segunda-Feira - Domingo', value: [1, 2, 3, 4, 5, 6, 0]},
@@ -110,7 +110,7 @@ export default {
       ],
       value: '',
       events: [],
-      colors: ['blue', , 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
+      colors: ['blue', 'deep-purple', 'cyan', 'green', 'orange', 'grey darken-1'],
     }
   },
   methods: {

@@ -110,6 +110,39 @@
                             <span>{{ new Date(item.deadline).toLocaleString() }}</span>
                           </template>
 
+                          <template v-slot:top>
+                            <v-dialog v-model="dialogDelete" max-width="500px">
+                              <v-card>
+                                <v-card-title class="text-h5">Tem certeza de que deseja excluir essa atividade?</v-card-title>
+                                <v-card-actions>
+                                  <v-spacer></v-spacer>
+                                  <v-btn color="darken-1" text @click="closeDelete">Cancelar</v-btn>
+                                  <v-btn color="darken-1" text @click="deleteItemConfirm">Sim</v-btn>
+                                  <v-spacer></v-spacer>
+                                </v-card-actions>
+                              </v-card>
+                            </v-dialog>
+                          </template>
+
+                          <template v-slot:item.actions="{ item }">
+                            <v-icon
+                              small
+                              class="mr-2"
+                              @click="editItem(item)"
+                            >
+                              mdi-pencil
+                            </v-icon>
+                            <v-icon
+                              small
+                              @click="deleteItem(item)"
+                            >
+                              mdi-delete
+                            </v-icon>
+                          </template>
+                          <template v-slot:no-data>
+                            <span>Sem atividades</span>
+                          </template>
+
                           <template v-slot:item.status="{ item }">
                             <span v-if="item.status == 0">Não iniciado</span>
                             <span v-if="item.status == 1">Em elaboração</span>
@@ -367,6 +400,14 @@ const configs = require('../../config/configs');
 const FileDownload = require('js-file-download');
 const jwt = require('jsonwebtoken');
 
+const api = axios.create({
+  baseURL: configs.API_URL,
+  headers: {
+    'auth-token': window.localStorage.token
+  }
+});
+
+
 export default {
   name: 'ProcessDetailed',
   components: {
@@ -393,6 +434,10 @@ export default {
       selected: [],
       alertMsg: '',
       snackbar: false,
+      dialog: false,
+      dialogDelete: false,
+      editedIndex: -1,
+      editedItem: {},
       color: 'info',
       colors: [
         'info',
@@ -444,10 +489,21 @@ export default {
           text: 'Status',
           value: 'status'
         },
+        { 
+          text: 'Ações', 
+          value: 'actions', 
+          sortable: false 
+        },
       ],
     }
   },
   watch: {
+    dialog (val) {
+      val || this.close()
+    },
+    dialogDelete (val) {
+      val || this.closeDelete()
+    },
     checklistsDone(){
       let api = axios.create({
         baseURL: configs.API_URL,
@@ -528,6 +584,51 @@ export default {
     },
   },
   methods: {
+    editItem (item) {
+      console.log("Editando o item:")
+      console.log(item)
+    },
+    deleteItem (item) {
+      console.log("Deletando o item:")
+      console.log(item)
+      this.editedIndex = this.process.processChecklists.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialogDelete = true
+    },
+    async deleteItemConfirm () {
+      this.closeDelete();
+
+      let processChecklistId = this.process.processChecklists[this.editedIndex].id;
+      await api.delete(`processChecklists/${processChecklistId}`).then((responseDeleteAtividade) => {
+        console.log(responseDeleteAtividade)
+        if(responseDeleteAtividade.status === 204){
+          console.log("deletado com sucesso")
+        }else{
+          console.log("Nao foi possivel deletar o checklist")
+          console.log(responseDeleteAtividade.data)
+        }
+      });
+      this.process.processChecklists.forEach((procesChecklist, i) => {
+        if(procesChecklist.id === processChecklistId){
+          this.process.processChecklists.splice(i, 1)
+        }
+      })
+    },
+    close () {
+      this.dialog = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+
+    closeDelete () {
+      this.dialogDelete = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
     async updateList(id){
       let apiUpdateListProcess = axios.create({
         baseURL: configs.API_URL,

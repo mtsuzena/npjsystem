@@ -1,3 +1,4 @@
 node_modules/
 .vscode/
 tmp/uploads/*.docx
+server/config/database.js

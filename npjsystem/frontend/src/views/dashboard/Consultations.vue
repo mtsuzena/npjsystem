@@ -136,7 +136,7 @@ export default {
       this.msg = msg;
       window.setInterval(() => {
             this.alertSucess = false;
-      }, 3400);
+      }, 4000);
     },
     openDialogCalender({date}) {
       this.consultationId = '';

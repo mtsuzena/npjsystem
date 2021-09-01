@@ -1,4 +1,5 @@
 <template>
+
   <v-form
     id="dialogForm"
     ref="form"
@@ -144,13 +145,21 @@
             </v-container>
           </v-card-text>
           <v-card-actions>
+            <v-btn
+              color="#034405"
+              text
+              @click="cancellAttendance"
+              v-if="consultationId != ''"
+            >
+              CANCELAR ATENDIMENTO
+            </v-btn>
             <v-spacer />
             <v-btn
               color="#034405"
               text
               @click="close"
             >
-              CANCELAR
+              VOLTAR
 
             </v-btn>
             <v-btn
@@ -167,6 +176,8 @@
       </v-dialog>
     </v-row>
   </v-form>
+
+
 </template>
 
 <script>
@@ -200,6 +211,7 @@
     },
     data () {
       return {
+        tet: false,
         dialog: this.open,
         items: [],
         time: null,
@@ -262,6 +274,12 @@
         const textOne = item.text.toLowerCase();
         const searchText = queryText.toLowerCase();
         return textOne.indexOf(searchText) > -1;
+      },
+      async cancellAttendance(){
+        await api.delete(`consultations/${this.consultationId}`).then((response) => {
+          this.close();
+          this.$emit('cancellAttendance');
+        }, (error) => {} );
       },
       async getUsers () {
         this.items = []

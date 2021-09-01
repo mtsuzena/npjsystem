@@ -5,7 +5,16 @@
     tag="section"
     class="grey lighten-5 mb-6"
   >
-
+    <v-alert
+      dense
+      text
+      type="success"
+      :value="alertSucess"
+      border="top"
+      transition="slide-y-transition"
+    >
+      {{msg}}
+    </v-alert>
     <dialog-calender
       v-if="calenderDateSelected != null && dialog != false"
       :dateCalender="calenderDateSelected"
@@ -13,6 +22,7 @@
       :open="dialog"
       @closeDialog="closeDialog"
       @saveDialog="saveObject"
+      @cancellAttendance="cancellAttendance"
     ></dialog-calender>
     <div>
 
@@ -94,6 +104,8 @@ export default {
 
   data() {
     return {
+      msg: '',
+      alertSucess: false,
       markeds: [],
       consultationId: '',
       calenderDateSelected: Date,
@@ -114,6 +126,18 @@ export default {
     }
   },
   methods: {
+    cancellAttendance(){
+      this.alertSucess = true;
+      this.saveObject();
+      this.alerts(1, 'Atendimento cancelado :)');
+    },
+    alerts(alert, msg){
+      //arrumar dps isso
+      this.msg = msg;
+      window.setInterval(() => {
+            this.alertSucess = false;
+      }, 3400);
+    },
     openDialogCalender({date}) {
       this.consultationId = '';
       this.calenderDateSelected = new Date(`${date} 00:00:00`)

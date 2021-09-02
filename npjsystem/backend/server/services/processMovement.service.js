@@ -9,6 +9,10 @@ exports.getProcessMovementsByProcessId = async function (processId) {
     return processMovementData.getProcessMovementsByProcessId(processId);
 }
 
+exports.deleteProcessMovement = async function (id) {
+    return processMovementData.deleteProcessMovement(id);
+}
+
 exports.saveProcessMovement = async function (processMovement) {
     if(!processMovement.processId) throw new Error('processMovement shall have a ProcessId');
     if(!processMovement.userId) throw new Error('processMovement shall have a UserId');

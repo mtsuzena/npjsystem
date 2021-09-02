@@ -23,4 +23,13 @@ router.post('/processMovements', verify, async function (req, res, next){
     }
 });
 
+router.delete('/processMovements/:id', verify, async function (req, res, next){
+    try {
+        await processMovementService.deleteProcessMovement(req.params.id)
+        res.status(204).end();
+    } catch (error) {
+        next(error);
+    }
+});
+
 module.exports = router;

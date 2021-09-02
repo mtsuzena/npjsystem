@@ -1,7 +1,7 @@
  db = {
     HOST: "localhost",
     USER: "postgres",
-    PASSWORD: "mamut321.",
+    PASSWORD: "art",
     DB: "npjsystem",
     dialect: "postgres",
     pool: {

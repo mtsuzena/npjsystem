@@ -13,6 +13,7 @@
           color="green"
           v-bind="attrs"
           v-on="on"
+          @click="desab"
         >
           Cadastrar checklist
         </v-btn>
@@ -145,11 +146,15 @@ const api = axios.create({
 export default {
   name: "DialogChecklist",
   props: {
-    process: {}
+    process: {},
+    checklist: {},
+    dialog_m: '',
+
   },
 
   data() {
     return {
+      checklist2: {},
       nameChecklistRules: [
         v => !!v || 'Preencha o nome do checklist!',
         v => (v && v.length < 25) || 'Tamanho maior que 25 caracteres!',
@@ -177,6 +182,9 @@ export default {
     }
   },
   methods: {
+    desab(){
+      this.dialog_m = false;
+    },
     async getUser() {
       await api.get(`users/`).then((responseUsers) => {
         responseUsers.data.forEach((value) => {
@@ -201,10 +209,23 @@ export default {
     },
     cancellProcess() {
       this.dialog = false;
+      this.dialog_m=false;
       this.$refs.form.reset();
     },
     async saveCheckList() {
-      if (this.$refs.form.validate()) {
+      if(this.dialog_m === true){
+        await api.put(`processChecklists/${this.checklist.id}`, this.processChecklist)
+          .then((response) => {
+              this.dialog = false;
+              this.$emit('updateList', this.checklist.id);
+              this.$refs.form.reset();
+            }, (error) => {
+              console.log(error);
+            }
+          )
+        ;
+      }
+      else if (this.$refs.form.validate()) {
         await api.post('/processChecklists', this.processChecklist)
           .then((response) => {
               this.dialog = false;
@@ -218,9 +239,27 @@ export default {
       }
     }
   },
-  watch: {},
-  created() {
-  }
+  watch: {
+    dialog_m(){
+      if (this.dialog_m === true){
+        console.log('ta on papai');
+        this.dialog = true;
+        this.processChecklist.name = this.checklist.name;
+        this.processChecklist.deadline = this.checklist.deadline;
+        this.processChecklist.processId = this.checklist.processId;
+        this.processChecklist.userId = this.checklist.userId;
+        // this.processChecklist.createAt = null;
+        // this.processChecklist.createAt = this.checklist.createAt;
+        this.getUser();
+        delete this.processChecklist['createAt'];
+        console.log(this.processChecklist.id);
+      }else{
+        console.log('ta off papai');
+      }
+
+    }
+  },
+  created() {}
 }
 </script>
 

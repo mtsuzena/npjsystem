@@ -283,7 +283,7 @@
                           <template v-slot:opposite>
                             <span>{{processMovement.user.name}}</span>
                           </template>
-                          
+
                           <v-badge
                             @click.native="removerMovimentacaoProcesso(processMovement.id)"
                             color="error"
@@ -411,7 +411,7 @@ export default {
   data() {
     return {
       unicoChecklist: {},
-      updateCheck: '',
+      updateCheck: false,
       tab: null,
       items: [
         'Andamento processual', 'Movimentações do processo', 'Audiências',

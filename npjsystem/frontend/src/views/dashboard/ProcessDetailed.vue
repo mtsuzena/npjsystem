@@ -281,12 +281,20 @@
                           <template v-slot:opposite>
                             <span>{{processMovement.user.name}}</span>
                           </template>
-                          <v-card class="elevation-2">
-                            <v-card-title class="text-h5">
-                              {{processMovement.actionName}}
-                            </v-card-title>
-                            <v-card-text>{{processMovement.actionDescription}}</v-card-text>
-                          </v-card>
+                          
+                          <v-badge
+                            @click.native="removerMovimentacaoProcesso(processMovement.id)"
+                            color="error"
+                            icon="mdi-delete-forever"
+                            overlap
+                          >
+                            <v-card class="elevation-2">
+                              <v-card-title class="text-h5">
+                                {{processMovement.actionName}}
+                              </v-card-title>
+                              <v-card-text>{{processMovement.actionDescription}}</v-card-text>
+                            </v-card>
+                          </v-badge>
                         </v-timeline-item>
                       </v-timeline>
                     </base-material-card>
@@ -573,6 +581,24 @@ export default {
     },
   },
   methods: {
+    async removerMovimentacaoProcesso(processMovementId){
+      await api.delete(`processMovements/${processMovementId}`).then((responseDeleteProcessMovement) => {
+        console.log(responseDeleteProcessMovement)
+        if(responseDeleteProcessMovement.status === 204){
+          console.log("deletado com sucesso")
+
+          this.process.processMovements.forEach((p, i) => {
+            if(p.id === processMovementId){
+              this.process.processMovements.splice(i, 1);
+            }
+          });
+
+        }else{
+          console.log("Nao foi possivel deletar o checklist")
+          console.log(responseDeleteProcessMovement.data)
+        }
+      });
+    },
     editItem (item) {
       console.log("Editando o item:");
       console.log(item);

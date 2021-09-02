@@ -18,3 +18,11 @@ exports.getProcessMovementsByProcessId = function (processId) {
 exports.saveProcessMovement = function (processMovement) {
 	return ProcessMovement.create(processMovement);
 };
+
+exports.deleteProcessMovement = function (id) {
+	return ProcessMovement.destroy({
+        where: {
+            id: id
+        }
+    })
+};

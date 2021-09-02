@@ -213,6 +213,8 @@
                         </v-data-table>
                         <dialog-checklist
                           :process="process"
+                          :checklist="unicoChecklist"
+                          :dialog_m="updateCheck"
                           @updateList="updateList"
                         ></dialog-checklist>
                       </v-card-text>
@@ -400,7 +402,8 @@ export default {
   },
   data() {
     return {
-
+      unicoChecklist: {},
+      updateCheck: '',
       tab: null,
       items: [
         'Andamento processual', 'Movimentações do processo', 'Audiências',
@@ -478,10 +481,10 @@ export default {
           text: 'Status',
           value: 'status'
         },
-        { 
-          text: 'Ações', 
-          value: 'actions', 
-          sortable: false 
+        {
+          text: 'Ações',
+          value: 'actions',
+          sortable: false
         },
       ],
     }
@@ -574,8 +577,8 @@ export default {
   },
   methods: {
     editItem (item) {
-      console.log("Editando o item:");
-      console.log(item);
+      this.unicoChecklist = item;
+      this.updateCheck=true;
     },
     deleteItem (item) {
       console.log("Deletando o item:")
@@ -633,13 +636,25 @@ export default {
           'Content-Type': 'multipart/form-data'
         }
       });
+      this.process.processChecklists = [];
+      await apiUpdateListProcess.get(`/processChecklists`).then((resp) =>{
 
-      await  apiUpdateListProcess.get(`/processChecklists/${id}`)
-        .then((response) => {
-          response.data.user.fullName = response.data.user.name + ' ' +  response.data.user.lastName;
-          this.process.processChecklists.push(response.data);
-          this.updateProcessMovements();
-        });
+         resp.data.forEach((value) => {
+        if (this.process.id == value.processId){
+          value.user.fullName = value.user.name + ' ' +  value.user.lastName;
+          this.process.processChecklists.push(value);
+        }
+
+        })
+      });
+      this.unicoChecklist = null;
+      this.updateCheck = false;
+      // await  apiUpdateListProcess.get(`/processChecklists/${id}`)
+      //   .then((response) => {
+      //     response.data.user.fullName = response.data.user.name + ' ' +  response.data.user.lastName;
+      //     this.process.processChecklists.push(response.data);
+      //     this.updateProcessMovements();
+      //   });
     },
     async updateProcessMovements(){
       let apiUpdateListProcess = axios.create({

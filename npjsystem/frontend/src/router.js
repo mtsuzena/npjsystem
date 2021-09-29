@@ -27,6 +27,16 @@ export default new Router({
           component: () => import('@/views/dashboard/Processes'),
         },
         {
+          name: 'Clientes',
+          path: 'pages/customers',
+          component: () => import('@/views/dashboard/Customers'),
+        },
+        {
+          name: 'Usuarios',
+          path: 'pages/users',
+          component: () => import('@/views/dashboard/Users'),
+        },
+        {
           name: 'Revisão de Documentos',
           path: 'pages/documentReview',
           beforeEnter(to, from, next){

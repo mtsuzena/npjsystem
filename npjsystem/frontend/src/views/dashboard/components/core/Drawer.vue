@@ -108,12 +108,12 @@
           to: '/pages/atendimentos',
         },
         {
-          title: 'Processos',
+          title: 'process',
           icon: 'mdi-clipboard-outline',
           to: '/pages/processos',
         },
         {
-          title: 'Revisão de Documentos',
+          title: 'documentReview',
           icon: 'mdi-clipboard-outline',
           to: '/pages/documentReview',
         },
@@ -141,6 +141,11 @@
           icon: 'mdi-account',
           title: 'user',
           to: '/pages/usuario',
+        },
+        {
+          icon: 'mdi-account',
+          title: 'customer',
+          to: '/pages/customers',
         },
       ],
     }),

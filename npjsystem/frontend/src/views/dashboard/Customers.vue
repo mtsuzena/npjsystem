@@ -37,7 +37,6 @@
                 'items-per-page-text':'Clientes por página'
               }"
               item-key="number"
-              @click:row="redirectToDetailedCustomerScreen"
               class="py-3"
             >
               <template v-slot:item.customerActive="{item}">
@@ -53,6 +52,37 @@
                   v-if="item.customerActive === false"
                 ></v-checkbox>
               </template>
+
+              <template v-slot:top>
+                <v-dialog v-model="dialogDelete" max-width="500px">
+                  <v-card>
+                    <v-card-title class="text-h5">Tem certeza de que deseja excluir essa atividade?</v-card-title>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="darken-1" text @click="closeDelete">Cancelar</v-btn>
+                      <v-btn color="darken-1" text @click="deleteItemConfirm">Sim</v-btn>
+                      <v-spacer></v-spacer>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </template>
+
+              <template v-slot:item.actions="{ item }">
+                <v-icon
+                  small
+                  class="mr-2"
+                  @click="editItem(item)"
+                >
+                  mdi-pencil
+                </v-icon>
+                <v-icon
+                  small
+                  @click="deleteItem(item)"
+                >
+                  mdi-delete
+                </v-icon>
+              </template>
+
             </v-data-table>
           </v-card-text>
           
@@ -69,6 +99,13 @@
 import axios from 'axios'
 const jwt = require('jsonwebtoken');
 const configs = require('../../config/configs');
+
+const api = axios.create({
+  baseURL: configs.API_URL,
+  headers: {
+    'auth-token': window.localStorage.token
+  }
+});
 
 export default {
   name: 'Customers',
@@ -109,14 +146,72 @@ export default {
           text: 'Cliente Ativo',
           value: 'customerActive',
           align: 'left ',
-        }
+        },
+        {
+          text: 'Ações',
+          value: 'actions',
+          sortable: false
+        },
       ],
+      editedIndex: -1,
+      editedItem: {
+        name: '',
+        deadline: '',
+        responsavel: '',
+      },
+      dialogDelete: false,
     }
   },
   methods: {
-    redirectToDetailedCustomerScreen(process) {
-      this.$router.push(`processDetailed/${process.number}`);
+    deleteItem (item) {
+      this.editedIndex = this.customers.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialogDelete = true
     },
+    close () {
+      this.dialog = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+    closeDelete () {
+      this.dialogDelete = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+    async deleteItemConfirm () {
+      this.closeDelete();
+
+      let customerId = this.customers[this.editedIndex].id;
+      await api.delete(`customers/${customerId}`).then((responseDeleteCustomer) => {
+
+        if(responseDeleteCustomer.status === 204){
+          console.log("deletado com sucesso")
+          // gerar alerta aqui
+        }else{
+          console.log("Nao foi possivel deletar o checklist")
+          console.log(responseDeleteCustomer.data)
+          //gerar alerta
+        }
+      });
+
+      this.customers.forEach((customer, i) => {
+        if(customer.id === customerId){
+          this.customers.splice(i, 1)
+        }
+      })
+    },
+  },
+  watch: {
+    dialog (val) {
+      val || this.close()
+    },
+    dialogDelete (val) {
+      val || this.closeDelete()
+    }
   },
   beforeCreate(){
     let api = axios.create({

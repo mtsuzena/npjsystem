@@ -139,13 +139,18 @@
         // },
         {
           icon: 'mdi-account',
-          title: 'user',
+          title: 'userProfile',
           to: '/pages/usuario',
         },
         {
           icon: 'mdi-account',
           title: 'customer',
           to: '/pages/customers',
+        },
+        {
+          icon: 'mdi-account',
+          title: 'user',
+          to: '/pages/users',
         },
       ],
     }),

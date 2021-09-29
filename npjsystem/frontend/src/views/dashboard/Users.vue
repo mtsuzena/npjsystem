@@ -14,7 +14,7 @@
         <base-material-card
           icon="mdi-clipboard-text"
           color="success"
-          title="Clientes"
+          title="Usuarios"
           class="px-5 py-3"
         >
           <v-card-text>
@@ -30,8 +30,8 @@
             </v-card-title>
 
             <v-data-table
-              :headers="customerHeaders"
-              :items="customers"
+              :headers="userHeaders"
+              :items="users"
               :search="search"
               :footer-props="{
                 'items-per-page-text':'Clientes por página'
@@ -40,18 +40,19 @@
               @click:row="redirectToDetailedCustomerScreen"
               class="py-3"
             >
-              <template v-slot:item.customerActive="{item}">
+              <template v-slot:item.userActive="{item}">
                 <v-checkbox
-                  v-model="item.customerActive"
-                  label="Cliente ativo"
-                  v-if="item.customerActive === true"
+                  v-model="item.userActive"
+                  label="Usuario ativo"
+                  v-if="item.userActive === true"
                 ></v-checkbox>
 
                 <v-checkbox
-                  v-model="item.customerActive"
-                  label="Cliente desativado"
-                  v-if="item.customerActive === false"
+                  v-model="item.userActive"
+                  label="Usuario desativado"
+                  v-if="item.userActive === false"
                 ></v-checkbox>
+
               </template>
             </v-data-table>
           </v-card-text>
@@ -77,9 +78,9 @@ export default {
   },
   data() {
     return {
-      customers: [],
+      users: [],
       search: '',
-      customerHeaders: [
+      userHeaders: [
         {
           sortable: false,
           text: 'Nome',
@@ -94,23 +95,11 @@ export default {
         },
         {
           sortable: false,
-          text: 'Celular',
-          value: 'cellphone',
-          align: 'left ',
+          text: 'Perfil do Usuário',
+          value: 'profile.name',
+          align: 'left',
         },
-        {
-          sortable: false,
-          text: 'Cidade',
-          value: 'city',
-          align: 'left ',
-        },
-        {
-          sortable: false,
-          text: 'Cliente Ativo',
-          value: 'customerActive',
-          align: 'left ',
-        }
-      ],
+      ]
     }
   },
   methods: {
@@ -127,10 +116,10 @@ export default {
     });
     const tokenDecoded = jwt.decode(window.localStorage.token);
 
-    api.get('customers').then((responseGetCustomers) => {
-      this.customers = responseGetCustomers.data;
-      this.customers.forEach((customer, i) => {
-        this.customers[i].fullName = customer.name + ' ' + customer.lastName;
+    api.get('users').then((responseGetUsers) => {
+      this.users = responseGetUsers.data;
+      this.users.forEach((user, i) => {
+        this.users[i].fullName = user.name + ' ' + user.lastName;
       });
     });
   }

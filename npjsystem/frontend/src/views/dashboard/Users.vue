@@ -37,23 +37,38 @@
                 'items-per-page-text':'Clientes por página'
               }"
               item-key="number"
-              @click:row="redirectToDetailedCustomerScreen"
               class="py-3"
             >
-              <template v-slot:item.userActive="{item}">
-                <v-checkbox
-                  v-model="item.userActive"
-                  label="Usuario ativo"
-                  v-if="item.userActive === true"
-                ></v-checkbox>
-
-                <v-checkbox
-                  v-model="item.userActive"
-                  label="Usuario desativado"
-                  v-if="item.userActive === false"
-                ></v-checkbox>
-
+              <template v-slot:item.actions="{ item }">
+                <v-icon
+                  small
+                  class="mr-2"
+                  @click="editItem(item)"
+                >
+                  mdi-pencil
+                </v-icon>
+                <v-icon
+                  small
+                  @click="deleteItem(item)"
+                >
+                  mdi-delete
+                </v-icon>
               </template>
+
+              <template v-slot:top>
+                <v-dialog v-model="dialogDelete" max-width="500px">
+                  <v-card>
+                    <v-card-title class="text-h5">Tem certeza de que deseja excluir essa atividade?</v-card-title>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="darken-1" text @click="closeDelete">Cancelar</v-btn>
+                      <v-btn color="darken-1" text @click="deleteItemConfirm">Sim</v-btn>
+                      <v-spacer></v-spacer>
+                    </v-card-actions>
+                  </v-card>
+                </v-dialog>
+              </template>
+
             </v-data-table>
           </v-card-text>
           
@@ -62,6 +77,16 @@
         </base-material-card>
       </v-col>
     </v-row>
+    <base-material-snackbar
+      v-model="snackbar"
+      :type="color"
+      v-bind="{
+        [parsedDirection[0]]: true,
+        [parsedDirection[1]]: true
+      }"
+    >
+      {{alertMsg}}
+    </base-material-snackbar>
   </v-container>
 </template>
 
@@ -71,8 +96,15 @@ import axios from 'axios'
 const jwt = require('jsonwebtoken');
 const configs = require('../../config/configs');
 
+const api = axios.create({
+  baseURL: configs.API_URL,
+  headers: {
+    'auth-token': window.localStorage.token
+  }
+});
+
 export default {
-  name: 'Customers',
+  name: 'Users',
   components: {
     DialogNewProcess: () => import('./components/DialogNewProcess'),
   },
@@ -99,12 +131,90 @@ export default {
           value: 'profile.name',
           align: 'left',
         },
-      ]
+        {
+          text: 'Ações',
+          value: 'actions',
+          sortable: false
+        },
+      ],
+      editedIndex: -1,
+      editedItem: {
+        name: '',
+        deadline: '',
+        responsavel: '',
+      },
+      dialogDelete: false,
+      alertMsg: '',
+      color: 'info',
+      colors: [
+        'info',
+        'success',
+        'warning',
+        'error',
+      ],
+      direction: 'top center',
+      snackbar: false,
     }
   },
   methods: {
-    redirectToDetailedCustomerScreen(process) {
-      this.$router.push(`processDetailed/${process.number}`);
+    generateAlert(color, msg){
+      this.alertMsg = msg;
+      this.color = this.colors[color];
+      this.direction = 'top right';
+      this.snackbar = true;
+    },
+    deleteItem (item) {
+      this.editedIndex = this.users.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialogDelete = true
+    },
+    close () {
+      this.dialog = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+    closeDelete () {
+      this.dialogDelete = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+    async deleteItemConfirm () {
+      this.closeDelete();
+      console.log("aushdas")
+
+      let userId = this.users[this.editedIndex].id;
+      await api.delete(`users/${userId}`).then((responseDeleteUser) => {
+
+        if(responseDeleteUser.status === 204){
+          console.log("deletado com sucesso")
+          this.generateAlert(1, 'Usuário excluído');
+        }else{
+          this.generateAlert(3, 'Erro ao excluír o usuário');
+        }
+      });
+
+      this.users.forEach((user, i) => {
+        if(user.id === userId){
+          this.users.splice(i, 1)
+        }
+      })
+    },
+  },
+  watch: {
+    dialog (val) {
+      val || this.close()
+    },
+    dialogDelete (val) {
+      val || this.closeDelete()
+    }
+  },
+  computed: {
+    parsedDirection () {
+      return this.direction.split(' ')
     },
   },
   beforeCreate(){

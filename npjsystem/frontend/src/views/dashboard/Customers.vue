@@ -91,6 +91,16 @@
         </base-material-card>
       </v-col>
     </v-row>
+    <base-material-snackbar
+      v-model="snackbar"
+      :type="color"
+      v-bind="{
+        [parsedDirection[0]]: true,
+        [parsedDirection[1]]: true
+      }"
+    >
+      {{alertMsg}}
+    </base-material-snackbar>
   </v-container>
 </template>
 
@@ -160,9 +170,25 @@ export default {
         responsavel: '',
       },
       dialogDelete: false,
+      alertMsg: '',
+      color: 'info',
+      colors: [
+        'info',
+        'success',
+        'warning',
+        'error',
+      ],
+      direction: 'top center',
+      snackbar: false,
     }
   },
   methods: {
+    generateAlert(color, msg){
+      this.alertMsg = msg;
+      this.color = this.colors[color];
+      this.direction = 'top right';
+      this.snackbar = true;
+    },
     deleteItem (item) {
       this.editedIndex = this.customers.indexOf(item)
       this.editedItem = Object.assign({}, item)
@@ -190,11 +216,9 @@ export default {
 
         if(responseDeleteCustomer.status === 204){
           console.log("deletado com sucesso")
-          // gerar alerta aqui
+          this.generateAlert(1, 'Cliente excluído');
         }else{
-          console.log("Nao foi possivel deletar o checklist")
-          console.log(responseDeleteCustomer.data)
-          //gerar alerta
+          this.generateAlert(3, 'Erro ao excluír o cliente');
         }
       });
 
@@ -212,6 +236,11 @@ export default {
     dialogDelete (val) {
       val || this.closeDelete()
     }
+  },
+  computed: {
+    parsedDirection () {
+      return this.direction.split(' ')
+    },
   },
   beforeCreate(){
     let api = axios.create({

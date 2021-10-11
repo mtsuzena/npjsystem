@@ -71,8 +71,14 @@
 
             </v-data-table>
           </v-card-text>
-          
-          <dialog-new-process></dialog-new-process>
+
+          <dialog-user
+            @atualizarLista="atualizarLista"
+            @atualizarLista2="atualizarLista2"
+            :dialog-prop="dialogProp"
+            :user-prop="userProp"
+            @attDialog="attDialog"
+          ></dialog-user>
 
         </base-material-card>
       </v-col>
@@ -106,10 +112,12 @@ const api = axios.create({
 export default {
   name: 'Users',
   components: {
-    DialogNewProcess: () => import('./components/DialogNewProcess'),
+    DialogUser: () => import('./components/DialogUser'),
   },
   data() {
     return {
+      userProp: {},
+      dialogProp: false,
       users: [],
       search: '',
       userHeaders: [
@@ -157,6 +165,46 @@ export default {
     }
   },
   methods: {
+    editItem(item){
+      this.userProp = item
+      this.dialogProp = true;
+    },
+    attDialog(){
+      this.dialogProp = false;
+    },
+
+    async atualizarLista(usuario){
+      this.dialogProp = false;
+      let api = axios.create({
+        baseURL: configs.API_URL,
+        headers: {
+          'auth-token': window.localStorage.token
+        }
+      });
+     await api.get(`/profiles/${usuario.profileId}`).then((res) =>{
+        usuario.profile = {name: res.data.name};
+      });
+      usuario.fullName = usuario.name + ' ' + usuario.lastName;
+      this.users.push(usuario);
+    },
+
+    async atualizarLista2(usuario){
+      this.dialogProp = false;
+      let api = axios.create({
+        baseURL: configs.API_URL,
+        headers: {
+          'auth-token': window.localStorage.token
+        }
+      });
+      this.users = [];
+      api.get('users').then((responseGetUsers) => {
+        this.users = responseGetUsers.data;
+        this.users.forEach((user, i) => {
+          this.users[i].fullName = user.name + ' ' + user.lastName;
+        });
+      });
+    },
+
     generateAlert(color, msg){
       this.alertMsg = msg;
       this.color = this.colors[color];

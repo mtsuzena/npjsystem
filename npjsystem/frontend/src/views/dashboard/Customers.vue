@@ -85,8 +85,14 @@
 
             </v-data-table>
           </v-card-text>
-          
-          <dialog-new-process></dialog-new-process>
+
+          <dialog-customer
+            @atualizarLista="atualizarLista"
+            @atualizarLista2="atualizarLista2"
+            :dialog-prop="dialogProp"
+            :customerProp="customerProp"
+            @attDialog="attDialog"
+          ></dialog-customer>
 
         </base-material-card>
       </v-col>
@@ -120,7 +126,7 @@ const api = axios.create({
 export default {
   name: 'Customers',
   components: {
-    DialogNewProcess: () => import('./components/DialogNewProcess'),
+    DialogCustomer: () => import('./components/DialogCustomer'),
   },
   data() {
     return {
@@ -180,9 +186,41 @@ export default {
       ],
       direction: 'top center',
       snackbar: false,
+      customerProp: '',
+      dialogProp: false,
     }
   },
   methods: {
+    editItem(item){
+      this.customerProp = item
+      this.dialogProp = true;
+    },
+    attDialog(){
+      this.dialogProp = false;
+    },
+
+    async atualizarLista(customer){
+      this.dialogProp = false;
+      customer.fullName = customer.name + ' ' + customer.lastName;
+      this.customers.push(customer);
+    },
+
+    async atualizarLista2(){
+      this.dialogProp = false;
+      let api = axios.create({
+        baseURL: configs.API_URL,
+        headers: {
+          'auth-token': window.localStorage.token
+        }
+      });
+      this.customers = [];
+      api.get('customers').then((responseGetCustomers) => {
+        this.customers = responseGetCustomers.data;
+        this.customers.forEach((customer, i) => {
+          this.customers[i].fullName = customer.name + ' ' + customer.lastName;
+        });
+      });
+    },
     generateAlert(color, msg){
       this.alertMsg = msg;
       this.color = this.colors[color];

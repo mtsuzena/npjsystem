@@ -41,4 +41,13 @@ router.post('/audiencias', verify, async function (req, res, next){
     }
 });
 
+router.delete('/audiencias/:id', verify, async function (req, res, next){
+    try {
+        await audienciaService.deleteAudiencia(req.params.id)
+        res.status(204).end();
+    } catch (error) {
+        next(error);
+    }
+});
+
 module.exports = router;

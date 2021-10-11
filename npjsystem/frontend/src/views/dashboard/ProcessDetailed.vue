@@ -316,7 +316,7 @@
                   <v-col>
                     <base-material-card
                       color="green"
-                      title="Lista de checagem do andamento processual"
+                      title="Lista de checagem de audiencias"
                       class="px-5 py-3"
                     >
                       <v-card-text>
@@ -336,6 +336,29 @@
                             <span v-if="item.tipo == 0">Conciliação</span>
                             <span v-if="item.tipo == 1">Instrução</span>
                             <span v-if="item.tipo == 2">Julgamento</span>
+                          </template>
+
+                          <template v-slot:top>
+                            <v-dialog v-model="dialogDelete" max-width="500px">
+                              <v-card>
+                                <v-card-title class="text-h5">Tem certeza de que deseja excluir essa audiencia?</v-card-title>
+                                <v-card-actions>
+                                  <v-spacer></v-spacer>
+                                  <v-btn color="darken-1" text @click="closeDeleteAudiencia">Cancelar</v-btn>
+                                  <v-btn color="darken-1" text @click="deleteItemConfirmAudiencia">Sim</v-btn>
+                                  <v-spacer></v-spacer>
+                                </v-card-actions>
+                              </v-card>
+                            </v-dialog>
+                          </template>
+
+                          <template v-slot:item.actions="{ item }">
+                            <v-icon
+                              small
+                              @click="deleteItemAudiencia(item)"
+                            >
+                              mdi-delete
+                            </v-icon>
                           </template>
 
                           <template v-slot:item.clienteNotificado="{item}">
@@ -411,7 +434,9 @@ export default {
   data() {
     return {
       unicoChecklist: {},
+      unicoAudiencia: {},
       updateCheck: false,
+      updateAudiencia: false,
       tab: null,
       items: [
         'Andamento processual', 'Movimentações do processo', 'Audiências',
@@ -421,7 +446,9 @@ export default {
       descricaoMovimentacao: null,
       build: true,
       processChecklistId: null,
+      audienciaId: null,
       processChecklistSelected: null,
+      audienciaSelected: null,
       selectedFile: null,
       process: {},
       processStatus: '',
@@ -431,9 +458,17 @@ export default {
       alertMsg: '',
       snackbar: false,
       dialog: false,
+      dialogAudiencia: false,
       dialogDelete: false,
+      dialogDeleteAudiencia: false,
       editedIndex: -1,
+      editedIndexAudiencia: -1,
       editedItem: {
+        name: '',
+        deadline: '',
+        responsavel: '',
+      },
+      editedItemAudiencia: {
         name: '',
         deadline: '',
         responsavel: '',
@@ -465,6 +500,11 @@ export default {
           text: 'Informações de testemunhas:',
           value: "testemunhasAudiencia" ,
         },
+        {
+          text: 'Ações',
+          value: 'actions',
+          sortable: false
+        }
       ],
       headers: [
         {
@@ -501,8 +541,14 @@ export default {
     dialog (val) {
       val || this.close()
     },
+    dialogAudiencia (val) {
+      val || this.closeAudiencia()
+    },
     dialogDelete (val) {
       val || this.closeDelete()
+    },
+    dialogDeleteAudiencia (val) {
+      val || this.closeDeleteAudiencia()
     },
     checklistsDone(){
       let api = axios.create({
@@ -606,12 +652,24 @@ export default {
       this.unicoChecklist = item;
       this.updateCheck=true;
     },
+    editItemAudiencia (item) {
+      this.unicoAudiencia = item;
+      this.updateAudiencia=true;
+    },
     deleteItem (item) {
       console.log("Deletando o item:")
       console.log(item)
       this.editedIndex = this.process.processChecklists.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
+    },
+    deleteItemAudiencia (item) {
+      console.log("Deletando a audiencia:")
+      console.log(item)
+      this.editedIndexAudiencia = this.process.audiencias.indexOf(item)
+      this.editedItemAudiencia = Object.assign({}, item)
+      this.dialogDeleteAudiencia = true
+      this.deleteItemConfirmAudiencia();
     },
     async deleteItemConfirm () {
       this.closeDelete();
@@ -632,6 +690,25 @@ export default {
         }
       })
     },
+    async deleteItemConfirmAudiencia () {
+      this.closeDeleteAudiencia();
+
+      let audienciaId = this.process.audiencias[this.editedIndexAudiencia].id;
+      await api.delete(`audiencias/${audienciaId}`).then((responseDeleteAtividade) => {
+        console.log(responseDeleteAtividade)
+        if(responseDeleteAtividade.status === 204){
+          console.log("deletado com sucesso")
+        }else{
+          console.log("Nao foi possivel deletar o checklist")
+          console.log(responseDeleteAtividade.data)
+        }
+      });
+      this.process.audiencias.forEach((audiencia, i) => {
+        if(audiencia.id === audienciaId){
+          this.process.audiencias.splice(i, 1)
+        }
+      })
+    },
     close () {
       this.dialog = false
       this.$nextTick(() => {
@@ -639,11 +716,25 @@ export default {
         this.editedIndex = -1
       })
     },
+    closeAudiencia () {
+      this.dialogAudiencia = false
+      this.$nextTick(() => {
+        this.editedItemAudiencia = Object.assign({}, this.defaultItem)
+        this.editedIndexAudiencia = -1
+      })
+    },
     closeDelete () {
       this.dialogDelete = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
+      })
+    },
+    closeDeleteAudiencia () {
+      this.dialogDeleteAudiencia = false
+      this.$nextTick(() => {
+        this.editedItemAudiencia = Object.assign({}, this.defaultItem)
+        this.editedIndexAudiencia = -1
       })
     },
     save () {

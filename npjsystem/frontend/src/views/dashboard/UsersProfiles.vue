@@ -152,7 +152,13 @@ export default {
   },
   methods: {
     editItem(item){
-      console.log("editar item")
+      let tokenDecoded = jwt.decode(window.localStorage.token);
+      let permite = tokenDecoded.roles.find(role => role.name === 'UPDATE_PROFILE');
+      if(permite){
+        console.log("editar perfil aqui")
+      }else{
+        this.generateAlert(3, 'Você não possui permisão para editar um perfil');
+      } 
     },
     generateAlert(color, msg){
       this.alertMsg = msg;
@@ -161,9 +167,15 @@ export default {
       this.snackbar = true;
     },
     deleteItem (item) {
-      this.editedIndex = this.profiles.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialogDelete = true
+      let tokenDecoded = jwt.decode(window.localStorage.token);
+      let permissaoParaDeletar = tokenDecoded.roles.find(role => role.name === 'DELETE_PROFILE');
+      if(permissaoParaDeletar){
+        this.editedIndex = this.profiles.indexOf(item)
+        this.editedItem = Object.assign({}, item)
+        this.dialogDelete = true
+      }else{
+        this.generateAlert(3, 'Você não possui permisão para deletar um perfil');
+      }      
     },
     close () {
       this.dialog = false
@@ -218,10 +230,12 @@ export default {
         'auth-token': window.localStorage.token
       }
     });
-    const tokenDecoded = jwt.decode(window.localStorage.token);
+    let tokenDecoded = jwt.decode(window.localStorage.token);
     if(!tokenDecoded){
       this.$router.push({ name: 'Login' })
     }
+    console.log("token")
+    console.log(this.tokenDecoded)
 
     api.get('profiles').then((response) => {
       this.profiles = response.data;

@@ -192,8 +192,14 @@ export default {
   },
   methods: {
     editItem(item){
-      this.customerProp = item
-      this.dialogProp = true;
+      let tokenDecoded = jwt.decode(window.localStorage.token);
+      let permissao = tokenDecoded.roles.find(role => role.name === 'UPDATE_CUSTOMER');
+      if(permissao){
+        this.customerProp = item
+        this.dialogProp = true;
+      }else{
+        this.generateAlert(3, 'Você não possui permisão para alterar um cliente');
+      }
     },
     attDialog(){
       this.dialogProp = false;
@@ -228,9 +234,15 @@ export default {
       this.snackbar = true;
     },
     deleteItem (item) {
-      this.editedIndex = this.customers.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialogDelete = true
+      let tokenDecoded = jwt.decode(window.localStorage.token);
+      let permissao = tokenDecoded.roles.find(role => role.name === 'DELETE_CUSTOMER');
+      if(permissao){
+        this.editedIndex = this.customers.indexOf(item)
+        this.editedItem = Object.assign({}, item)
+        this.dialogDelete = true
+      }else{
+        this.generateAlert(3, 'Você não possui permisão para deletar um cliente');
+      }
     },
     close () {
       this.dialog = false

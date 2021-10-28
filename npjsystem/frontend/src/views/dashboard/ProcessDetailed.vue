@@ -649,19 +649,29 @@ export default {
       });
     },
     editItem (item) {
-      this.unicoChecklist = item;
-      this.updateCheck=true;
+      let tokenDecoded = jwt.decode(window.localStorage.token);
+      let permissao = tokenDecoded.roles.find(role => role.name === 'UPDATE_PROCESS_CHECKLIST');
+      if(permissao){
+        this.unicoChecklist = item;
+        this.updateCheck=true;
+      }else{
+        this.generateAlert(3, 'Você não possui permisão para alterar uma atividade');
+      }
     },
     editItemAudiencia (item) {
       this.unicoAudiencia = item;
       this.updateAudiencia=true;
     },
     deleteItem (item) {
-      console.log("Deletando o item:")
-      console.log(item)
-      this.editedIndex = this.process.processChecklists.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialogDelete = true
+      let tokenDecoded = jwt.decode(window.localStorage.token);
+      let permissao = tokenDecoded.roles.find(role => role.name === 'DELETE_PROCESS_CHECKLIST');
+      if(permissao){
+        this.editedIndex = this.process.processChecklists.indexOf(item)
+        this.editedItem = Object.assign({}, item)
+        this.dialogDelete = true
+      }else{
+        this.generateAlert(3, 'Você não possui permisão para deletar uma atividade');
+      }
     },
     deleteItemAudiencia (item) {
       console.log("Deletando a audiencia:")

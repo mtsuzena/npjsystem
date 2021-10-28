@@ -117,26 +117,6 @@
           icon: 'mdi-clipboard-outline',
           to: '/pages/documentReview',
         },
-        // {
-        //   title: 'typography',
-        //   icon: 'mdi-format-font',
-        //   to: '/components/typography',
-        // },
-        // {
-        //   title: 'icons',
-        //   icon: 'mdi-chart-bubble',
-        //   to: '/components/icons',
-        // },
-        // {
-        //   title: 'google',
-        //   icon: 'mdi-map-marker',
-        //   to: '/maps/google-maps',
-        // },
-        // {
-        //   title: 'notifications',
-        //   icon: 'mdi-bell',
-        //   to: '/components/notifications',
-        // },
         {
           icon: 'mdi-account',
           title: 'userProfile',
@@ -152,6 +132,11 @@
           title: 'user',
           to: '/pages/users',
         },
+        {
+          title: 'usersProfile',
+          icon: 'mdi-clipboard-outline',
+          to: '/pages/profiles',
+        }
       ],
     }),
 

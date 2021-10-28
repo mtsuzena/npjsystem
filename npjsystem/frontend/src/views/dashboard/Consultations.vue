@@ -215,8 +215,14 @@ export default {
       this.insertEvents(this.consultations);
     },
   },
-   created() {
+  created() {
       this.getConsultation();
+  },
+  beforeCreate(){
+    const tokenDecoded = jwt.decode(window.localStorage.token);
+    if(!tokenDecoded){
+      this.$router.push({ name: 'Login' })
+    }
   }
 }
 </script>

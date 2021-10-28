@@ -219,6 +219,9 @@ export default {
       }
     });
     const tokenDecoded = jwt.decode(window.localStorage.token);
+    if(!tokenDecoded){
+      this.$router.push({ name: 'Login' })
+    }
 
     api.get('profiles').then((response) => {
       this.profiles = response.data;

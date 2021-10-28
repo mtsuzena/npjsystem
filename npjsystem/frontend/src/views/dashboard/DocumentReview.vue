@@ -412,40 +412,43 @@ export default {
   },
   beforeCreate(){
     let api = axios.create({
-        baseURL: configs.API_URL,
-        headers: {
-          'auth-token': window.localStorage.token
-        }
-      });
-      const tokenDecoded = jwt.decode(window.localStorage.token);
-      api.get(`users/${tokenDecoded.id}`).then((responseGetUserById) => {
-        this.user = responseGetUserById.data;
-      });
+      baseURL: configs.API_URL,
+      headers: {
+        'auth-token': window.localStorage.token
+      }
+    });
+    const tokenDecoded = jwt.decode(window.localStorage.token);
+    if(!tokenDecoded){
+      this.$router.push({ name: 'Login' })
+    }
+    api.get(`users/${tokenDecoded.id}`).then((responseGetUserById) => {
+      this.user = responseGetUserById.data;
+    });
 
-      api.get(`processes/byUserId/${tokenDecoded.id}`).then((responseGetProcessesByUserId) => {
+    api.get(`processes/byUserId/${tokenDecoded.id}`).then((responseGetProcessesByUserId) => {
 
-        let processes = responseGetProcessesByUserId.data;
+      let processes = responseGetProcessesByUserId.data;
 
-        processes.forEach((process, i) => {
-          process.processChecklists.forEach((procesChecklist, i) => {
-            procesChecklist.user.fullName = procesChecklist.user.name + ' ' + procesChecklist.user.lastName;
+      processes.forEach((process, i) => {
+        process.processChecklists.forEach((procesChecklist, i) => {
+          procesChecklist.user.fullName = procesChecklist.user.name + ' ' + procesChecklist.user.lastName;
 
-            if(procesChecklist.status === 2){
-              let splitDocName = procesChecklist.document.fileName.split('-', 2);
-              let docName = splitDocName[1];
-              procesChecklist.document.fileNameWithoutHash = docName; 
-              this.processChecklistsParaAprovar.push(procesChecklist);
-            }
-            if(procesChecklist.status === 3){
-              let splitDocName = procesChecklist.document.fileName.split('-', 2);
-              let docName = splitDocName[1];
-              procesChecklist.document.fileNameWithoutHash = docName; 
-              this.processChecklistsAprovados.push(procesChecklist);
-            }
-          });
-
+          if(procesChecklist.status === 2){
+            let splitDocName = procesChecklist.document.fileName.split('-', 2);
+            let docName = splitDocName[1];
+            procesChecklist.document.fileNameWithoutHash = docName; 
+            this.processChecklistsParaAprovar.push(procesChecklist);
+          }
+          if(procesChecklist.status === 3){
+            let splitDocName = procesChecklist.document.fileName.split('-', 2);
+            let docName = splitDocName[1];
+            procesChecklist.document.fileNameWithoutHash = docName; 
+            this.processChecklistsAprovados.push(procesChecklist);
+          }
         });
+
       });
+    });
   },
 }
 </script>

@@ -125,6 +125,10 @@ export default {
     });
     const tokenDecoded = jwt.decode(window.localStorage.token);
 
+    if(!tokenDecoded){
+      this.$router.push({ name: 'Login' })
+    }
+
     api.get('processes').then((responseGetProcesses) => {
       this.processes = responseGetProcesses.data;
       this.processes.forEach((process, i) => {

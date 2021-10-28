@@ -932,6 +932,11 @@ export default {
       }
     });
 
+    const tokenDecoded = jwt.decode(window.localStorage.token);
+    if(!tokenDecoded){
+      this.$router.push({ name: 'Login' })
+    }
+
     api.get(`processes/byProcessNumber/${this.$route.params.processNumber}`).then((responseGetProcessByNumber) => {
 
       this.process = responseGetProcessByNumber.data;

@@ -37,6 +37,11 @@ export default new Router({
           component: () => import('@/views/dashboard/Users'),
         },
         {
+          name: 'Perfis de Usuarios',
+          path: 'pages/profiles',
+          component: () => import('@/views/dashboard/UsersProfiles'),
+        },
+        {
           name: 'Revisão de Documentos',
           path: 'pages/documentReview',
           beforeEnter(to, from, next){

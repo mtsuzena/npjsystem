@@ -166,8 +166,14 @@ export default {
   },
   methods: {
     editItem(item){
-      this.userProp = item
-      this.dialogProp = true;
+      let tokenDecoded = jwt.decode(window.localStorage.token);
+      let permissao = tokenDecoded.roles.find(role => role.name === 'UPDATE_USER');
+      if(permissao){
+        this.userProp = item
+        this.dialogProp = true;
+      }else{
+        this.generateAlert(3, 'Você não possui permisão para alterar um usuário');
+      }
     },
     attDialog(){
       this.dialogProp = false;
@@ -212,9 +218,15 @@ export default {
       this.snackbar = true;
     },
     deleteItem (item) {
-      this.editedIndex = this.users.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialogDelete = true
+      let tokenDecoded = jwt.decode(window.localStorage.token);
+      let permissao = tokenDecoded.roles.find(role => role.name === 'DELETE_USER');
+      if(permissao){
+        this.editedIndex = this.users.indexOf(item)
+        this.editedItem = Object.assign({}, item)
+        this.dialogDelete = true
+      }else{
+        this.generateAlert(3, 'Você não possui permisão para deletar um usuário');
+      }
     },
     close () {
       this.dialog = false

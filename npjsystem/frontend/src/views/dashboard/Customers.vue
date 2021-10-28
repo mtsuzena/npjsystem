@@ -289,6 +289,10 @@ export default {
     });
     const tokenDecoded = jwt.decode(window.localStorage.token);
 
+    if(!tokenDecoded){
+      this.$router.push({ name: 'Login' })
+    }
+
     api.get('customers').then((responseGetCustomers) => {
       this.customers = responseGetCustomers.data;
       this.customers.forEach((customer, i) => {

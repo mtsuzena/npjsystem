@@ -177,6 +177,11 @@ export default {
       }
     });
     const tokenDecoded = jwt.decode(window.localStorage.token);
+
+    if(!tokenDecoded){
+      this.$router.push({ name: 'Login' })
+    }
+
     api.get(`users/${tokenDecoded.id}`).then((responseGetUserById) => {
       this.user = responseGetUserById.data;
     });

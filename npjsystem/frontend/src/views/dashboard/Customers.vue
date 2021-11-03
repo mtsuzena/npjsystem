@@ -87,10 +87,11 @@
           </v-card-text>
 
           <dialog-customer
+            @generateAlert="generateAlert"
             @atualizarLista="atualizarLista"
             @atualizarLista2="atualizarLista2"
             :dialog-prop="dialogProp"
-            :customerProp="customerProp"
+            :customerProp="customerProp"  
             @attDialog="attDialog"
           ></dialog-customer>
 

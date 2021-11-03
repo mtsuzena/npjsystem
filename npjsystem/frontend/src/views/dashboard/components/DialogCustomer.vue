@@ -8,11 +8,20 @@
     >
       <template v-slot:activator="{on,attrs}">
         <v-btn
+          v-if="verificaSePermiteCriarCliente()"
           class="ma-2"
           color="green"
           v-bind="attrs"
           v-on="on"
           @click="dialog = false"
+        >
+          Cadastrar cliente
+        </v-btn>
+        <v-btn
+          v-else
+          class="ma-2"
+          color="green"
+          @click="retornarErro('Você nao possui permissao para criar um cliente')"
         >
           Cadastrar cliente
         </v-btn>
@@ -251,7 +260,19 @@ export default {
   },
 
   methods: {
-
+    retornarErro(msg) {
+      this.msgErro = msg;
+      this.$emit('generateAlert', 3, msg);
+    },
+    verificaSePermiteCriarCliente(){
+      const tokenDecoded = jwt.decode(window.localStorage.token);
+      let permissao = tokenDecoded.roles.find(role => role.name === 'CREATE_CUSTOMER');
+      if(permissao) {
+        return true
+      }else{
+        return false
+      }
+    },
     async salvar() {
       if (this.att == true) {
         await api.put(`customers/${this.customer.id}`, this.customer)

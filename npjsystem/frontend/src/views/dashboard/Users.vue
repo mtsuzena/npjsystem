@@ -73,6 +73,7 @@
           </v-card-text>
 
           <dialog-user
+            @generateAlert="generateAlert"
             @atualizarLista="atualizarLista"
             @atualizarLista2="atualizarLista2"
             :dialog-prop="dialogProp"

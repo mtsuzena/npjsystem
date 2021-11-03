@@ -49,10 +49,22 @@
               </template>
             </v-data-table>
           </v-card-text>
-          <dialog-new-process></dialog-new-process>
+          <dialog-new-process
+            @generateAlert="generateAlert"
+          ></dialog-new-process>
         </base-material-card>
       </v-col>
     </v-row>
+    <base-material-snackbar
+      v-model="snackbar"
+      :type="color"
+      v-bind="{
+        [parsedDirection[0]]: true,
+        [parsedDirection[1]]: true
+      }"
+    >
+      {{alertMsg}}
+    </base-material-snackbar>
   </v-container>
 </template>
 
@@ -69,6 +81,16 @@ export default {
   },
   data() {
     return {
+      alertMsg: '',
+      color: 'info',
+      colors: [
+        'info',
+        'success',
+        'warning',
+        'error',
+      ],
+      direction: 'top center',
+      snackbar: false,
       processes: [],
       search: '',
       processHeaders: [
@@ -111,9 +133,20 @@ export default {
       ],
     }
   },
+  computed: {
+    parsedDirection () {
+      return this.direction.split(' ')
+    },
+  },
   methods: {
     redirectToDetailedProcessScreen(process) {
       this.$router.push(`processDetailed/${process.number}`);
+    },
+    generateAlert(color, msg){
+      this.alertMsg = msg;
+      this.color = this.colors[color];
+      this.direction = 'top right';
+      this.snackbar = true;
     },
   },
   beforeCreate(){

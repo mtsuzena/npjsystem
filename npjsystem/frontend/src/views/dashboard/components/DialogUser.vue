@@ -8,11 +8,20 @@
     >
       <template v-slot:activator="{on,attrs}">
         <v-btn
+          v-if="verificaSePermiteCriarUsuario()"
           class="ma-2"
           color="green"
           v-bind="attrs"
           v-on="on"
           @click="dialog = false"
+        >
+          Cadastrar Usuario
+        </v-btn>
+        <v-btn
+          v-else
+          class="ma-2"
+          color="green"
+          @click="retornarErro('Você nao possui permissao para criar um usuário')"
         >
           Cadastrar Usuario
         </v-btn>
@@ -265,6 +274,19 @@ export default {
   },
 
   methods: {
+    retornarErro(msg) {
+      this.msgErro = msg;
+      this.$emit('generateAlert', 3, msg);
+    },
+    verificaSePermiteCriarUsuario(){
+      const tokenDecoded = jwt.decode(window.localStorage.token);
+      let permissao = tokenDecoded.roles.find(role => role.name === 'CREATE_USER');
+      if(permissao) {
+        return true
+      }else{
+        return false
+      }
+    },
 
     async perfil() {
       await api.get('profiles/').then((resposta) => {

@@ -35,7 +35,7 @@ router.post('/profiles', verify, async function (req, res, next){
 router.put('/profiles/:id', verify, async function (req, res, next){
     const profile = req.body;
     try {
-        await profileService.updateProfile(req.params.id, profile)
+        const profileUpdated = await profileService.updateProfile(req.params.id, profile)
         res.status(204).end();
     } catch (error) {
         next(error);

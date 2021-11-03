@@ -37,6 +37,33 @@ exports.updateProfile = async function (id, data) {
     existingProfile.name = profile.name;
     existingProfile.description = profile.description;
 
+    // Identifcando se foi removido alguma role
+    let rolesParaRemover = [];
+    existingProfile.roles.forEach((role) => {
+        const found = roles.find(element => element === role.id);
+        if(!found){
+            rolesParaRemover.push(role.id)
+        }
+    })
+
+    let rolesParaAdicionar = [];
+    roles.forEach((role) => {
+        const found = existingProfile.roles.find(element => element.id === role);
+        if(!found){
+            rolesParaAdicionar.push(role)
+        }
+    })
+
+    // Caso alguma role foi removida, deletar da base
+    if(rolesParaRemover){
+        existingProfile.removeRole(rolesParaRemover);
+    }
+
+    // Caso alguma role foi adicionada, salvar na base
+    if(rolesParaAdicionar){
+        existingProfile.addRole(rolesParaAdicionar);
+    }
+
     return profilesData.updateProfile(existingProfile);
 }
 

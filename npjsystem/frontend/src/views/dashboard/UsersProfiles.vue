@@ -71,7 +71,6 @@
 
             </v-data-table>
             <dialog-profiles
-              @atualizarLista="atualizarLista"
               @atualizarLista2="atualizarLista2"
               :dialog-prop="dialogProp"
               :profile-prop="profileProp"
@@ -160,18 +159,19 @@ export default {
     }
   },
   methods: {
-    async atualizarLista(profile, v ){
-      this.dialogProp = false;
-      let api = axios.create({
-        baseURL: configs.API_URL,
-        headers: {
-          'auth-token': window.localStorage.token
-        }
-      });
-      profile.roles = v;
-      this.profiles.push(profile);
-
-    },
+    // async atualizarLista(profile, v ){
+    //   this.dialogProp = false;
+    //   let api = axios.create({
+    //     baseURL: configs.API_URL,
+    //     headers: {
+    //       'auth-token': window.localStorage.token
+    //     }
+    //   });
+    //   // profile.roles = v;
+    //   console.log(profile,'sss');
+    //   this.profiles.push(profile);
+    //
+    // },
     async atualizarLista2(profile){
       this.dialogProp = false;
       let api = axios.create({
@@ -193,11 +193,13 @@ export default {
       let tokenDecoded = jwt.decode(window.localStorage.token);
       let permite = tokenDecoded.roles.find(role => role.name === 'UPDATE_PROFILE');
       if(permite){
+        // console.log(item);
          this.profileProp = item;
          this.dialogProp = true;
       }else{
         this.generateAlert(3, 'Você não possui permisão para editar um perfil');
       }
+
     },
     generateAlert(color, msg){
       this.alertMsg = msg;

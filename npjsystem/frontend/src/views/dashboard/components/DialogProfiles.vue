@@ -75,6 +75,8 @@
               rounded
               hoverable
               activatable
+              open-all
+              selection-type="leaf"
               :items="permissions"
               v-model="profile.roles"
             ></v-treeview>
@@ -223,14 +225,18 @@ export default {
   watch: {
     dialogProp() {
       if (this.dialogProp === true) {
+
           this.dialog = true;
           this.profile.id = this.profileProp.id;
-          this.profileProp.roles.forEach((v) => {
-            this.profile.roles.push(v.id);
-          });
           this.profile.name = this.profileProp.name;
           this.profile.description = this.profileProp.description;
           this.att = true;
+          this.profile.roles = [];
+          this.profileProp.roles.forEach((v) => {
+             this.profile.roles.push(v.id);
+          });
+
+
       }
     },
   },
@@ -260,27 +266,27 @@ export default {
         resposta.data.forEach((value) => {
 
           if (value.name.match(/ROLE$/))
-            this.permissions[0].children.push({id: value.id, name: value.name.replace('_ROLE','')});
+            this.permissions[0].children.push({id: value.id, name: value.name});
           else if (value.name.match(/USER$/))
-            this.permissions[1].children.push({id: value.id, name: value.name.replace('_USER','')});
+            this.permissions[1].children.push({id: value.id, name: value.name});
           else if (value.name.match(/PROFILE$/))
-            this.permissions[2].children.push({id: value.id, name: value.name.replace('_PROFILE','')});
+            this.permissions[2].children.push({id: value.id, name: value.name});
           else if (value.name.match(/PROCESS_TYPE$/))
-            this.permissions[3].children.push({id: value.id, name: value.name.replace('_PROCESS_TYPE','')});
+            this.permissions[3].children.push({id: value.id, name: value.name});
           else if (value.name.match(/PROCESS_CHECKLIST$/))
-            this.permissions[4].children.push({id: value.id, name: value.name.replace('_PROCESS_CHECKLIST','')});
+            this.permissions[4].children.push({id: value.id, name: value.name});
           else if (value.name.match(/PROCESS$/))
-            this.permissions[5].children.push({id: value.id, name: value.name.replace('_PROCESS','')});
+            this.permissions[5].children.push({id: value.id, name: value.name});
           else if (value.name.match(/CUSTOMER$/))
-            this.permissions[6].children.push({id: value.id, name: value.name.replace('_CUSTOMER','')});
+            this.permissions[6].children.push({id: value.id, name: value.name});
           else if (value.name.match(/CONSULTATION$/))
-            this.permissions[7].children.push({id: value.id, name: value.name.replace('_CONSULTATION','')});
+            this.permissions[7].children.push({id: value.id, name: value.name});
           else if (value.name.match(/PROCESS_MOVEMENTS$/))
-            this.permissions[8].children.push({id: value.id, name: value.name.replace('_MOVEMENTS','').replace('_',' ')});
+            this.permissions[8].children.push({id: value.id, name: value.name});
           else if (value.name.match(/DOCUMENT$/))
-            this.permissions[9].children.push({id: value.id, name: value.name.replace('_DOCUMENT','')});
+            this.permissions[9].children.push({id: value.id, name: value.name});
           else if (value.name.match(/AUDIENCIA$/))
-            this.permissions[10].children.push({id: value.id, name: value.name.replace('_AUDIENCIA','').replace('_',' ')});
+            this.permissions[10].children.push({id: value.id, name: value.name});
 
         });
 
@@ -288,43 +294,45 @@ export default {
 
     },
     async salvar() {
-
-      if (this.profile.roles.length != 0){
-        if (this.att == true) {
-
+      console.log(this.profile);
+      if (this.profile.roles.length !== 0){
+        if (this.att == true && this.profile.id != null) {
+          this.att == false;
           await api.put(`profiles/${this.profile.id}`, this.profile)
             .then((resposta) => {
                 this.dialog = false;
                 this.$emit('atualizarLista2');
                 this.$refs.form.reset();
+
               }, (error) => {
                 console.log(error);
               }
             )
           ;
 
-        } else if (this.$refs.form.validate()) {
+        } else if (this.$refs.form.validate() && this.att == false && this.profile.id == null) {
+          console.log(this.profile);
           await api.post('profiles/', this.profile).then((resp) => {
-
             this.dialog = false;
-            this.$emit('atualizarLista', resp.data, this.profile.roles);
-            this.$refs.form.reset();
+            resp.data.roles = this.profile.roles;
 
+            this.$emit('atualizarLista2');
+            this.$refs.form.reset();
           }, (e) => {
             console.log(e);
           });
         }
-        this.profile.roles = [];
       }else{
-        this.profile.roles = [];
         this.alerts(1,'Favor selecionar 1 permissão!')
       }
 
     },
 
     cancelar() {
+      delete this.profile["id"];
       this.profile.roles = [];
       this.dialog = false;
+      this.att=false;
       this.$emit('attDialog');
       this.$refs.form.reset();
     }

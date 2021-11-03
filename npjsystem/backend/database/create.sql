@@ -43,6 +43,7 @@ INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (542, 'CREATE_AUDIE
 INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (543, 'READ_AUDIENCIA', (SELECT NOW()), (SELECT NOW()));
 INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (544, 'CREATE_TESTEMUNHA_AUDIENCIA', (SELECT NOW()), (SELECT NOW()));
 INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (545, 'READ_TESTEMUNHA_AUDIENCIA', (SELECT NOW()), (SELECT NOW()));
+INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (546, 'DELETE_PROCESS_MOVEMENTS', (SELECT NOW()), (SELECT NOW()));
 
 INSERT INTO profiles(id, name, description, "createdAt", "updatedAt") VALUES (501, 'ADMIN', 'Admnistrador do Sistema', (SELECT NOW()), (SELECT NOW()));
 
@@ -91,6 +92,7 @@ insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") value
 insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 501, 543);
 insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 501, 544);
 insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 501, 545);
+insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 501, 546);
 
 insert into users (id, "name", email, "imgSrc","lastName", "aboutMe", "cep", "state", "city", "addres", "password", "userActive", "profileId", "createdAt", "updatedAt") values (501, 'Genilma', 'genilma.moura@npjsystem.com', 'avatar_feminino_exemplo_1.jpeg', 'Moura', 'Coordenadora do Núcleo de Prática Jurídica', '83704304', 'PR', 'Araucaria', 'Rua Alberto Silva', '$2a$10$efMdAjZunBI8XnV.UZ8OW.0BQqDOa3sXeXcWboGy8ejlisBtBPEom', true, 501, (SELECT NOW()), (SELECT NOW()));
 

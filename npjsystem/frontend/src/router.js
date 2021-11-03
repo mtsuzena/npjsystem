@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 const jwt = require('jsonwebtoken');
+
 export default new Router({
   mode: 'hash',
   base: process.env.BASE_URL,
@@ -24,21 +25,65 @@ export default new Router({
         {
           name: 'Processos',
           path: 'pages/processos',
+          beforeEnter(to, from, next){
+            let token = jwt.decode(window.localStorage.getItem('token'));
+            if (token.roles.find((role)=>role.name === 'READ_PROCESS')){
+              next()
+            }else{
+              window.alert('Área restrita.');
+              next({
+                path: '/'
+              })
+            }
+          },
           component: () => import('@/views/dashboard/Processes'),
         },
         {
           name: 'Clientes',
           path: 'pages/customers',
+          beforeEnter(to, from, next){
+            let token = jwt.decode(window.localStorage.getItem('token'));
+            if (token.roles.find((role)=>role.name === 'READ_CUSTOMER')){
+              next()
+            }else{
+              window.alert('Área restrita.');
+              next({
+                path: '/'
+              })
+            }
+          },
           component: () => import('@/views/dashboard/Customers'),
         },
         {
           name: 'Usuarios',
           path: 'pages/users',
+          beforeEnter(to, from, next){
+            let token = jwt.decode(window.localStorage.getItem('token'));
+            if (token.roles.find((role)=>role.name === 'UPDATE_USER')){
+              next()
+            }else{
+              window.alert('Área restrita.');
+              next({
+                path: '/'
+              })
+            }
+          },
           component: () => import('@/views/dashboard/Users'),
         },
         {
           name: 'Perfis de Usuarios',
           path: 'pages/profiles',
+          beforeEnter(to, from, next){
+            let token = jwt.decode(window.localStorage.getItem('token'));
+            if (token.roles.find((role)=>role.name === 'READ_PROFILE')){
+              next()
+            }else{
+              window.alert('Área restrita.');
+              next({
+                path: '/'
+              })
+            }
+          },
           component: () => import('@/views/dashboard/UsersProfiles'),
         },
         {
@@ -65,6 +110,17 @@ export default new Router({
         {
           name: 'Atendimentos',
           path: 'pages/atendimentos',
+          beforeEnter(to, from, next){
+            let token = jwt.decode(window.localStorage.getItem('token'));
+            if (token.roles.find((role)=>role.name === 'READ_CONSULTATION')){
+              next()
+            }else{
+              window.alert('Área restrita.');
+              next({
+                path: '/'
+              })
+            }
+          },
           component: () => import('@/views/dashboard/Consultations'),
         },
         // Pages

@@ -9,11 +9,20 @@
 
       <template v-slot:activator="{ on, attrs }">
         <v-btn
+          v-if="verificaSePermiteCriarChecklist()"
           class="ma-2"
           color="green"
           v-bind="attrs"
           v-on="on"
           @click="desab"
+        >
+          Cadastrar checklist
+        </v-btn>
+        <v-btn
+          v-else
+          class="ma-2"
+          color="green"
+          @click="retornarErro('Você nao possui permissao para criar uma atividade')"
         >
           Cadastrar checklist
         </v-btn>
@@ -182,6 +191,19 @@ export default {
     }
   },
   methods: {
+    retornarErro(msg) {
+      this.msgErro = msg;
+      this.$emit('generateAlert', 3, msg);
+    },
+    verificaSePermiteCriarChecklist(){
+      const tokenDecoded = jwt.decode(window.localStorage.token);
+      let permissao = tokenDecoded.roles.find(role => role.name === 'CREATE_PROCESS_CHECKLIST');
+      if(permissao) {
+        return true
+      }else{
+        return false
+      }
+    },
     desab(){
       this.dialog_m = false;
     },

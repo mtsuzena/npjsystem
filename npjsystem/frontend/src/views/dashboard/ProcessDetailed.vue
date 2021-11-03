@@ -212,6 +212,7 @@
                           </template>
                         </v-data-table>
                         <dialog-checklist
+                          @generateAlert="generateAlert"
                           :process="process"
                           :checklist="unicoChecklist"
                           :dialog_m="updateCheck"
@@ -575,6 +576,14 @@ export default {
           }
         })
 
+        let tokenDecoded = jwt.decode(window.localStorage.token);
+        let permissao = tokenDecoded.roles.find(role => role.name === 'UPDATE_PROCESS_CHECKLIST');
+        if(!permissao){
+          this.checklistsDone.splice(posicaoCkNovo, 1);
+          this.generateAlert(3, 'Você não possui permisão para alterar uma atividade');
+          return false;
+        }
+
         //Verifica se o checklist possui um documento antes de atualizar para Done
         //Caso nao possua um documento, gerar alerta de error
         if(this.checklistsDone[posicaoCkNovo].document === null){
@@ -631,6 +640,14 @@ export default {
   },
   methods: {
     async removerMovimentacaoProcesso(processMovementId){
+
+      let tokenDecoded = jwt.decode(window.localStorage.token);
+      let permissao = tokenDecoded.roles.find(role => role.name === 'DELETE_PROCESS_MOVEMENTS');
+      if(!permissao){
+        this.generateAlert(3, 'Você não possui permisão para excluir movimentações do processo');
+        return false;
+      }
+
       await api.delete(`processMovements/${processMovementId}`).then((responseDeleteProcessMovement) => {
         console.log(responseDeleteProcessMovement)
         if(responseDeleteProcessMovement.status === 204){
@@ -808,6 +825,16 @@ export default {
       }
     },
     async salvarMovimentacaoDoProcesso(){
+
+      const tokenDecoded = jwt.decode(window.localStorage.token);
+      let permissao = tokenDecoded.roles.find(role => role.name === 'CREATE_PROCESS_MOVEMENTS');
+      if(!permissao) {
+        this.tituloMovimentacao = null;
+        this.descricaoMovimentacao = null;
+        this.generateAlert(3, 'Você nao pode inserir movimentações no processo')
+        return false
+      }
+
       const user = jwt.decode(window.localStorage.token);
       let processMovement = {
         actionName: this.tituloMovimentacao,

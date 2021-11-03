@@ -70,6 +70,14 @@
               </template>
 
             </v-data-table>
+            <dialog-profiles
+              @atualizarLista="atualizarLista"
+              @atualizarLista2="atualizarLista2"
+              :dialog-prop="dialogProp"
+              :profile-prop="profileProp"
+              @attDialog="attDialog"
+            ></dialog-profiles>
+
           </v-card-text>
         </base-material-card>
       </v-col>
@@ -103,13 +111,14 @@ const api = axios.create({
 export default {
   name: 'UsersProfiles',
   components: {
-    DialogUser: () => import('./components/DialogUser'),
+    DialogProfiles: () => import('./components/DialogProfiles'),
   },
   data() {
     return {
       userProp: {},
       dialogProp: false,
       profiles: [],
+      profileProp: {},
       search: '',
       profileHeaders: [
         {
@@ -151,14 +160,44 @@ export default {
     }
   },
   methods: {
+    async atualizarLista(profile, v ){
+      this.dialogProp = false;
+      let api = axios.create({
+        baseURL: configs.API_URL,
+        headers: {
+          'auth-token': window.localStorage.token
+        }
+      });
+      profile.roles = v;
+      this.profiles.push(profile);
+
+    },
+    async atualizarLista2(profile){
+      this.dialogProp = false;
+      let api = axios.create({
+        baseURL: configs.API_URL,
+        headers: {
+          'auth-token': window.localStorage.token
+        }
+      });
+      this.profileProp = {};
+      this.profiles =[];
+      api.get('/profiles').then((response) => {
+        this.profiles = response.data;
+      });
+    },
+    attDialog(){
+      this.dialogProp = false;
+    },
     editItem(item){
       let tokenDecoded = jwt.decode(window.localStorage.token);
       let permite = tokenDecoded.roles.find(role => role.name === 'UPDATE_PROFILE');
       if(permite){
-        console.log("editar perfil aqui")
+         this.profileProp = item;
+         this.dialogProp = true;
       }else{
         this.generateAlert(3, 'Você não possui permisão para editar um perfil');
-      } 
+      }
     },
     generateAlert(color, msg){
       this.alertMsg = msg;
@@ -175,7 +214,7 @@ export default {
         this.dialogDelete = true
       }else{
         this.generateAlert(3, 'Você não possui permisão para deletar um perfil');
-      }      
+      }
     },
     close () {
       this.dialog = false

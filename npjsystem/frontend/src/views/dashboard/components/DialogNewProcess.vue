@@ -9,10 +9,19 @@
 
       <template v-slot:activator="{ on, attrs }">
         <v-btn
+          v-if="verificaSePermiteCriarUmProcesso()"
           class="ma-2"
           color="success"
           v-bind="attrs"
           v-on="on"
+        >
+          Cadastrar Processo
+        </v-btn>
+        <v-btn
+          v-else
+          class="ma-2"
+          color="success"
+          @click="emitirErro()"
         >
           Cadastrar Processo
         </v-btn>
@@ -284,6 +293,18 @@ export default {
     }
   },
   methods: {
+    emitirErro(){
+      this.$emit('generateAlert', 3, 'Você nao pode criar um processo');
+    },
+    verificaSePermiteCriarUmProcesso(){
+      const tokenDecoded = jwt.decode(window.localStorage.token);
+      let permissao = tokenDecoded.roles.find(role => role.name === 'CREATE_PROCESS');
+      if(permissao) {
+        return true
+      }else{
+        return false
+      }
+    },
     customFilter(item, queryText, itemText) {
       const textOne = item.text.toLowerCase();
       const searchText = queryText.toLowerCase();

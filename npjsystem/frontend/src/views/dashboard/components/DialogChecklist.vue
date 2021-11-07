@@ -232,6 +232,7 @@ export default {
     cancellProcess() {
       this.dialog = false;
       this.dialog_m=false;
+      this.$emit('dialogs', false);
       this.$refs.form.reset();
     },
     async saveCheckList() {
@@ -264,21 +265,15 @@ export default {
   watch: {
     dialog_m(){
       if (this.dialog_m === true){
-        console.log('ta on papai');
         this.dialog = true;
         this.processChecklist.name = this.checklist.name;
+        console.log(this.checklist.deadline);
         this.processChecklist.deadline = this.checklist.deadline;
         this.processChecklist.processId = this.checklist.processId;
         this.processChecklist.userId = this.checklist.userId;
-        // this.processChecklist.createAt = null;
-        // this.processChecklist.createAt = this.checklist.createAt;
         this.getUser();
         delete this.processChecklist['createAt'];
-        console.log(this.processChecklist.id);
-      }else{
-        console.log('ta off papai');
       }
-
     }
   },
   created() {}

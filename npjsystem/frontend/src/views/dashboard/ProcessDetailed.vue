@@ -217,6 +217,7 @@
                           :checklist="unicoChecklist"
                           :dialog_m="updateCheck"
                           @updateList="updateList"
+                          @dialogs="updateModal"
                         ></dialog-checklist>
                       </v-card-text>
                     </base-material-card>
@@ -639,6 +640,9 @@ export default {
     },
   },
   methods: {
+    updateModal(modal){
+      this.updateCheck = modal;
+    },
     async removerMovimentacaoProcesso(processMovementId){
 
       let tokenDecoded = jwt.decode(window.localStorage.token);

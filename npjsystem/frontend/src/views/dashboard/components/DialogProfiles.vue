@@ -38,7 +38,7 @@
             border="top"
             transition="slide-y-transition"
           >
-            {{msg}}
+            {{ msg }}
           </v-alert>
           <v-form
             id="formUser"
@@ -79,7 +79,18 @@
               selection-type="leaf"
               :items="permissions"
               v-model="profile.roles"
-            ></v-treeview>
+            >
+              <template v-slot:label="{ item }">
+              <span
+                :class="{ large: !!(item.id === 15) }"
+                >
+                    {{ $t(item.name) }}
+              </span>
+              </template>
+
+            </v-treeview>
+
+
           </v-form>
 
         </v-card-text>
@@ -150,7 +161,7 @@ export default {
       modal: false,
       alertSucess: false,
       msg: '',
-      profile:  {
+      profile: {
         name: '',
         description: '',
         roles: []
@@ -215,7 +226,7 @@ export default {
 
       rules: {
         required: value => !!value || 'Não pode ser vazio.',
-        x:  value => [] || 'Favor selecionar uma permissão!',
+        x: value => [] || 'Favor selecionar uma permissão!',
         min: v => (v && v.length >= 8) || 'Tamanho minimo de 8 caracteres!',
         max: v => (v && v.length < 30) || 'Tamanho maior que 25 caracteres!',
       },
@@ -226,15 +237,15 @@ export default {
     dialogProp() {
       if (this.dialogProp === true) {
 
-          this.dialog = true;
-          this.profile.id = this.profileProp.id;
-          this.profile.name = this.profileProp.name;
-          this.profile.description = this.profileProp.description;
-          this.att = true;
-          this.profile.roles = [];
-          this.profileProp.roles.forEach((v) => {
-             this.profile.roles.push(v.id);
-          });
+        this.dialog = true;
+        this.profile.id = this.profileProp.id;
+        this.profile.name = this.profileProp.name;
+        this.profile.description = this.profileProp.description;
+        this.att = true;
+        this.profile.roles = [];
+        this.profileProp.roles.forEach((v) => {
+          this.profile.roles.push(v.id);
+        });
 
 
       }
@@ -242,20 +253,20 @@ export default {
   },
 
   methods: {
-    alerts(alert, msg){
-      this.alertSucess=true;
+    alerts(alert, msg) {
+      this.alertSucess = true;
       this.msg = msg;
       window.setInterval(() => {
         this.alertSucess = false;
       }, 4000);
     },
 
-    allProfiles(){
-      if (this.profile.roles.length === 0){
-        this.permissions.forEach((t)=>{
+    allProfiles() {
+      if (this.profile.roles.length === 0) {
+        this.permissions.forEach((t) => {
           this.profile.roles.push(t.id);
         });
-      }else {
+      } else {
         this.profile.roles = [];
       }
     },
@@ -295,7 +306,7 @@ export default {
     },
     async salvar() {
       console.log(this.profile);
-      if (this.profile.roles.length !== 0){
+      if (this.profile.roles.length !== 0) {
         if (this.att == true && this.profile.id != null) {
           this.att == false;
           await api.put(`profiles/${this.profile.id}`, this.profile)
@@ -322,8 +333,8 @@ export default {
             console.log(e);
           });
         }
-      }else{
-        this.alerts(1,'Favor selecionar 1 permissão!')
+      } else {
+        this.alerts(1, 'Favor selecionar 1 permissão!')
       }
 
     },
@@ -332,7 +343,7 @@ export default {
       delete this.profile["id"];
       this.profile.roles = [];
       this.dialog = false;
-      this.att=false;
+      this.att = false;
       this.$emit('attDialog');
       this.$refs.form.reset();
     }

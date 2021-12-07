@@ -81,6 +81,8 @@
   "DELETE_CONSULTATION": "Remover atendimentos",
   "CREATE_PROCESS_MOVEMENTS": "Cadastrar movimentações",
   "READ_PROCESS_MOVEMENTS": "Visualizar movimentações",
+  "FILE_PROCESS": "Arquivar processo",
+  "DELETE_PROCESS_MOVEMENTS": "Remover movimentações do processo",
   "CREATE_DOCUMENT": "Cadastar documentos",
   "UPDATE_DOCUMENT": "Atualizar documentos",
   "UPLOAD_DOCUMENT": "Carregar documentos",

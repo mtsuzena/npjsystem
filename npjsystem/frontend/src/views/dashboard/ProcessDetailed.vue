@@ -237,6 +237,7 @@
                           :checklist="unicoChecklist"
                           :dialog_m="updateCheck"
                           @updateList="updateList"
+                          @dialogs="updateModal"
                         ></dialog-checklist>
                       </v-card-text>
                     </base-material-card>
@@ -682,6 +683,9 @@ export default {
           this.generateAlert(3, 'Você não possui permissão para arquivar o processo');
         }
       });
+    },
+    updateModal(modal){
+      this.updateCheck = modal;
     },
     async removerMovimentacaoProcesso(processMovementId){
 

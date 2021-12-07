@@ -48,6 +48,26 @@
                 <span>Pasta Física: {{ process.pastaFisica }}</span>
               </v-col>
             </v-row>
+            <v-row>
+              <v-col align="right">
+                <v-btn
+                  v-if="!process.isFiled"
+                  class="ma-2"
+                  color="red"
+                  @click="arquivarProcesso()"
+                >
+                  Arquivar processo
+                </v-btn>
+                <v-btn
+                  v-else
+                  class="ma-2"
+                  color="green"
+                  @click="desarquivarProcesso()"
+                >
+                  Desarquivar processo
+                </v-btn>
+              </v-col>
+            </v-row>
           </v-card-text>
         </base-material-card>
       </v-col>
@@ -639,6 +659,30 @@ export default {
     },
   },
   methods: {
+    async desarquivarProcesso(){
+      await api.post(`processes/${this.process.id}/arquivar/false`).then((response) => {
+        if(response.status === 200){
+          this.generateAlert(1, 'O processo foi desarquivado com sucesso');
+          this.process.isFiled = false;
+        }
+
+        if(response.status === 401){
+          this.generateAlert(3, 'Você não possui permissão para desarquivar o processo');
+        }
+      });
+    },
+    async arquivarProcesso(){
+      await api.post(`processes/${this.process.id}/arquivar/true`).then((response) => {
+        if(response.status === 200){
+          this.generateAlert(1, 'O processo foi arquivado com sucesso');
+          this.process.isFiled = true;
+        }
+        
+        if(response.status === 401){
+          this.generateAlert(3, 'Você não possui permissão para arquivar o processo');
+        }
+      });
+    },
     async removerMovimentacaoProcesso(processMovementId){
 
       let tokenDecoded = jwt.decode(window.localStorage.token);

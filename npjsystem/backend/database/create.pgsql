@@ -44,6 +44,7 @@ INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (543, 'READ_AUDIENC
 INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (544, 'CREATE_TESTEMUNHA_AUDIENCIA', (SELECT NOW()), (SELECT NOW()));
 INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (545, 'READ_TESTEMUNHA_AUDIENCIA', (SELECT NOW()), (SELECT NOW()));
 INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (546, 'DELETE_PROCESS_MOVEMENTS', (SELECT NOW()), (SELECT NOW()));
+INSERT INTO roles(id, name, "createdAt", "updatedAt") VALUES (547, 'FILE_PROCESS', (SELECT NOW()), (SELECT NOW()));
 
 INSERT INTO profiles(id, name, description, "createdAt", "updatedAt") VALUES (501, 'ADMIN', 'Admnistrador do Sistema', (SELECT NOW()), (SELECT NOW()));
 
@@ -93,8 +94,9 @@ insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") value
 insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 501, 544);
 insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 501, 545);
 insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 501, 546);
+insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") values ((SELECT NOW()), (SELECT NOW()), 501, 547);
 
-insert into users (id, "name", email, "imgSrc","lastName", "aboutMe", "cep", "state", "city", "addres", "password", "userActive", "profileId", "createdAt", "updatedAt") values (501, 'Genilma', 'genilma.moura@npjsystem.com', 'avatar_feminino_exemplo_1.jpeg', 'Moura', 'Coordenadora do Núcleo de Prática Jurídica', '83704304', 'PR', 'Araucaria', 'Rua Alberto Silva', '$2a$10$efMdAjZunBI8XnV.UZ8OW.0BQqDOa3sXeXcWboGy8ejlisBtBPEom', true, 501, (SELECT NOW()), (SELECT NOW()));
+insert into users (id, "name", email, "imgSrc","lastName", "aboutMe", "cep", "state", "city", "addres", "password", "userActive", "profileId", "createdAt", "updatedAt") values (501, 'Genilma', 'supervisor@npjsy.com', 'avatar_feminino_exemplo_1.jpeg', 'Moura', 'Coordenadora do Núcleo de Prática Jurídica', '83704304', 'PR', 'Araucaria', 'Rua Alberto Silva', '$2a$10$efMdAjZunBI8XnV.UZ8OW.0BQqDOa3sXeXcWboGy8ejlisBtBPEom', true, 501, (SELECT NOW()), (SELECT NOW()));
 
 /* ARRUMAR DADOS POSTERIORMENTE */
 
@@ -116,19 +118,15 @@ insert into profile_roles("createdAt", "updatedAt", "profileId", "roleId") value
 
 --criar usuers professores
 INSERT INTO users (id, name, "lastName", "imgSrc", email, "aboutMe", cep, state, city, addres, password, "userActive", "createdAt", "updatedAt", "profileId")
-VALUES (502, 'Carlos', 'Gouvea', '', 'carlos.gouvea@npjsystem.com',
+VALUES (502, 'Camila', 'Marques', '', 'professor@npjsy.com',
         'Professor do curso Sistemas de Informação', '83709300', 'PR', 'Araucária', 'Rua das Flores', '$2a$10$efMdAjZunBI8XnV.UZ8OW.0BQqDOa3sXeXcWboGy8ejlisBtBPEom', true, now(), now(), 502);
-INSERT INTO users (id, name, "lastName", "imgSrc", email, "aboutMe", cep, state, city, addres, password, "userActive", "createdAt", "updatedAt", "profileId")
-VALUES (503, 'Camila', 'Marques', '', 'camila.marques@npjsystem.com',
-        'Professora do curso de Direito', '83709590', 'PR', 'Araucária', 'Rua das Camélias', '$2a$10$efMdAjZunBI8XnV.UZ8OW.0BQqDOa3sXeXcWboGy8ejlisBtBPEom', true, now(), now(), 502);
-
 
 -- criar perfil estagiario
 INSERT INTO profiles (id, name, description, "createdAt", "updatedAt")
 VALUES (503, 'ESTAGIARIO', 'ESTAGIARIO', now(),now());
 
 INSERT INTO users (id, name, "lastName", "imgSrc", email, "aboutMe", cep, state, city, addres, password, "userActive", "createdAt", "updatedAt", "profileId")
-VALUES (504, 'Jheniffer', 'Silva', '', 'jheniffer.silva@npjsystem.com',
+VALUES (504, 'Jheniffer', 'Silva', '', 'estagiario@npjsy.com', 
         'Estudando de Direito', '83709590', 'PR', 'Araucária', 'Rua das Camélias', '$2a$10$efMdAjZunBI8XnV.UZ8OW.0BQqDOa3sXeXcWboGy8ejlisBtBPEom', true, now(), now(), 503);
 
 

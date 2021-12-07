@@ -73,6 +73,11 @@ exports.check = function(route, method, roles){
             auth = authenticator(roles, db.ROLES.DELETE_PROCESS_CHECKLIST);
         }
     }
+    else if(route.indexOf("arquivar") > -1){
+        if(method == "POST"){
+            auth = authenticator(roles, db.ROLES.FILE_PROCESS);
+        }
+    }
     else if(route.indexOf("processes") > -1){
         if(method == "GET"){
             auth = authenticator(roles, db.ROLES.READ_PROCESS);

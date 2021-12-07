@@ -121,6 +121,16 @@
       </v-col>
 
     </v-row>
+    <base-material-snackbar
+      v-model="snackbar"
+      :type="color"
+      v-bind="{
+        [parsedDirection[0]]: true,
+        [parsedDirection[1]]: true
+      }"
+    >
+      {{alertMsg}}
+    </base-material-snackbar>
   </v-container>
 </template>
 
@@ -132,6 +142,11 @@
   name: 'UserProfile',
   components: {
 
+  },
+  computed: {
+    parsedDirection () {
+      return this.direction.split(' ')
+    },
   },
   methods: {
     updateUser(){
@@ -147,11 +162,32 @@
       api.put(`users/${tokenDecoded.id}`, this.user).then((responseUpdateUser) => {
         console.log(responseUpdateUser);
       });
+
+      this.generateAlert(1, 'Perfil editado com sucesso');
+    },
+    setAlertColor (color) {
+      this.color = this.colors[color];
+    },
+    generateAlert(color, msg){
+      this.alertMsg = msg;
+      this.setAlertColor(color);
+      this.direction = 'center';
+      this.snackbar = true;
     }
   },
   data() {
     return {
       user: {},
+      snackbar: false,
+      color: 'info',
+      colors: [
+        'info',
+        'success',
+        'warning',
+        'error',
+      ],
+      direction: 'top center',
+      alertMsg: ''
     }
   },
   beforeMount(){

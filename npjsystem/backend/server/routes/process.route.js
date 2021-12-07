@@ -67,6 +67,15 @@ router.put('/processes/:id', verify, async function (req, res, next){
     }
 });
 
+router.post('/processes/:id/arquivar/:isFiled', verify, async function (req, res, next){
+    try {
+        await processService.arquivarProcesso(req.params.id, req.params.isFiled)
+        res.status(200).end();
+    } catch (error) {
+        next(error);
+    }
+});
+
 router.delete('/processes/:id', verify, async function (req, res, next){
     try {
         await processService.deleteProcess(req.params.id)

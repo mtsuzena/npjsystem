@@ -351,7 +351,7 @@
                           @click:row="getProcessChecklistId"
                         >
                           <template v-slot:item.data="{ item }">
-                            <span>{{ new Date(item.data).toLocaleString() }}</span>
+                            <span>{{ item.data }}</span>
                           </template>
 
                           <template v-slot:item.tipo="{ item }">
@@ -410,6 +410,10 @@
                             </v-tooltip>
                           </template>
                         </v-data-table>
+                        <dialog-audiencia
+                          :processdd="this.process"
+                          @attAudiencias = "attAudiencias"
+                        ></dialog-audiencia>
                       </v-card-text>
                     </base-material-card>
                   </v-col>
@@ -452,6 +456,7 @@ export default {
   name: 'ProcessDetailed',
   components: {
     DialogChecklist: () => import('./components/DialogChecklist'),
+    DialogAudiencia: () => import('./components/DialogAudiencia'),
   },
   data() {
     return {
@@ -678,7 +683,7 @@ export default {
           this.generateAlert(1, 'O processo foi arquivado com sucesso');
           this.process.isFiled = true;
         }
-        
+
         if(response.status === 401){
           this.generateAlert(3, 'Você não possui permissão para arquivar o processo');
         }
@@ -686,6 +691,21 @@ export default {
     },
     updateModal(modal){
       this.updateCheck = modal;
+    },
+
+    async attAudiencias(response){
+      await api.get(`audiencias/byProcessId/${this.process.id}`).then((r) => {
+        this.process.audiencias = r.data;
+        this.process.audiencias.forEach((t,k) => {
+           //2021-12-27
+            let ano = this.process.audiencias[k].data.substring(0, 4)
+            let mes = this.process.audiencias[k].data.substring(5,7)
+            let dia = this.process.audiencias[k].data.substring(8, 10)
+            this.process.audiencias[k].data = dia + '/' + mes + '/' + ano;
+
+        });
+
+      });
     },
     async removerMovimentacaoProcesso(processMovementId){
 
@@ -1025,7 +1045,14 @@ export default {
     api.get(`processes/byProcessNumber/${this.$route.params.processNumber}`).then((responseGetProcessByNumber) => {
 
       this.process = responseGetProcessByNumber.data;
+      this.process.audiencias.forEach((t,k) => {
+        //2021-12-27
+        let ano = this.process.audiencias[k].data.substring(0, 4)
+        let mes = this.process.audiencias[k].data.substring(5,7)
+        let dia = this.process.audiencias[k].data.substring(8, 10)
+        this.process.audiencias[k].data = dia + '/' + mes + '/' + ano;
 
+      });
 
       if(this.process.isFiled){
         this.processStatus = '(processo arquivado)'

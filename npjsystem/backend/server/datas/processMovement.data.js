@@ -11,6 +11,9 @@ exports.getProcessMovementsByProcessId = function (processId) {
                 model: db.user,
                 attributes: ['name', 'imgSrc']
             }
+        ],
+        order: [
+            ['createdAt', 'DESC']
         ]
     });
 };

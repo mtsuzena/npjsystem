@@ -99,6 +99,9 @@ exports.getProcess = function (id) {
                         model: db.user,
                         attributes: ['name', 'imgSrc']
                     }
+                ],
+                order: [
+                    ['createdAt', 'DESC']
                 ]
             },
             {
@@ -107,6 +110,9 @@ exports.getProcess = function (id) {
                     {
                         model: db.testemunhaAudiencia,
                     }
+                ],
+                order: [
+                    ['data', 'DESC']
                 ]
             }
         ]
@@ -217,6 +223,9 @@ exports.getProcessByProcessNumber = function (processNumber) {
                         model: db.user,
                         attributes: ['name', 'imgSrc']
                     }
+                ],
+                order: [
+                    ['createdAt', 'DESC']
                 ]
             },
             {
@@ -225,6 +234,9 @@ exports.getProcessByProcessNumber = function (processNumber) {
                     {
                         model: db.testemunhaAudiencia,
                     }
+                ],
+                order: [
+                    ['data', 'DESC']
                 ]
             }
         ]
@@ -276,6 +288,9 @@ exports.getProcessByNumber = function (number) {
                         model: db.user,
                         attributes: ['name', 'imgSrc']
                     }
+                ],
+                order: [
+                    ['createdAt', 'DESC']
                 ]
             },
             {
@@ -284,6 +299,9 @@ exports.getProcessByNumber = function (number) {
                     {
                         model: db.testemunhaAudiencia,
                     }
+                ],
+                order: [
+                    ['data', 'DESC']
                 ]
             }
         ]

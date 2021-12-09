@@ -7,6 +7,9 @@ exports.getAudiencias = function () {
             {
                 model: db.testemunhaAudiencia,
             }
+        ],
+        order: [
+            ['data', 'DESC']
         ]
     });
 };

@@ -1247,9 +1247,13 @@ export default {
       });
 
       // Convertendo images path em uma importacao da imagem
-      this.process.processMovements.forEach((processMovement, i) => {
-        this.process.processMovements[i].user.imgSrc = require('@/assets/avatar/' + processMovement.user.imgSrc);
-      });
+      api.get(`processMovements/${this.process.id}`).then((r) => {
+        this.process.processMovements = r.data;
+        this.process.processMovements.forEach((processMovement, i) => {
+          this.process.processMovements[i].user.imgSrc = require('@/assets/avatar/' + processMovement.user.imgSrc);
+        });
+      })
+
 
       // this.process.processMovements.reverse();
 

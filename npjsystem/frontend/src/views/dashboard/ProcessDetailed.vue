@@ -28,7 +28,7 @@
             </v-row>
             <v-row>
               <v-col>
-                <span>Data de Autuação: {{ new Date(process.begins_date).toLocaleString() }}</span>
+                <span>Data de Autuação: {{ process.begins_date }}</span>
               </v-col>
               <v-col>
                 <span>Requerido: {{ process.requerido }}</span>
@@ -692,6 +692,17 @@ export default {
       var min = data.getMinutes();
       var seg = data.getSeconds();
 
+      let tipoAud = '';
+      if(obj.tipo === 0){
+        tipoAud = 'Conciliaçao'
+      }
+      if(obj.tipo === 1){
+        tipoAud = 'Instrução'
+      }
+      if(obj.tipo === 2){
+        tipoAud = 'Julgamento'
+      }
+
       if(event){
         await api.put(`audiencias/${obj.id}`, {"clienteNotificado": true});
 
@@ -701,6 +712,7 @@ export default {
           + this.nomeUsuarioLogado
           + ' notificou o cliente '
           + this.process.customer.name + ' ' + this.process.customer.lastName
+          + ' sobre a audiência de ' + tipoAud
           + ' no dia'
           + ' ' + dia + '/' + (mes+1) + '/' + ano
           + ' às '
@@ -716,6 +728,7 @@ export default {
           + this.nomeUsuarioLogado
           + ' removeu a notificação do cliente '
           + this.process.customer.name + ' ' + this.process.customer.lastName
+          + ' sobre a audiência de ' + tipoAud
           + ' no dia'
           + ' ' + dia + '/' + (mes+1) + '/' + ano
           + ' às '
@@ -819,14 +832,12 @@ export default {
       await api.delete(`processMovements/${processMovementId}`).then((responseDeleteProcessMovement) => {
         console.log(responseDeleteProcessMovement)
         if(responseDeleteProcessMovement.status === 204){
-          console.log("deletado com sucesso")
-
           this.process.processMovements.forEach((p, i) => {
             if(p.id === processMovementId){
               this.process.processMovements.splice(i, 1);
             }
           });
-
+          this.generateAlert(2, 'Movimentação processual removida com sucesso');
         }else{
           console.log("Nao foi possivel deletar o checklist")
           console.log(responseDeleteProcessMovement.data)
@@ -1215,6 +1226,11 @@ export default {
       this.process = responseGetProcessByNumber.data;
       this.pMovement.processId = this.process.id;
       this.pMovement.userId = tokenDecoded.id;
+
+      let ano = this.process.begins_date.substring(0, 4)
+      let mes = this.process.begins_date.substring(5,7)
+      let dia = this.process.begins_date.substring(8, 10)
+      this.process.begins_date = dia + '/' + mes + '/' + ano;
 
       this.process.audiencias.forEach((t,k) => {
         //2021-12-27

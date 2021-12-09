@@ -16,7 +16,7 @@
           v-on="on"
           @click="desab"
         >
-          Cadastrar checklist
+          Cadastrar atividade
         </v-btn>
         <v-btn
           v-else
@@ -24,7 +24,7 @@
           color="green"
           @click="retornarErro('Você nao possui permissao para criar uma atividade')"
         >
-          Cadastrar checklist
+          Cadastrar atividade
         </v-btn>
       </template>
 
@@ -32,7 +32,7 @@
         <v-card-title class="pa-0">
           <v-toolbar fixed>
             <v-col class="d-flex justify-space-around">
-              <v-toolbar-title>Inserir checklist</v-toolbar-title>
+              <v-toolbar-title>Criar atividade</v-toolbar-title>
             </v-col>
           </v-toolbar>
         </v-card-title>
@@ -47,7 +47,7 @@
           >
             <v-col cols="12">
               <v-text-field
-                label="Checklist:"
+                label="Nome da atividade:"
                 prepend-icon="fas fa-clipboard-list"
                 :rules="nameChecklistRules"
                 v-model="processChecklist.name"

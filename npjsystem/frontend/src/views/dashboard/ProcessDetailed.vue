@@ -473,6 +473,13 @@ export default {
   },
   data() {
     return {
+      nomeUsuarioLogado: null,
+      pMovement: {
+        actionName: null,
+        actionDescription: null,
+        userId: null,
+        processId: null
+      },
       unicoChecklist: {},
       unicoAudiencia: {},
       updateCheck: false,
@@ -552,7 +559,7 @@ export default {
       ],
       headers: [
         {
-          text: 'Nome Checklist',
+          text: 'Nome Atividade',
           align: 'start',
           sortable: false,
           value: 'name',
@@ -684,7 +691,32 @@ export default {
   methods: {
     async notificarCliente(event, obj) {
       if(event){
+        console.log('notificando cliente');
+        console.log(obj)
         await api.put(`audiencias/${obj.id}`, {"clienteNotificado": true});
+
+        this.pMovement.actionName = 'Notificação de Cliente';
+
+        let data = new Date();
+        var dia = data.getDate(); 
+        var mes = data.getMonth();
+        var ano = data.getFullYear(); 
+        var hora = data.getHours();
+        var min = data.getMinutes();
+        var seg = data.getSeconds();
+
+        let actionName = "Criação de Processo";
+        this.pMovement.actionDescription = 
+            'Usuário ' 
+            + this.nomeUsuarioLogado
+            + ' notificou o cliente '
+            + this.process.customer.name + ' ' + this.process.customer.lastName
+            + ' no dia'
+            + ' ' + dia + '/' + (mes+1) + '/' + ano
+            + ' às '
+            + hora + ':' + min + ':' + seg + '.';
+
+        await api.post(`processMovements`, this.pMovement);
       }else{
         await api.put(`audiencias/${obj.id}`, {"clienteNotificado": false});
       }
@@ -1066,9 +1098,17 @@ export default {
       this.$router.push({ name: 'Login' })
     }
 
+    api.get(`users/${tokenDecoded.id}`).then((response) => {
+      let user = response.data;
+      this.nomeUsuarioLogado = user.name + ' ' + user.lastName;
+    })
+
     api.get(`processes/byProcessNumber/${this.$route.params.processNumber}`).then((responseGetProcessByNumber) => {
 
       this.process = responseGetProcessByNumber.data;
+      this.pMovement.processId = this.process.id;
+      this.pMovement.userId = tokenDecoded.id;
+
       this.process.audiencias.forEach((t,k) => {
         //2021-12-27
         let ano = this.process.audiencias[k].data.substring(0, 4)

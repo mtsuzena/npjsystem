@@ -115,7 +115,7 @@
                           @click:row="getProcessChecklistId"
                         >
                           <template v-slot:item.deadline="{ item }">
-                            <span>{{ new Date(item.deadline).toLocaleString() }}</span>
+                            <span>{{ item.deadline }}</span>
                           </template>
 
                           <template v-slot:top>
@@ -1010,13 +1010,15 @@ export default {
       });
       this.process.processChecklists = [];
       await apiUpdateListProcess.get(`/processChecklists`).then((resp) =>{
-
-         resp.data.forEach((value) => {
-        if (this.process.id == value.processId){
-          value.user.fullName = value.user.name + ' ' +  value.user.lastName;
-          this.process.processChecklists.push(value);
-        }
-
+        resp.data.forEach((value) => {
+          if (this.process.id == value.processId){
+            value.user.fullName = value.user.name + ' ' +  value.user.lastName;
+            let ano = value.deadline.substring(0, 4)
+            let mes = value.deadline.substring(5,7)
+            let dia = value.deadline.substring(8, 10)
+            value.deadline = dia + '/' + mes + '/' + ano;
+            this.process.processChecklists.push(value);
+          }
         })
       });
       this.unicoChecklist = null;
@@ -1239,6 +1241,12 @@ export default {
       }
 
       this.process.processChecklists.forEach((procesChecklist, i) => {
+
+        let ano = procesChecklist.deadline.substring(0, 4)
+        let mes = procesChecklist.deadline.substring(5,7)
+        let dia = procesChecklist.deadline.substring(8, 10)
+        this.process.processChecklists[i].deadline = dia + '/' + mes + '/' + ano;
+
         this.process.processChecklists[i].user.fullName = procesChecklist.user.name + ' ' + procesChecklist.user.lastName;
         if(procesChecklist.isChecked){
           this.checklistsDone.push(procesChecklist);

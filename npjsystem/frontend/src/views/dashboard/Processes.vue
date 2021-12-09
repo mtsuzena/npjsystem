@@ -114,12 +114,6 @@ export default {
         },
         {
           sortable: false,
-          text: 'Data de Audiência',
-          value: 'court_hearing_date',
-          align: 'left',
-        },
-        {
-          sortable: false,
           text: 'Requerente',
           value: 'customer.fullName',
           align: 'left',

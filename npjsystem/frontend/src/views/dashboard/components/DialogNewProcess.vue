@@ -144,7 +144,6 @@
               <v-text-field
                 label="Pasta física:"
                 prepend-icon="fas fa-folder"
-                :rules="pastFisic"
                 v-model="process.pastaFisica"
               >
               </v-text-field>

@@ -308,9 +308,12 @@ export default {
   },
   methods: {
     enviarParaAprovacao(processChecklistParaAprovar){
+      
       this.processChecklistEmAprovacao = processChecklistParaAprovar;
       this.processChecklistEmAprovacaoAux = processChecklistParaAprovar;
       this.steper = '2';
+      console.log('em aprova');
+      console.log(this.processChecklistEmAprovacao);
     },
     paraAprovarClicado(){
       this.steper = '1';
@@ -425,7 +428,7 @@ export default {
       this.user = responseGetUserById.data;
     });
 
-    api.get(`processes/byUserId/${tokenDecoded.id}`).then((responseGetProcessesByUserId) => {
+    api.get(`processes`).then((responseGetProcessesByUserId) => {
 
       let processes = responseGetProcessesByUserId.data;
 

@@ -6,19 +6,17 @@
           align="center"
           justify="center"
         >
-          <v-col
-            cols="12"
-            sm="8"
-            md="8"
-          >
+          <v-col>
             <v-card class="elevation-12">
               <v-window>
-                <v-row>
+                <v-row 
+                  align="center"
+                  justify="center">
                   <v-col
                     cols="12"
                     md="12"
                   >
-                    <v-card-text class="mt-8">
+                    <v-card-text>
                       <div align="center">
                         <v-img
                           max-height="160"
@@ -66,6 +64,7 @@
                         Entrar
                       </v-btn>
                     </div>
+                    <br>
                     <br>
                   </v-col>
                 </v-row>

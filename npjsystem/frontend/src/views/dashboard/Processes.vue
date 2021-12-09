@@ -40,13 +40,7 @@
               @click:row="redirectToDetailedProcessScreen"
               class="py-3"
             >
-              <template v-slot:item.begins_date="{ item }">
-                <span>{{ new Date(item.begins_date).toLocaleString() }}</span>
-              </template>
-              <template v-slot:item.court_hearing_date="{ item }">
-                <span v-if="item.court_hearing_date !== null">{{ new Date(item.court_hearing_date).toLocaleString() }}</span>
-                <span v-if="item.court_hearing_date === null">Nenhuma data marcada</span>
-              </template>
+              
             </v-data-table>
           </v-card-text>
           <dialog-new-process
@@ -159,6 +153,11 @@ export default {
     api.get('processes').then((responseGetProcesses) => {
       this.processes = responseGetProcesses.data;
       this.processes.forEach((process, i) => {
+        let ano = process.begins_date.substring(0, 4)
+        let mes = process.begins_date.substring(5,7)
+        let dia = process.begins_date.substring(8, 10)
+        this.processes[i].begins_date = dia + '/' + mes + '/' + ano;
+
         this.processes[i].user.fullName = process.user.name + ' ' + process.user.lastName;
         this.processes[i].customer.fullName = process.customer.name + ' ' + process.customer.lastName;
       });

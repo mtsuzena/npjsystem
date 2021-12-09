@@ -77,7 +77,6 @@
                 <v-date-picker
                   v-model="dateActing"
                   scrollable
-                  :min="disabledDates"
                 >
                   <v-spacer></v-spacer>
                   <v-btn

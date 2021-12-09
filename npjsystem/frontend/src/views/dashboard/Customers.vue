@@ -39,19 +39,7 @@
               item-key="number"
               class="py-3"
             >
-              <template v-slot:item.customerActive="{item}">
-                <v-checkbox
-                  v-model="item.customerActive"
-                  label="Cliente ativo"
-                  v-if="item.customerActive === true"
-                ></v-checkbox>
-
-                <v-checkbox
-                  v-model="item.customerActive"
-                  label="Cliente desativado"
-                  v-if="item.customerActive === false"
-                ></v-checkbox>
-              </template>
+              
 
               <template v-slot:top>
                 <v-dialog v-model="dialogDelete" max-width="500px">
@@ -156,12 +144,6 @@ export default {
           sortable: false,
           text: 'Cidade',
           value: 'city',
-          align: 'left ',
-        },
-        {
-          sortable: false,
-          text: 'Cliente Ativo',
-          value: 'customerActive',
           align: 'left ',
         },
         {

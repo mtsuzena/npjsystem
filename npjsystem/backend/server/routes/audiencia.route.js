@@ -50,4 +50,14 @@ router.delete('/audiencias/:id', verify, async function (req, res, next){
     }
 });
 
+router.put('/audiencias/:id', verify, async function (req, res, next){
+    const audiencia = req.body;
+    try {
+        await audienciaService.updateAudiencia(req.params.id, audiencia)
+        res.status(204).end();
+    } catch (error) {
+        next(error);
+    }
+});
+
 module.exports = router;

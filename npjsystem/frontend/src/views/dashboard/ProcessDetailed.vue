@@ -377,6 +377,12 @@
                           <template v-slot:item.actions="{ item }">
                             <v-icon
                               small
+                              class="mr-2"
+                            >
+                              mdi-pencil
+                            </v-icon>
+                            <v-icon
+                              small
                               @click="deleteItemAudiencia(item)"
                             >
                               mdi-delete
@@ -388,15 +394,17 @@
                                 v-model="item.clienteNotificado"
                                 label="Cliente notificado"
                                 v-if="item.clienteNotificado === true"
+                                @change="notificarCliente($event, item)"
                               ></v-checkbox>
 
                               <v-checkbox
                                 v-model="item.clienteNotificado"
                                 label="Cliete não notificado"
                                 v-if="item.clienteNotificado === false"
+                                @change="notificarCliente($event, item)"
                               ></v-checkbox>
                           </template>
-                          <template v-slot:item.testemunhasAudiencia="{ item }">
+                          <!--<template v-slot:item.testemunhasAudiencia="{ item }">
                             <v-tooltip left>
                               <template v-slot:activator="{ on, attrs }">
                                 <v-btn
@@ -408,7 +416,7 @@
                               </template>
                               <span>Ver informações das testemunhas</span>
                             </v-tooltip>
-                          </template>
+                          </template> -->
                         </v-data-table>
                         <dialog-audiencia
                           :processdd="this.process"
@@ -522,10 +530,6 @@ export default {
         {
           text: 'Cliente notificado: ',
           value: "clienteNotificado"
-        },
-        {
-          text: 'Informações de testemunhas:',
-          value: "testemunhasAudiencia" ,
         },
         {
           text: 'Ações',
@@ -665,6 +669,13 @@ export default {
     },
   },
   methods: {
+    async notificarCliente(event, obj) {
+      if(event){
+        await api.put(`audiencias/${obj.id}`, {"clienteNotificado": true});
+      }else{
+        await api.put(`audiencias/${obj.id}`, {"clienteNotificado": false});
+      }
+    },
     async desarquivarProcesso(){
       await api.post(`processes/${this.process.id}/arquivar/false`).then((response) => {
         if(response.status === 200){

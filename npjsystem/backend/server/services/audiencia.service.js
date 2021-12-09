@@ -19,3 +19,10 @@ exports.saveAudiencia = async function (audiencia) {
 exports.deleteAudiencia = async function (id) {
     return audienciaData.deleteAudiencia(id);
 }
+
+exports.updateAudiencia = async function (id, audiencia) {
+    const existingAudiencia = await audienciaData.getAudiencia(id);
+    existingAudiencia.clienteNotificado = audiencia.clienteNotificado
+
+    return audienciaData.updateAudiencia(existingAudiencia);
+}

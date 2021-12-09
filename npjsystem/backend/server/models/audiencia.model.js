@@ -21,7 +21,17 @@ module.exports = (sequelize, Sequelize) => {
       clienteNotificado: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
-      }
+      },
+      /* 
+      1 - Presencial
+      2 - Online
+      */
+      modalidade: {
+        type: Sequelize.INTEGER
+      },
+      local: {
+        type: Sequelize.STRING
+      },
     });
   
     return Audiencia;

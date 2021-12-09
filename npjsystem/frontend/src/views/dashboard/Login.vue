@@ -19,11 +19,20 @@
                     md="12"
                   >
                     <v-card-text class="mt-8">
-                      <h1
-                        class="text-center text-h3 teal--text text--accent-3"
+                      <div align="center">
+                        <v-img
+                          max-height="160"
+                          max-width="160"
+                          src="./npjsy-logo.png"
+                        ></v-img>
+                      </div>
+                      <!--<h1
+                        class="text-center text-h3"
+                        style="color: #034405"
+                        
                       >
                         Entrar em NPJ System
-                      </h1>
+                      </h1>-->
                       <v-form>
                         <v-text-field
                           v-model="email"
@@ -31,7 +40,7 @@
                           name="Email"
                           prepend-icon="email"
                           type="text"
-                          color="teal accent-3"
+                          color="#034405"
                         />
                         <v-text-field
                           id="password"
@@ -40,17 +49,17 @@
                           name="password"
                           prepend-icon="lock"
                           type="password"
-                          color="teal accent-3"
+                          color="#034405"
                         />
                       </v-form>
-                      <h3 class="text-center mt-4">
+                      <h4 class="text-center mt-4" style="color: #034405">
                         Esqueceu sua senha?
-                      </h3>
+                      </h4>
                     </v-card-text>
                     <div class="text-center mt-3">
                       <v-btn
                         rounded
-                        color="teal accent-3"
+                        color="#034405"
                         dark
                         @click="login"
                       >

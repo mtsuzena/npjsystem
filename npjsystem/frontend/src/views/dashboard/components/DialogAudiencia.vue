@@ -59,6 +59,28 @@
               ></v-autocomplete>
             </v-col>
 
+            <v-col cols="12">
+              <v-autocomplete
+                label="Modalidade: "
+                :items="modalidadesCmb"
+                item-text="text"
+                item-value="value"
+                :filter="customFilter"
+                prepend-icon="fas fa-blog"
+                :rules="capetaRules"
+                v-model="Objetaud.modalidade"
+              ></v-autocomplete>
+            </v-col>
+
+            <v-col cols="12">
+              <v-text-field
+                label="Local da audiência:"
+                prepend-icon="fas fa-map-marker"
+                :rules="localxxRules"
+                v-model="Objetaud.local"
+              />
+            </v-col>
+
             <v-col
               cols="12"
             >
@@ -72,7 +94,7 @@
                 <template v-slot:activator="{ on, attrs }">
                   <v-text-field
                     v-model="Objetaud.data"
-                    label="Término em:"
+                    label="Data da audiência:"
                     prepend-icon="mdi-calendar"
                     readonly
                     v-bind="attrs"
@@ -156,6 +178,11 @@ export default {
       capetaRules: [
         v => !!v || 'Favor selecionar!',
       ],
+      localxxRules: [
+        v => !!v || 'Favor preencher o campo!',
+        v => (v && v.length < 50) || 'Tamanho maior que 50 caracteres!',
+      ],
+      modalidadesCmb: [{text: "Presencial", value: 1}, {text: "Online", value: 2}],
       disabledDatesT: this.formatDate(new Date(Date.now() - 8640000)),
       dialogT: false,
       validT: true,
@@ -170,7 +197,9 @@ export default {
         tipo: '',
         data: '',
         processId: '',
-        clienteNotificado: false
+        clienteNotificado: false,
+        modalidade: '',
+        local: ''
       }
     }
   },

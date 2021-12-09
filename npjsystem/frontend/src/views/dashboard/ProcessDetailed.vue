@@ -31,19 +31,13 @@
                 <span>Data de Autuação: {{ new Date(process.begins_date).toLocaleString() }}</span>
               </v-col>
               <v-col>
-                <span v-if="!process.court_hearing_date">Data de Audiência: Nenhuma data marcada</span>
-                <span v-else>Data de Audiência: {{ new Date(process.court_hearing_date).toLocaleString() }}</span>
+                <span>Requerido: {{ process.requerido }}</span>
               </v-col>
             </v-row>
             <v-row>
               <v-col>
                 <span>Requerente: {{ process.customer.name }} {{ process.customer.lastName }}</span>
               </v-col>
-              <v-col>
-                <span>Requerido: {{ process.requerido }}</span>
-              </v-col>
-            </v-row>
-            <v-row>
               <v-col>
                 <span>Pasta Física: {{ process.pastaFisica }}</span>
               </v-col>
@@ -763,10 +757,10 @@ export default {
         this.process.processMovements.forEach((processMovement, i) => {
           this.process.processMovements[i].user.imgSrc = require('@/assets/avatar/' + processMovement.user.imgSrc);
         });
-        this.process.processMovements.reverse();
+        // this.process.processMovements.reverse();
       });
     },
-    async attAudiencias(response){
+    async attAudiencias(response, tipoAudiencia){
       await api.get(`audiencias/byProcessId/${this.process.id}`).then((r) => {
         this.process.audiencias = r.data;
         this.process.audiencias.forEach((t,k) => {
@@ -779,6 +773,39 @@ export default {
         });
 
       });
+
+      let data = new Date();
+      var dia = data.getDate(); 
+      var mes = data.getMonth();
+      var ano = data.getFullYear(); 
+      var hora = data.getHours();
+      var min = data.getMinutes();
+      var seg = data.getSeconds();
+      let modalidade = '';
+
+      if(tipoAudiencia === 0){
+        modalidade = 'Conciliaçao'
+      }
+      if(tipoAudiencia === 1){
+        modalidade = 'Instrução'
+      }
+      if(tipoAudiencia === 2){
+        modalidade = 'Julgamento'
+      }
+
+      this.pMovement.actionName = 'Criação de Audiência';
+      this.pMovement.actionDescription = 
+        'Usuário '
+        + this.nomeUsuarioLogado
+        + ' criou a audiência de '
+        + modalidade
+        + ' no dia'
+        + ' ' + dia + '/' + (mes+1) + '/' + ano
+        + ' às '
+        + hora + ':' + min + ':' + seg + '.';
+
+      await api.post(`processMovements`, this.pMovement);
+      await this.attMovimentacoes();
     },
     async removerMovimentacaoProcesso(processMovementId){
 
@@ -843,25 +870,51 @@ export default {
       this.closeDelete();
 
       let processChecklistId = this.process.processChecklists[this.editedIndex].id;
+      let processChecklist = this.process.processChecklists[this.editedIndex];
       await api.delete(`processChecklists/${processChecklistId}`).then((responseDeleteAtividade) => {
         console.log(responseDeleteAtividade)
         if(responseDeleteAtividade.status === 204){
-          console.log("deletado com sucesso")
+          this.generateAlert(2, 'Atividade deletada com sucesso');     
         }else{
           console.log("Nao foi possivel deletar o checklist")
           console.log(responseDeleteAtividade.data)
         }
       });
+
       this.process.processChecklists.forEach((procesChecklist, i) => {
         if(procesChecklist.id === processChecklistId){
           this.process.processChecklists.splice(i, 1)
         }
       })
+
+      let data = new Date();
+      var dia = data.getDate(); 
+      var mes = data.getMonth();
+      var ano = data.getFullYear(); 
+      var hora = data.getHours();
+      var min = data.getMinutes();
+      var seg = data.getSeconds();
+    
+      this.pMovement.actionName = 'Remoção de Atividade';
+      this.pMovement.actionDescription = 
+        'Usuário ' 
+        + this.nomeUsuarioLogado
+        + ' removeu a atividade '
+        + processChecklist.name
+        + ' no dia'
+        + ' ' + dia + '/' + (mes+1) + '/' + ano
+        + ' às '
+        + hora + ':' + min + ':' + seg + '.';
+
+      
+      await api.post(`processMovements`, this.pMovement);
+      await this.attMovimentacoes();
     },
     async deleteItemConfirmAudiencia () {
       this.closeDeleteAudiencia();
 
       let audienciaId = this.process.audiencias[this.editedIndexAudiencia].id;
+      let audiencia = this.process.audiencias[this.editedIndexAudiencia];
       await api.delete(`audiencias/${audienciaId}`).then((responseDeleteAtividade) => {
         console.log(responseDeleteAtividade)
         if(responseDeleteAtividade.status === 204){
@@ -876,6 +929,40 @@ export default {
           this.process.audiencias.splice(i, 1)
         }
       })
+
+      let data = new Date();
+      var dia = data.getDate(); 
+      var mes = data.getMonth();
+      var ano = data.getFullYear(); 
+      var hora = data.getHours();
+      var min = data.getMinutes();
+      var seg = data.getSeconds();
+      let modalidade = '';
+
+      if(audiencia.tipo === 0){
+        modalidade = 'Conciliaçao'
+      }
+      if(audiencia.tipo === 1){
+        modalidade = 'Instrução'
+      }
+      if(audiencia.tipo === 2){
+        modalidade = 'Julgamento'
+      }
+    
+      this.pMovement.actionName = 'Remoção de Audiência';
+      this.pMovement.actionDescription = 
+        'Usuário ' 
+        + this.nomeUsuarioLogado
+        + ' removeu a audiência de '
+        + modalidade
+        + ' no dia'
+        + ' ' + dia + '/' + (mes+1) + '/' + ano
+        + ' às '
+        + hora + ':' + min + ':' + seg + '.';
+
+      
+      await api.post(`processMovements`, this.pMovement);
+      await this.attMovimentacoes();
     },
     close () {
       this.dialog = false
@@ -934,6 +1021,7 @@ export default {
       });
       this.unicoChecklist = null;
       this.updateCheck = false;
+      await this.attMovimentacoes();
       // await  apiUpdateListProcess.get(`/processChecklists/${id}`)
       //   .then((response) => {
       //     response.data.user.fullName = response.data.user.name + ' ' +  response.data.user.lastName;
@@ -955,7 +1043,7 @@ export default {
           this.process.processMovements.forEach((processMovement, i) => {
             this.process.processMovements[i].user.imgSrc = require('@/assets/avatar/' + processMovement.user.imgSrc);
           });
-          this.process.processMovements.reverse();
+          // this.process.processMovements.reverse();
         });
     },
     corBotaoUploadParaChecklistReprovado(checklist){
@@ -1163,7 +1251,7 @@ export default {
         this.process.processMovements[i].user.imgSrc = require('@/assets/avatar/' + processMovement.user.imgSrc);
       });
 
-      this.process.processMovements.reverse();
+      // this.process.processMovements.reverse();
 
     });
   }

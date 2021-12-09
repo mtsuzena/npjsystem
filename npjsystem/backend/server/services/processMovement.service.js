@@ -81,7 +81,7 @@ exports.gerarMovimentacaoDeCriacaoDeChecklist = async function (token, newCheckl
         + user.name 
         + ' ' 
         + user.lastName
-        + ' criou o checklist '
+        + ' criou a atividade '
         + newChecklist.name
         + ' no dia'
         + ' ' + dia + '/' + (mes+1) + '/' + ano
@@ -110,21 +110,21 @@ exports.gerarLogMovimentacaoChecklist = async function (token, newChecklist) {
     var min = data.getMinutes();
     var seg = data.getSeconds();
 
-    let actionName = "Movimentação de Checklist";
+    let actionName = "Movimentação de Atividade";
 
     let actionDescription = 'Usuário ' + user.name + ' ' + user.lastName;
 
     if(newChecklist.status === '1'){
-        actionDescription = actionDescription + ' movimentou o checklist ' + newChecklist.name + ' para em Elaboração ';
+        actionDescription = actionDescription + ' movimentou a atividade ' + newChecklist.name + ' para em Elaboração ';
     }
     if(newChecklist.status === '2'){
-        actionDescription = actionDescription + ' enviou o checklist ' + newChecklist.name + ' para aprovação ';
+        actionDescription = actionDescription + ' enviou a atividade ' + newChecklist.name + ' para aprovação ';
     }
     if(newChecklist.status === '3'){
-        actionDescription = actionDescription + ' aprovou o checklist ' + newChecklist.name + ' ';
+        actionDescription = actionDescription + ' aprovou a atividade ' + newChecklist.name + ' ';
     }
     if(newChecklist.status === '4'){
-        actionDescription = actionDescription + ' reprovou o checklist ' + newChecklist.name + ' ';
+        actionDescription = actionDescription + ' reprovou a atividade ' + newChecklist.name + ' ';
     }
 
     actionDescription = actionDescription

@@ -233,11 +233,12 @@ export default {
         this.Objetaud.processId =  this.processdd.id;
         this.Objetaud.data =this.Objetaud.data+' 00:00:00';
         this.Objetaud.tipo = this.Objetaud.tipo - 1;
+        let tipoAud = this.Objetaud.tipo;
         api.post('/audiencias', this.Objetaud)
             .then((response) => {
               this.dialogT = false;
               this.$refs.form.reset();
-              this.$emit('attAudiencias', response.data);
+              this.$emit('attAudiencias', response.data, tipoAud);
             }, (error) => {
               console.log(error);
             });

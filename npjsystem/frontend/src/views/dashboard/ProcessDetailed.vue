@@ -404,6 +404,11 @@
                                 @change="notificarCliente($event, item)"
                               ></v-checkbox>
                           </template>
+
+                          <template v-slot:item.modalidade="{ item }">
+                            <span v-if="item.modalidade == 1">Presencial</span>
+                            <span v-if="item.modalidade == 2">Online</span>
+                          </template>
                           <!--<template v-slot:item.testemunhasAudiencia="{ item }">
                             <v-tooltip left>
                               <template v-slot:activator="{ on, attrs }">
@@ -524,12 +529,20 @@ export default {
           value: 'tipo',
         },
         {
-          text: 'Data da audiência: ',
+          text: 'Data da audiência:',
           value: 'data'
         },
         {
-          text: 'Cliente notificado: ',
+          text: 'Cliente notificado:',
           value: "clienteNotificado"
+        },
+        {
+          text: 'Modalidade:',
+          value: "modalidade"
+        },
+        {
+          text: 'Local:',
+          value: "local"
         },
         {
           text: 'Ações',
@@ -803,7 +816,7 @@ export default {
       await api.delete(`audiencias/${audienciaId}`).then((responseDeleteAtividade) => {
         console.log(responseDeleteAtividade)
         if(responseDeleteAtividade.status === 204){
-          console.log("deletado com sucesso")
+          this.generateAlert(2, 'Audiência excluída com sucesso');
         }else{
           console.log("Nao foi possivel deletar o checklist")
           console.log(responseDeleteAtividade.data)

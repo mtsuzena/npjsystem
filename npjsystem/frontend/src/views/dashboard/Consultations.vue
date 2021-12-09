@@ -193,11 +193,23 @@ export default {
       this.events = []
 
       arr.forEach((value)=>{
+        let dateStart = new Date(value.consultationDate);
+
+        let corDefinida = false;
+        let color = '';
+        do {
+          color = this.colors[this.rnd(0, this.colors.length - 1)]
+          let found = this.events.find(e => e.color === color && e.start.toLocaleDateString("pt-BR") === dateStart.toLocaleDateString("pt-BR"))
+          if(!found){
+            corDefinida = true;
+          }
+        }while(!corDefinida)
+
         this.events.push({
           id: value.id,
           name: `| Atendimento ao Cliente: ${value.customer.name}`,
-          start: new Date(value.consultationDate),
-          color: this.colors[this.rnd(0, this.colors.length - 1)],
+          start: dateStart,
+          color: color,
           timed: '00:00',
           format: '24hr'
         });

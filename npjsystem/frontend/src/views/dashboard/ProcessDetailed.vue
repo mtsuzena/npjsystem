@@ -690,35 +690,44 @@ export default {
   },
   methods: {
     async notificarCliente(event, obj) {
+      let data = new Date();
+      var dia = data.getDate(); 
+      var mes = data.getMonth();
+      var ano = data.getFullYear(); 
+      var hora = data.getHours();
+      var min = data.getMinutes();
+      var seg = data.getSeconds();
+
       if(event){
-        console.log('notificando cliente');
-        console.log(obj)
         await api.put(`audiencias/${obj.id}`, {"clienteNotificado": true});
 
         this.pMovement.actionName = 'Notificação de Cliente';
-
-        let data = new Date();
-        var dia = data.getDate(); 
-        var mes = data.getMonth();
-        var ano = data.getFullYear(); 
-        var hora = data.getHours();
-        var min = data.getMinutes();
-        var seg = data.getSeconds();
-
-        let actionName = "Criação de Processo";
         this.pMovement.actionDescription = 
-            'Usuário ' 
-            + this.nomeUsuarioLogado
-            + ' notificou o cliente '
-            + this.process.customer.name + ' ' + this.process.customer.lastName
-            + ' no dia'
-            + ' ' + dia + '/' + (mes+1) + '/' + ano
-            + ' às '
-            + hora + ':' + min + ':' + seg + '.';
-
+          'Usuário ' 
+          + this.nomeUsuarioLogado
+          + ' notificou o cliente '
+          + this.process.customer.name + ' ' + this.process.customer.lastName
+          + ' no dia'
+          + ' ' + dia + '/' + (mes+1) + '/' + ano
+          + ' às '
+          + hora + ':' + min + ':' + seg + '.';
         await api.post(`processMovements`, this.pMovement);
+        await this.attMovimentacoes();
       }else{
         await api.put(`audiencias/${obj.id}`, {"clienteNotificado": false});
+
+        this.pMovement.actionName = 'Remoção de Notificação de Cliente';
+        this.pMovement.actionDescription = 
+          'Usuário ' 
+          + this.nomeUsuarioLogado
+          + ' removeu a notificação do cliente '
+          + this.process.customer.name + ' ' + this.process.customer.lastName
+          + ' no dia'
+          + ' ' + dia + '/' + (mes+1) + '/' + ano
+          + ' às '
+          + hora + ':' + min + ':' + seg + '.';
+        await api.post(`processMovements`, this.pMovement);
+        await this.attMovimentacoes();
       }
     },
     async desarquivarProcesso(){
@@ -748,7 +757,15 @@ export default {
     updateModal(modal){
       this.updateCheck = modal;
     },
-
+    async attMovimentacoes(){
+      await api.get(`processMovements/${this.process.id}`).then((t) => {
+        this.process.processMovements = t.data;
+        this.process.processMovements.forEach((processMovement, i) => {
+          this.process.processMovements[i].user.imgSrc = require('@/assets/avatar/' + processMovement.user.imgSrc);
+        });
+        this.process.processMovements.reverse();
+      });
+    },
     async attAudiencias(response){
       await api.get(`audiencias/byProcessId/${this.process.id}`).then((r) => {
         this.process.audiencias = r.data;
